@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import Divider from "@/components/common/Divider";
 
-import { AgreementTerm } from "@/constants/AgreementTerm";
+import { AgreementTerm } from "@/constants/agreement-terms";
 
 import AgreementGroup from "./AgreementGroup";
 import CheckIcon from "./CheckIcon";

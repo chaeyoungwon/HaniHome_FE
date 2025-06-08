@@ -13,7 +13,7 @@ import BottomActionBar from "@/components/common/BottomActionBar";
 import InputField from "@/components/common/InputField";
 import AgreementList from "@/components/signup/info/AgreementList";
 
-import { AgreementTerm } from "@/constants/AgreementTerm";
+import { AgreementTerm } from "@/constants/agreement-terms";
 
 const SignupInfoPage = () => {
   const router = useRouter();

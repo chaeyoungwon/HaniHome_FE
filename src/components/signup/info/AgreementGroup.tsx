@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import { AgreementTerm } from "@/constants/AgreementTerm";
+import { AgreementTerm } from "@/constants/agreement-terms";
 
 import DownArrow from "@/public/svgs/signup/down-arrow.svg";
 

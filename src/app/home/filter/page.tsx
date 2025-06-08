@@ -11,7 +11,7 @@ import SubwayStationSelector from "@/components/home/filter/SubwayStationSelecto
 import TypeSelector from "@/components/home/filter/TypeSelector";
 import BackHeader from "@/components/layout/header/BackHeader";
 
-import { SHARE_ONLY_ROOM_TYPES } from "@/constants/Filter";
+import { SHARE_ONLY_ROOM_TYPES } from "@/constants/housing-options";
 
 const Filter = () => {
   const [selectedType, setSelectedType] = useState<"쉐어" | "렌트">();

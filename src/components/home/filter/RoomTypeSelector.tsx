@@ -1,6 +1,6 @@
 import SelectableChip from "@/components/common/SelectableChip";
 
-import { ROOM_TYPES } from "@/constants/Filter";
+import { ROOM_TYPES } from "@/constants/housing-options";
 
 interface RoomTypeSelectorProps {
   selectedRoomTypes: string[];

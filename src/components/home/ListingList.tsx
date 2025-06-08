@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
-import { ListingDummies } from "@/constants/ListingDummies";
+import { ListingDummies } from "@/constants/listing-card-dummies";
 
 import ListingCard from "./ListingCard";
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import clsx from "clsx";
 
-import { listingDetailTabs } from "@/constants/ListingTabs";
+import { listingDetailTabs } from "@/constants/listing-detail-tabs";
 
 interface DetailTabsProps {
   listingId: string;

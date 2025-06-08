@@ -5,7 +5,7 @@ import { Fragment } from "react";
 import Divider from "@/components/common/Divider";
 import BackHeader from "@/components/layout/header/BackHeader";
 
-import { furnitureIconMap } from "@/constants/FurnitureLists";
+import { furnitureIconMap } from "@/constants/furniture-lists";
 
 const dummyFurniture = {
   침실: ["침대 프레임", "책상", "침구류", "옷장"],
