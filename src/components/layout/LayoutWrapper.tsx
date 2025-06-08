@@ -12,10 +12,10 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
   const showNavbar = showBottomNavbarPaths.includes(pathname);
 
   return (
-    <>
+    <div className="scrollbar-hide mx-auto h-screen min-h-screen max-w-[768px] min-w-[375px] overflow-y-auto">
       {children}
       {showNavbar && <TabBar />}
-    </>
+    </div>
   );
 };
 

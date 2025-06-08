@@ -113,6 +113,7 @@ button.rdrDay {
   width: 28px;
   margin-left: 8px;
 }
+
 .single-selection .rdrDays .rdrDay:nth-child(7n + 1) .rdrStartEdge {
   width: 28px;
   margin-left: 2.5px;
@@ -132,14 +133,14 @@ button.rdrDay {
 /* ========= 상태에 따른 배경 ========= */
 .rdrDay.rdrDayInRange {
   background-color: var(--color-mint);
-  color: white !important;
+  color: white;
   border-radius: 0;
   box-shadow: none;
 }
 
 .rdrDayStartOfRange {
   background-color: var(--color-mint);
-  color: white !important;
+  color: white;
   border-radius: 14px 0 0 14px;
 }
 
@@ -193,12 +194,11 @@ button.rdrDay {
 
 /* ========= 요일별 스타일 ========= */
 .rdrDay:nth-child(7n + 1) .rdrDayNumber span {
-  color: red;
+  color: var(--color-red) !important;
 }
-.rdrDay.rdrDaySelected:nth-child(7n + 1) .rdrDayNumber span,
-.rdrDay.rdrDayStartOfRange:nth-child(7n + 1) .rdrDayNumber span,
-.rdrDay.rdrDayEndOfRange:nth-child(7n + 1) .rdrDayNumber span {
-  color: white !important;
+
+.rdrDay:nth-child(7n) .rdrDayNumber span {
+  color: var(--color-gray-700) !important;
 }
 
 /* ========= 상단 요약 날짜 영역 ========= */

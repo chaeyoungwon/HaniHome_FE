@@ -26,7 +26,7 @@ const SelectableChip = ({
           ? "cursor-not-allowed border-gray-200 text-gray-300"
           : selected
             ? "bg-mint-press text-gray-0 border-mint-press"
-            : "hover:bg-mint-press hover:text-gray-0 border-gray-500 bg-white text-gray-600 hover:border-gray-500",
+            : "hover:bg-mint-press hover:border-mint-press hover:text-gray-0 border-gray-500 bg-white text-gray-600",
       )}
     >
       {label}

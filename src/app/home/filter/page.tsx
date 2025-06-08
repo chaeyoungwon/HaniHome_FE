@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
+import Divider from "@/components/common/Divider";
 import AvailableDatePicker from "@/components/home/filter/AvailableDatePicker";
 import BudgetSlider from "@/components/home/filter/BudgetSlider";
 import RoomTypeSelector from "@/components/home/filter/RoomTypeSelector";
@@ -10,7 +11,7 @@ import SubwayStationSelector from "@/components/home/filter/SubwayStationSelecto
 import TypeSelector from "@/components/home/filter/TypeSelector";
 import BackHeader from "@/components/layout/header/BackHeader";
 
-import { SHARE_ONLY_ROOM_TYPES } from "@/constants/filter";
+import { SHARE_ONLY_ROOM_TYPES } from "@/constants/Filter";
 
 const Filter = () => {
   const [selectedType, setSelectedType] = useState<"쉐어" | "렌트">();
@@ -56,12 +57,13 @@ const Filter = () => {
   const count: number = 1; // TODO: 필터 로직과 연결해서 매물 수 계산
 
   return (
-    <div className="scrollbar-hide flex flex-col overflow-x-hidden overflow-y-auto pb-31">
+    <div className="flex min-h-screen flex-col overflow-x-hidden pt-12 pb-31">
       <BackHeader />
 
       {/* 매물 종류 */}
       <TypeSelector selectedType={selectedType} onSelect={selectType} />
-      <hr className="my-3 border-t border-gray-200" />
+
+      <Divider />
 
       {/* 매물 유형 */}
       <RoomTypeSelector
@@ -69,15 +71,15 @@ const Filter = () => {
         toggleRoomType={toggleRoomType}
         isDisabled={isDisabled}
       />
-      <hr className="my-3 border-t border-gray-200" />
+      <Divider />
 
       {/* 예산 범위 */}
       <BudgetSlider />
-      <hr className="my-3 border-t border-gray-200" />
+      <Divider />
 
       {/* 입주 가능일 */}
       <AvailableDatePicker />
-      <hr className="my-3 border-t border-gray-200" />
+      <Divider />
 
       {/* 지하철 역 설정 */}
       <SubwayStationSelector />

@@ -7,7 +7,7 @@ import MainHeader from "@/components/layout/header/MainHeader";
 
 const Home = () => {
   return (
-    <div className="scrollbar-hide flex h-screen flex-col overflow-y-auto pt-12 pb-16">
+    <div className="flex min-h-screen flex-col pt-12 pb-16">
       <MainHeader />
       <div className="bg-gray-0 flex flex-col pt-6 pb-2">
         <CategoryHeader />

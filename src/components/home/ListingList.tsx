@@ -35,7 +35,7 @@ const ListingList = () => {
   };
 
   const handleCardClick = (id: number) => {
-    router.push(`/listing/${id}`);
+    router.push(`/listings/${id}`);
   };
 
   return (

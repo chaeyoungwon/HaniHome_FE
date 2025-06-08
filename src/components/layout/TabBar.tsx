@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 
 import WishListIcon from "@/public/svgs/common/heart-outline-icon.svg";
 import HomeIcon from "@/public/svgs/common/home-icon.svg";
-import MyPageIcon from "@/public/svgs/tabbar/mypage-icon.svg";
+import MyPageIcon from "@/public/svgs/common/mypage-icon.svg";
 import ViewingIcon from "@/public/svgs/tabbar/viewing-icon.svg";
 
 const tabs = [

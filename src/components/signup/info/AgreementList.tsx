@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import Divider from "@/components/common/Divider";
+
 import { AgreementTerm } from "@/constants/AgreementTerm";
 
 import AgreementGroup from "./AgreementGroup";
@@ -66,7 +68,7 @@ const AgreementList = ({
         동의합니다
       </button>
 
-      <hr className="mt-3 border-t border-gray-200" />
+      <Divider />
 
       <AgreementGroup
         title="필수 동의란"

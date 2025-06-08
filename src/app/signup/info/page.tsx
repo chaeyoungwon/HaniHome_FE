@@ -64,10 +64,7 @@ const SignupInfoPage = () => {
   }, [watch, setField]);
 
   return (
-    <form
-      onSubmit={e => e.preventDefault()}
-      className="flex w-full flex-col pb-16"
-    >
+    <div className="flex w-full flex-col pb-16">
       <div className="flex flex-col gap-1 py-4">
         <h1 className="text-heading2 text-gray-900">정보를 입력해주세요</h1>
         <span className="text-cap1-med text-gray-700">
@@ -75,27 +72,29 @@ const SignupInfoPage = () => {
         </span>
       </div>
 
-      <InputField
-        label="이름"
-        placeholder="이름을 입력해주세요"
-        value={name}
-        {...register("name")}
-        errorMessage={touchedFields.name ? errors.name?.message : undefined}
-      />
-      <InputField
-        label="이메일"
-        placeholder="이메일을 입력해주세요"
-        value={email}
-        {...register("email")}
-        errorMessage={touchedFields.email ? errors.email?.message : undefined}
-      />
-      <InputField
-        label="전화번호"
-        placeholder="전화번호를 입력해주세요"
-        value={phone}
-        {...register("phone")}
-        errorMessage={touchedFields.phone ? errors.phone?.message : undefined}
-      />
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <InputField
+          label="이름"
+          placeholder="이름을 입력해주세요"
+          value={name}
+          {...register("name")}
+          errorMessage={touchedFields.name ? errors.name?.message : undefined}
+        />
+        <InputField
+          label="이메일"
+          placeholder="이메일을 입력해주세요"
+          value={email}
+          {...register("email")}
+          errorMessage={touchedFields.email ? errors.email?.message : undefined}
+        />
+        <InputField
+          label="전화번호"
+          placeholder="전화번호를 입력해주세요"
+          value={phone}
+          {...register("phone")}
+          errorMessage={touchedFields.phone ? errors.phone?.message : undefined}
+        />
+      </form>
 
       <AgreementList onChange={setAgreed} />
 
@@ -104,7 +103,7 @@ const SignupInfoPage = () => {
         onClick={handleSubmit(onSubmit)}
         disabled={!isFormReady}
       />
-    </form>
+    </div>
   );
 };
 

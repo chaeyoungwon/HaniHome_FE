@@ -1,6 +1,6 @@
 import SelectableChip from "@/components/common/SelectableChip";
 
-import { HOUSE_TYPES } from "@/constants/filter";
+import { HOUSE_TYPES } from "@/constants/Filter";
 
 interface TypeSelectorProps {
   selectedType?: "쉐어" | "렌트";

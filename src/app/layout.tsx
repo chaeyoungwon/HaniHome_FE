@@ -38,11 +38,9 @@ export default function RootLayout({
   return (
     <html lang="ko" className={suit.className}>
       <body>
-        <div className="mx-auto min-h-screen max-w-[768px] min-w-[375px]">
-          <ReactQueryProvider>
-            <LayoutWrapper>{children}</LayoutWrapper>
-          </ReactQueryProvider>
-        </div>
+        <ReactQueryProvider>
+          <LayoutWrapper>{children}</LayoutWrapper>
+        </ReactQueryProvider>
       </body>
     </html>
   );
