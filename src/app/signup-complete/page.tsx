@@ -22,7 +22,7 @@ const CompletePage = () => {
   const router = useRouter();
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center gap-5">
+    <div className="relative flex min-h-screen w-full flex-col items-center justify-center gap-5 pb-16">
       {/* 애니메이션 영역 */}
       <div className="relative h-[276px] w-[223px]">
         <div

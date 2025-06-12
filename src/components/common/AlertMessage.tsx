@@ -2,10 +2,11 @@ import { useEffect } from "react";
 
 interface AlertMessageProps {
   message: string;
+  className?: string;
   onDone: () => void;
 }
 
-const AlertMessage = ({ message, onDone }: AlertMessageProps) => {
+const AlertMessage = ({ message, onDone, className }: AlertMessageProps) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onDone();
@@ -14,7 +15,9 @@ const AlertMessage = ({ message, onDone }: AlertMessageProps) => {
   }, []);
 
   return (
-    <div className="text-mint-light text-lab1-sb fixed bottom-17 z-50 w-[343px] rounded-sm bg-gray-900 px-4 py-1 text-center">
+    <div
+      className={`text-mint-light text-lab1-sb fixed left-1/2 z-50 w-[343px] -translate-x-1/2 rounded-sm bg-gray-900 px-4 py-1 text-center ${className}`}
+    >
       {message}
     </div>
   );

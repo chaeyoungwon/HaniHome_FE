@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-import { ListingCardProps } from "@/types/listing";
+import { ListingCardProps } from "@/types/listingCard";
 
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
 import HeartOutlineIcon from "@/public/svgs/common/heart-outline-icon.svg";

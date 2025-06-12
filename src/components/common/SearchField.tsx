@@ -21,10 +21,12 @@ interface SearchFieldProps {
   isSelected?: boolean;
   onSearchClick?: () => void;
   onConfirm?: (confirmed: boolean) => void;
+  type?: string;
 }
 
 const SearchField = ({
   label,
+  type,
   value,
   onChange,
   placeholder = "소문자, 영어로 입력해주세요",
@@ -96,7 +98,11 @@ const SearchField = ({
   };
 
   return (
-    <div className={`flex w-full flex-col gap-3 ${label ? "py-4" : ""}`}>
+    <div
+      className={`flex w-full flex-col gap-3 ${
+        label ? (type === "subway" ? "py-3" : "py-4") : ""
+      }`}
+    >
       {label && (
         <label htmlFor="search-input" className="text-body1-sb text-gray-800">
           {label}

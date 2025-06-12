@@ -23,7 +23,7 @@ const ListingDetailPage = () => {
 
   return (
     <>
-      <div className="flex min-h-screen flex-col pt-12 pb-16">
+      <div className="flex min-h-screen flex-col pb-16">
         <BackHeader rightIcon="report" />
         <div className="relative flex">
           <Image

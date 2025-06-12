@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { useSignupStore } from "@/stores/useSignupStore";
 import clsx from "clsx";
 
-import PlusIcon from "@/public/svgs/signup/plus-icon.svg";
+import PlusIcon from "@/public/svgs/common/plus-icon.svg";
 
 import ImageAlertModal from "./ImageAlertModal";
 

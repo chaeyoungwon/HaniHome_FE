@@ -1,3 +1,4 @@
+import ContentWrapper from "@/components/layout/ContentWrapper";
 import BackHeader from "@/components/layout/header/BackHeader";
 
 export default function SignupLayout({
@@ -6,9 +7,9 @@ export default function SignupLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen w-full">
+    <ContentWrapper>
       <BackHeader />
-      <div className="px-4 pt-12 pb-16">{children}</div>
-    </div>
+      <div className="px-4 pb-16">{children}</div>
+    </ContentWrapper>
   );
 }

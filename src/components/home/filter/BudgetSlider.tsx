@@ -11,7 +11,7 @@ const MIN_GAP = 50;
 const BudgetSlider = () => {
   const [budgetRange, setBudgetRange] = useState<[number, number]>([
     MIN_BUDGET,
-    1000,
+    MAX_BUDGET,
   ]);
   const [checked, setChecked] = useState(false);
 

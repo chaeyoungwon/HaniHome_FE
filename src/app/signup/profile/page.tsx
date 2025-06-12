@@ -112,6 +112,7 @@ const SignupProfilePage = () => {
       {alerts.length > 0 && (
         <AlertMessage
           message={alerts.at(-1)!}
+          className="bottom-17"
           onDone={() => setAlerts(prev => prev.slice(0, prev.length - 1))}
         />
       )}

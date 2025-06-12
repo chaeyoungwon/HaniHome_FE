@@ -64,7 +64,7 @@ const SignupInfoPage = () => {
   }, [watch, setField]);
 
   return (
-    <div className="flex w-full flex-col pb-16">
+    <div className="flex w-full flex-col">
       <div className="flex flex-col gap-1 py-4">
         <h1 className="text-heading2 text-gray-900">정보를 입력해주세요</h1>
         <span className="text-cap1-med text-gray-700">

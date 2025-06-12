@@ -85,6 +85,11 @@
     z-index: 10;
   }
 
+  /* shadow  */
+  .shadow-fab {
+    box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.25);
+  }
+
   /* blur */
   .backdrop-blur-4 {
     background: #1e1f21cc;

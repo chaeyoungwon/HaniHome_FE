@@ -20,7 +20,7 @@ const ListingFurniturePage = () => {
   ) as (keyof typeof dummyFurniture)[];
 
   return (
-    <div className="flex min-h-screen flex-col pt-12 pb-16">
+    <div className="flex min-h-screen flex-col pb-16">
       <BackHeader />
 
       {groupKeys.map((category, idx) => (

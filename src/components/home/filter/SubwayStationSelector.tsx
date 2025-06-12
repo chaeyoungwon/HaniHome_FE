@@ -9,7 +9,7 @@ const MAX_DISTANCE = 10;
 
 const SubwayStationSelector = () => {
   const [inputValue, setInputValue] = useState("");
-  const [distanceRange, setDistanceRange] = useState(MIN_DISTANCE);
+  const [distanceRange, setDistanceRange] = useState(MAX_DISTANCE);
 
   const handleChange = (value: number | number[]) => {
     setDistanceRange(value as number);
@@ -23,16 +23,15 @@ const SubwayStationSelector = () => {
   };
 
   return (
-    <div className="flex flex-col gap-2 px-4">
+    <div className="flex flex-col gap-3 px-4 py-4">
       <div className="flex flex-col">
-        <span className="text-heading3 pt-4 pb-3 text-gray-900">
-          지하철 역 설정
-        </span>
+        <span className="text-heading3 py-4 text-gray-900">지하철 역 설정</span>
         <SearchField
           label="기준 지하철 역 검색"
           value={inputValue}
           onChange={setInputValue}
           placeholder="검색어를 입력해주세요"
+          type="subway"
         />
       </div>
 

@@ -12,6 +12,7 @@ export const ListingDummies = [
     location: "chatswood",
     timeAgo: "N분 전",
     likes: 234,
+    rentalType: "쉐어",
   },
   {
     id: 2,
@@ -26,6 +27,7 @@ export const ListingDummies = [
     location: "chatswood",
     timeAgo: "N분 전",
     likes: 234,
+    rentalType: "쉐어",
   },
   {
     id: 3,
@@ -40,5 +42,6 @@ export const ListingDummies = [
     location: "chatswood",
     timeAgo: "N분 전",
     likes: 234,
+    rentalType: "렌트",
   },
 ];
