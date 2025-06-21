@@ -27,7 +27,7 @@ export const useAuth = () => {
   // 1. 회원가입
   const signupMutation = useMutation({
     mutationFn: (payload: SignupPayload) => signup(payload),
-    onSuccess: () => router.push("/signup-complete"),
+    onSuccess: () => router.push("/signup/complete"),
     onError: () => console.error("회원가입 실패"),
   });
 

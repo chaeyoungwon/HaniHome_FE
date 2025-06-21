@@ -53,7 +53,7 @@ const SignupProfilePage = () => {
       return;
     }
     if (result !== "available") return;
-    router.push("/signup-complete");
+    router.push("/signup/complete");
   };
 
   const isFormReady = useMemo(

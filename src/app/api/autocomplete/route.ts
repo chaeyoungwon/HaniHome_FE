@@ -15,12 +15,6 @@ export async function POST(req: Request) {
         input,
         includedRegionCodes: ["au"],
         includedPrimaryTypes: ["(regions)"],
-        locationBias: {
-          circle: {
-            center: { latitude: -33.8688, longitude: 151.2093 },
-            radius: 20000,
-          },
-        },
       }),
     },
   );

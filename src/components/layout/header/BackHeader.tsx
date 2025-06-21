@@ -10,16 +10,31 @@ interface BackHeaderProps {
   title?: string;
   rightIcon?: "report" | "close";
   onRightClick?: () => void;
+  onBackClick?: () => void;
+  hideBackIcon?: boolean;
 }
 
-const BackHeader = ({ title, rightIcon, onRightClick }: BackHeaderProps) => {
+const BackHeader = ({
+  title,
+  rightIcon,
+  onRightClick,
+  onBackClick,
+  hideBackIcon = false,
+}: BackHeaderProps) => {
   const router = useRouter();
 
   return (
     <header className="sticky top-0 left-1/2 z-50 flex h-12 max-w-[768px] min-w-[375px] items-center justify-between bg-white px-4 py-3">
-      <button onClick={() => router.back()} className="cursor-pointer">
-        <BackArrow />
-      </button>
+      {hideBackIcon ? (
+        <div className="w-6" />
+      ) : (
+        <button
+          onClick={onBackClick ?? (() => router.back())}
+          className="cursor-pointer"
+        >
+          <BackArrow />
+        </button>
+      )}
 
       {title ? (
         <h1 className="text-heading2 text-gray-900">{title}</h1>

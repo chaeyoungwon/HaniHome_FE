@@ -91,8 +91,9 @@
   }
 
   /* blur */
-  .backdrop-blur-4 {
-    background: #1e1f21cc;
+  .backdrop-blur {
+    position: absolute;
+    inset: 0;
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
   }

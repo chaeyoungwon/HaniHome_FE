@@ -1,30 +1,49 @@
 "use client";
 
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { useState } from "react";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import BackHeader from "@/components/layout/header/BackHeader";
+import AddressMap from "@/components/listings/AddressMap";
 import DetailTabs from "@/components/listings/DetailTabs";
 import CheckIcon from "@/components/signup/info/CheckIcon";
 
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
 import HeartOutlineIcon from "@/public/svgs/common/heart-outline-icon.svg";
 import CertificatedIcon from "@/public/svgs/listings/certificated-icon.svg";
-import LocationImage from "@/public/svgs/listings/location-image.svg";
 
 const ListingDetailPage = () => {
-  const params = useParams();
-  const listingId = params?.id as string;
+  const { id } = useParams();
+  const listingId = id as string;
+
+  const mode = useSearchParams().get("mode");
+  const isReservationConfirmed = mode === "confirm";
+
+  const router = useRouter();
+
   const [isBillIncluded, setIsBillIncluded] = useState(false);
   const [liked, setLiked] = useState(false);
+
+  const region = {
+    // 임시 하드코딩
+    streetNumber: "25",
+    streetName: "Smith St",
+    suburb: "Chatswood",
+    state: "NSW",
+    postCode: "2067",
+    country: "Australia",
+    unit: "",
+    buildingName: "",
+  };
 
   return (
     <>
       <div className="flex min-h-screen flex-col pb-16">
-        <BackHeader rightIcon="report" />
+        <BackHeader hideBackIcon={isReservationConfirmed} rightIcon="report" />
         <div className="relative flex">
           <Image
             src="/svgs/common/room-img.svg"
@@ -96,21 +115,24 @@ const ListingDetailPage = () => {
           <div className="flex flex-col gap-3 px-4 py-8">
             <span className="text-body1-sb text-gray-900">위치</span>
 
-            <div className="relative">
-              {/* 지도 이미지 -> 추후 API 연결하고 위치 받아서 지도 연결*/}
-              <LocationImage className="h-[343px] w-[343px]" />
-
-              {/* 오버레이 안내 문구 */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-heading3 text-center text-gray-900">
-                  상세 주소는 뷰잉 예약 후 확인 가능합니다.
-                </p>
-              </div>
-            </div>
+            <AddressMap
+              region={region}
+              isReservationConfirmed={isReservationConfirmed}
+            />
           </div>
         </div>
       </div>
-      <BottomActionBar label="뷰잉 예약하기" />
+      {isReservationConfirmed ? (
+        <BottomActionBar
+          label="홈으로 이동"
+          onClick={() => router.push("/home")}
+        />
+      ) : (
+        <BottomActionBar
+          label="뷰잉 예약하기"
+          onClick={() => router.push(`/viewing/reservation/${listingId}`)}
+        />
+      )}
     </>
   );
 };

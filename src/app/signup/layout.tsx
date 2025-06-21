@@ -1,3 +1,7 @@
+"use client";
+
+import { usePathname } from "next/navigation";
+
 import ContentWrapper from "@/components/layout/ContentWrapper";
 import BackHeader from "@/components/layout/header/BackHeader";
 
@@ -6,6 +10,14 @@ export default function SignupLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+
+  const isCompletePage = pathname === "/signup/complete";
+
+  if (isCompletePage) {
+    return <>{children}</>;
+  }
+
   return (
     <ContentWrapper>
       <BackHeader />

@@ -1,4 +1,5 @@
 import { GooglePlacesAPIResponse, PlacePrediction } from "@/types/googlePlaces";
+import { RegionType } from "@/types/listingDetail";
 
 export const fetchPlaceSuggestions = async (
   input: string,
@@ -46,4 +47,29 @@ export const fetchPlaceSuggestions = async (
     console.error("Google Autocomplete API Error:", err);
     return [];
   }
+};
+
+export const getCoordsFromRegion = async (region: RegionType) => {
+  const address = [
+    region.streetNumber,
+    region.streetName,
+    region.suburb,
+    region.state,
+    region.postCode,
+    region.country,
+  ]
+    .filter(Boolean)
+    .join(" ");
+
+  const res = await fetch(
+    `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+      address,
+    )}&key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY}`,
+  );
+
+  const data = await res.json();
+
+  if (!data.results?.[0]?.geometry?.location) return null;
+
+  return data.results[0].geometry.location as { lat: number; lng: number };
 };

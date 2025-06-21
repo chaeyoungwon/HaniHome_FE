@@ -8,6 +8,8 @@ import { useCalendarHandlers } from "@/hooks/calendar/useCalendarHandlers";
 
 import { CalendarProps, Range } from "@/types/calendar";
 
+import RightArrow from "@/public/svgs/common/right-filled-arrow.svg";
+
 import WheelSelector from "./WheelSelector";
 
 const Calendar = ({
@@ -72,23 +74,17 @@ const Calendar = ({
       </div>
 
       {/* 상단 날짜 텍스트 (가운데 클릭 시 휠 toggle) */}
-      <div className="flex items-center justify-center gap-17 px-11 py-3 text-gray-900">
-        <button
-          onClick={() => moveMonthBy(-1)}
-          className="h-[8.71px] w-[7px] cursor-pointer text-[8px] leading-none"
-        >
-          ◀
+      <div className="flex items-center justify-between gap-17 px-11 py-3 text-gray-900">
+        <button onClick={() => moveMonthBy(-1)}>
+          <RightArrow className="h-4.5 w-4.5 rotate-180 cursor-pointer" />
         </button>
 
         <span onClick={toggleShowWheel} className="cursor-pointer">
           {tempDate ? format(tempDate, "yyyy. MM. dd.") : ""}
         </span>
 
-        <button
-          onClick={() => moveMonthBy(1)}
-          className="h-[8.71px] w-[7px] cursor-pointer text-[8px] leading-none"
-        >
-          ▶
+        <button onClick={() => moveMonthBy(1)}>
+          <RightArrow className="0 h-4.5 w-4.5 cursor-pointer" />
         </button>
       </div>
 

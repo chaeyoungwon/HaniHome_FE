@@ -30,3 +30,14 @@ export interface ShareListingDetail extends CommonListingFields {
 }
 
 export type ListingDetail = RentListingDetail | ShareListingDetail;
+
+export interface RegionType {
+  country: string;
+  postCode: string;
+  state: string;
+  suburb: string;
+  streetName: string;
+  streetNumber: string;
+  unit: string;
+  buildingName: string;
+}
