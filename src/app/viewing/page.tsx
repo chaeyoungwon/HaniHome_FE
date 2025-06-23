@@ -1,5 +1,11 @@
+import TitleHeader from "@/components/layout/header/TitleHeader";
+
 const Viewing = () => {
-  return <>Viewing 관리</>;
+  return (
+    <>
+      <TitleHeader title="뷰잉 관리" />
+    </>
+  );
 };
 
 export default Viewing;
