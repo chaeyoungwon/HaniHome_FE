@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import clsx from "clsx";
 
-type UserRoomPreviewVariant = "sm" | "lg";
+type UserRoomPreviewVariant = "sm" | "md" | "lg";
 
 interface UserRoomPreviewProps {
   userImg: string;
@@ -26,11 +26,17 @@ const USER_ROOM_STYLE_MAP: Record<
     userClassName: "border-[0.67px] rounded-full",
     roomClassName: "border-[0.67px] rounded-[2.67px]",
   },
-  lg: {
+  md: {
     size: 36,
     offset: 18,
     userClassName: "border-[1px] rounded-full",
     roomClassName: "border-[1px] rounded-sm",
+  },
+  lg: {
+    size: 93.34,
+    offset: 46.67,
+    userClassName: "border-[2.539px] rounded-full",
+    roomClassName: "border-[2.539px] rounded-[10.37px]",
   },
 };
 
@@ -57,7 +63,7 @@ const UserRoomPreview = ({
         width={size}
         height={size}
         className={clsx(
-          "absolute top-0 left-0 z-1 object-cover",
+          "absolute top-0 left-0 z-1 border-gray-300 object-cover",
           userClassName,
         )}
         style={{
@@ -71,7 +77,7 @@ const UserRoomPreview = ({
         alt="룸 이미지"
         width={size}
         height={size}
-        className={clsx("absolute object-cover", roomClassName)}
+        className={clsx("absolute border-gray-300 object-cover", roomClassName)}
         style={{
           top: `${offset}px`,
           left: `${offset}px`,

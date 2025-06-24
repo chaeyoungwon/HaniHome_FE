@@ -59,7 +59,7 @@ const CompletePage = ({
         />
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col items-center gap-2">
         <span className="text-heading1 text-mint-contrast">{message}</span>
 
         {description && (

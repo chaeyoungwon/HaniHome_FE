@@ -51,7 +51,7 @@ const BackHeader = ({
           <CloseIcon className="h-6 w-6" />
         </button>
       ) : (
-        <div />
+        <div className="inline-block h-6 w-6" />
       )}
     </header>
   );

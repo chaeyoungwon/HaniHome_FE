@@ -12,4 +12,5 @@ export const VIEWING_TIME_SLOTS: {
 }[] = [
   { label: "아침", start: "06:00", end: "08:00" },
   { label: "점심", start: "14:00", end: "14:30" },
+  { label: "저녁", start: "19:00", end: "19:00" },
 ];

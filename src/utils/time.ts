@@ -1,0 +1,53 @@
+// 오전/오후, 시/분 분리
+export const getTimeLabel = (timeStr: string) => {
+  const [hourStr, minute] = timeStr.split(":");
+  const hour = Number(hourStr);
+
+  const period = hour < 12 ? "오전" : "오후";
+  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+
+  return {
+    period,
+    hour: String(hour12).padStart(2, "0"),
+    minute,
+  };
+};
+
+// "오전 06 : 30" -> "06:30"
+export const normalizeTime = (time: string): string => {
+  if (/^\d{2}:\d{2}$/.test(time)) return time;
+
+  const matched = time.match(/(오전|오후)?\s*(\d{1,2})\s*:\s*(\d{2})/);
+  if (!matched) return time;
+
+  const [, period, hStr, mStr] = matched;
+  let hour = Number(hStr);
+  const minute = mStr;
+
+  if (period === "오후" && hour < 12) hour += 12;
+  if (period === "오전" && hour === 12) hour = 0;
+
+  return `${String(hour).padStart(2, "0")}:${minute}`;
+};
+
+// 25.06.19 (목) 형식으로 반환
+export const formatDateTime = (date: Date, time: string) => {
+  const year = String(date.getFullYear()).slice(2);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  const weekdayStr = date
+    .toLocaleDateString("ko-KR", { weekday: "short" })
+    .replace(/\s/g, "");
+
+  const formattedDate = `${year}.${month}.${day} (${weekdayStr})`;
+
+  const { period, hour, minute } = getTimeLabel(time);
+
+  return {
+    formattedDate,
+    period,
+    hour,
+    minute,
+  };
+};

@@ -2,10 +2,7 @@ import { create } from "zustand";
 
 import { TimeLabel } from "@/constants/time-options";
 
-interface Schedule {
-  date: Date | null;
-  time: string;
-}
+import { Schedule } from "@/types/schedule";
 
 interface StorePerId {
   schedules: Schedule[];

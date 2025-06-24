@@ -11,9 +11,8 @@ const ViewingCompletePage = () => {
     <CompletePage
       message="예약이 완료되었어요!"
       description={[
-        "상세주소는",
-        "매물 상세페이지를",
-        "다시 들어가 확인해주세요",
+        "뷰잉관리에서 예약한 뷰잉 리스트를 탭하면",
+        "상세주소를 확인할 수 있어요.",
       ]}
       buttonLabel="주소 확인하기"
       redirectUrl={`/listings/${id}?mode=confirm`}

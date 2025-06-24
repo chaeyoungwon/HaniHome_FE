@@ -10,13 +10,11 @@ const DuplicateAlertModal = ({ onClose }: DuplicateAlertModalProps) => {
       title="다른 뷰잉 일정과 겹쳐요"
       description={
         <>
-          날짜와 시간대가 같은 다른 매물 뷰잉 일정이 있어요.
+          현재 설정한 모든 일정이
           <br />
-          현재 뷰잉 일정을 변경하거나,
+          내가 기존에 예약한 뷰잉 일정들과 겹쳐요.
           <br />
-          다른 매물의 뷰잉 일정을 변경한 후
-          <br />
-          다시 예약해주세요.
+          최소 1개 이상의 뷰잉 일정을 수정해주세요.
         </>
       }
       onClose={onClose}
