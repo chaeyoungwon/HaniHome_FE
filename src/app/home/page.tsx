@@ -9,7 +9,7 @@ import MainHeader from "@/components/layout/header/MainHeader";
 
 const Home = () => {
   return (
-    <ContentWrapper className="bg-gray-0">
+    <ContentWrapper className="bg-gray-0" bottomOffset={62}>
       <MainHeader />
       <div className="bg-gray-0 flex flex-col pt-6 pb-2">
         <CategoryHeader />

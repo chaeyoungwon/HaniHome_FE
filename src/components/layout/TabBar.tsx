@@ -17,7 +17,7 @@ const TabBar = () => {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky bottom-0 left-1/2 z-20 max-w-[768px] min-w-[375px] border-t border-gray-200 bg-white py-[6px]">
+    <nav className="fixed bottom-0 left-1/2 z-20 max-w-[768px] min-w-[375px] -translate-x-1/2 border-t border-gray-200 bg-white py-[6px]">
       <ul className="flex justify-between">
         {tabs.map(({ href, label, icon }) => {
           const isActive = pathname === href;

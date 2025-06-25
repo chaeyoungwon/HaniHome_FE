@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import clsx from "clsx";
+
 import { ListingCardProps } from "@/types/listingCard";
 
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
@@ -27,7 +29,10 @@ const ListingCard = ({
 }: ListingCardProps) => {
   return (
     <div
-      className="flex cursor-pointer items-center justify-center gap-4 px-4 py-3"
+      className={clsx(
+        "flex cursor-pointer items-center justify-center gap-4 px-4 py-3",
+        status !== "거래 중" && "opacity-60",
+      )}
       onClick={onClick}
     >
       <Image
@@ -42,7 +47,14 @@ const ListingCard = ({
         <div className="flex flex-col">
           <div className="flex items-center gap-[6px]">
             <p className="text-body1-sb text-gray-900">{price}</p>
-            <span className="text-cap1-med bg-violet-ultralight text-violet border-violet rounded-full border px-2 py-[2px]">
+            <span
+              className={clsx(
+                "text-cap1-med flex rounded-full border px-2 py-[2px]",
+                status === "거래 중"
+                  ? "border-violet bg-violet-ultralight text-violet"
+                  : "border-gray-300 bg-white text-gray-700",
+              )}
+            >
               {status}
             </span>
           </div>

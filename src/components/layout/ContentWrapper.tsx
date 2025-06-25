@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 /**
  * 유동 padding이 필요한 경우에만 사용하는 컴포넌트 (812px 이상 화면 대응)
@@ -20,7 +20,7 @@ const ContentWrapper = ({
 }: ContentWrapperProps) => {
   const [extraPadding, setExtraPadding] = useState(0);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const update = () => {
       setExtraPadding(window.innerHeight > 812 ? 60 : 0);
     };
