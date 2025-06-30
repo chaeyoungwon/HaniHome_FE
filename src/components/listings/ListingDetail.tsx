@@ -1,4 +1,4 @@
-import { ListingDummies } from "@/constants/listing-card-dummies";
+import { ListingDummies } from "@/constants/mock/listing-card-dummies";
 
 import RentDetail from "./RentDetail";
 import ShareDetail from "./ShareDetail";

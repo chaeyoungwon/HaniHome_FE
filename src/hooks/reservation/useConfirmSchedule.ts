@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useViewingScheduleStore } from "@/stores/useViewingScheduleStore";
 import { format } from "date-fns";
 
-import { normalizeTime } from "@/utils/time";
+import { normalizeTime } from "@/utils/dateFormatter";
 
 import { ValidSchedule } from "@/types/schedule";
 

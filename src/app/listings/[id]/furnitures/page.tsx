@@ -43,11 +43,7 @@ const ListingFurniturePage = () => {
             </div>
           </div>
 
-          {idx < groupKeys.length - 1 && (
-            <div className="my-1">
-              <Divider />
-            </div>
-          )}
+          {idx < groupKeys.length - 1 && <Divider className="my-4" />}
         </Fragment>
       ))}
     </div>

@@ -1,0 +1,86 @@
+import { ViewingCardItem } from "@/types/viewing";
+
+// 임시 데이터
+export const mockViewings: ViewingCardItem[] = [
+  {
+    id: 1,
+    memberId: 1,
+    propertyId: 1,
+    meetingDay: "2025-06-30T14:00:00.000Z",
+    status: "REQUESTED",
+    cancelReason: null,
+    photoUrls: ["/images/room1.png"],
+    memo: "시간 맞춰서 오세요!",
+    optionItemNames: ["주차 가능", "엘리베이터 있음"],
+
+    userType: "guest",
+    profileImageUrl: "/svgs/common/profile-img.svg",
+    roomImageUrl: "/svgs/common/room-img.svg",
+    nickname: "상대닉네임",
+  },
+  {
+    id: 2,
+    memberId: 2,
+    propertyId: 2,
+    meetingDay: "2025-07-31T14:00:00.000Z",
+    status: "REQUESTED",
+    cancelReason: null,
+    photoUrls: ["/images/room1.png"],
+    memo: "시간 맞춰서 오세요!",
+    optionItemNames: ["주차 가능", "엘리베이터 있음"],
+
+    userType: "guest",
+    profileImageUrl: "/svgs/common/profile-img.svg",
+    roomImageUrl: "/svgs/common/room-img.svg",
+    nickname: "상대닉네임",
+  },
+  {
+    id: 3,
+    memberId: 2,
+    propertyId: 3,
+    meetingDay: "2025-07-07T14:00:00.000Z",
+    status: "REQUESTED",
+    cancelReason: null,
+    photoUrls: ["/images/room1.png"],
+    memo: "시간 맞춰서 오세요!",
+    optionItemNames: ["주차 가능", "엘리베이터 있음"],
+
+    userType: "guest",
+    profileImageUrl: "/svgs/common/profile-img.svg",
+    roomImageUrl: "/svgs/common/room-img.svg",
+    nickname: "상대닉네임",
+  },
+  {
+    id: 4,
+    memberId: 2,
+    propertyId: 4,
+    meetingDay: "2025-07-01T16:00:00.000Z",
+    status: "COMPLETED",
+    cancelReason: null,
+    photoUrls: ["/images/room2.png"],
+    memo: null,
+    optionItemNames: ["반려동물 가능"],
+
+    userType: "host",
+    profileImageUrl: "/svgs/common/profile-img.svg",
+    roomImageUrl: "/svgs/common/room-img.svg",
+    nickname: "상대닉네임",
+  },
+  {
+    id: 5,
+    memberId: 1,
+    propertyId: 4,
+    meetingDay: "2025-07-03T11:00:00.000Z",
+    status: "CANCELLED",
+    cancelReason:
+      "개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.개인 사정으로 인해 취소합니다.",
+    photoUrls: ["/images/room3.png"],
+    memo: null,
+    optionItemNames: ["역세권", "풀옵션"],
+
+    userType: "guest",
+    profileImageUrl: "/svgs/common/profile-img.svg",
+    roomImageUrl: "/svgs/common/room-img.svg",
+    nickname: "상대닉네임",
+  },
+];

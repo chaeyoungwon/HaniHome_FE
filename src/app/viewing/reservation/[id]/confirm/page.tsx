@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useConfirmSchedules } from "@/hooks/reservation/useConfirmSchedule";
 
-import { formatDateTime, getTimeLabel } from "@/utils/time";
+import { formatDateTime, getTimeLabel } from "@/utils/dateFormatter";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import UserRoomPreview from "@/components/common/UserRoomPreview";

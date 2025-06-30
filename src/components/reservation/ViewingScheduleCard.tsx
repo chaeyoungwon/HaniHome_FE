@@ -1,4 +1,4 @@
-import { formatDateTime } from "@/utils/time";
+import { formatDateTime } from "@/utils/dateFormatter";
 
 import UserRoomPreview from "@/components/common/UserRoomPreview";
 

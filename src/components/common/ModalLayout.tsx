@@ -12,6 +12,7 @@ interface ModalLayoutProps {
   children: React.ReactNode;
   className?: string;
   closeButtonPosition?: string;
+  closeButtonColor?: string;
 }
 
 const ModalLayout = ({
@@ -19,6 +20,7 @@ const ModalLayout = ({
   children,
   className = "p-4",
   closeButtonPosition = "top-4 right-4",
+  closeButtonColor,
 }: ModalLayoutProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -36,7 +38,9 @@ const ModalLayout = ({
           onClick={onClose}
           aria-label="닫기"
         >
-          <CloseIcon className="h-6 w-6" />
+          <CloseIcon
+            className={`h-6 w-6 ${closeButtonColor ?? "text-gray-700"}`}
+          />
         </button>
         {children}
       </div>

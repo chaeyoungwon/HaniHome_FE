@@ -15,8 +15,8 @@ import ScheduleInputList from "@/components/reservation/ScheduleInputList";
 import SingleDateCalendar from "@/components/reservation/SingleDateCalendar";
 import TimePicker from "@/components/reservation/TimePicker";
 
+import { VIEWING_TIME_SLOTS } from "@/constants/mock/viewing-schedule-dummies";
 import { TimeLabel } from "@/constants/time-options";
-import { VIEWING_TIME_SLOTS } from "@/constants/viewing-schedule-dummies";
 
 import PlusIcon from "@/public/svgs/reservation/plus-squared-icon.svg";
 

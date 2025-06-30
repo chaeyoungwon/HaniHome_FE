@@ -51,3 +51,36 @@ export const formatDateTime = (date: Date, time: string) => {
     minute,
   };
 };
+
+// "2025-06-30T14:00:00.000Z" → { date: "25.06.30", time: "14 : 00" }
+export const formatMeetingDay = (isoString: string) => {
+  const date = new Date(isoString);
+
+  const year = String(date.getFullYear()).slice(2);
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return {
+    date: `${year}.${month}.${day}`, // "25.06.30"
+    time: `${hours} : ${minutes}`, // "14 : 00"
+  };
+};
+
+// 디데이 계산
+export const calculateDday = (meetingDay: string) => {
+  const now = new Date();
+
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const meeting = new Date(meetingDay);
+  const meetingDate = new Date(
+    meeting.getFullYear(),
+    meeting.getMonth(),
+    meeting.getDate(),
+  );
+
+  const diff = meetingDate.getTime() - today.getTime();
+  return Math.floor(diff / (1000 * 60 * 60 * 24));
+};

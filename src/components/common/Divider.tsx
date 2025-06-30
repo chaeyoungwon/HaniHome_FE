@@ -1,9 +1,9 @@
 interface DividerProps {
-  my?: string;
+  className?: string;
 }
 
-const Divider = ({ my = "3" }: DividerProps) => {
-  return <hr className={`my-${my} border-t border-gray-200`} />;
+const Divider = ({ className = "my-3" }: DividerProps) => {
+  return <hr className={`border-t border-gray-200 ${className}`} />;
 };
 
 export default Divider;

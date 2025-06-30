@@ -9,8 +9,8 @@ import {
   startOfMonth,
 } from "date-fns";
 
+import { VIEWING_PERIOD } from "@/constants/mock/viewing-schedule-dummies";
 import { TimeLabel } from "@/constants/time-options";
-import { VIEWING_PERIOD } from "@/constants/viewing-schedule-dummies";
 
 /**
  * 뷰잉 예약 일정 관리 훅

@@ -32,7 +32,7 @@ const ViewingScheduleSection = ({
               onClick={!disabled ? () => onSelect?.(s) : undefined}
               disabled={disabled}
             />
-            {i < schedules.length - 1 && <Divider my="1" />}
+            {i < schedules.length - 1 && <Divider className="my-1" />}
           </div>
         );
       })}

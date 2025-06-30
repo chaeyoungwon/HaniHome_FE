@@ -1,6 +1,6 @@
 import ViewingBox from "@/components/home/ViewingBox";
 
-import { viewingLists } from "@/constants/viewing-lists";
+import { viewingLists } from "@/constants/mock/viewing-lists";
 
 const ViewingSection = () => {
   return (

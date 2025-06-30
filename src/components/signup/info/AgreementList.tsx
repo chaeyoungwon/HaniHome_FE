@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import CheckIcon from "@/components/common/CheckIcon";
 import Divider from "@/components/common/Divider";
 
 import { AgreementTerm } from "@/constants/agreement-terms";
 
 import AgreementGroup from "./AgreementGroup";
-import CheckIcon from "./CheckIcon";
 
 interface AgreementListProps {
   onChange: (checked: number[]) => void;
@@ -68,7 +68,7 @@ const AgreementList = ({
         동의합니다
       </button>
 
-      <Divider />
+      <Divider className="mt-3" />
 
       <AgreementGroup
         title="필수 동의란"

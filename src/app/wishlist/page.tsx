@@ -10,7 +10,7 @@ import TitleHeader from "@/components/layout/header/TitleHeader";
 import DropDownMenu from "@/components/wishlist/dropDownMenu";
 import RoomList from "@/components/wishlist/roomList";
 
-import { ListingDummies } from "@/constants/listing-card-dummies";
+import { ListingDummies } from "@/constants/mock/listing-card-dummies";
 
 const Wishlist = () => {
   const router = useRouter();

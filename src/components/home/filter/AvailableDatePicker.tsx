@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import CheckIcon from "@/components/common/CheckIcon";
 import Calendar from "@/components/common/calendar/Calendar";
-import CheckIcon from "@/components/signup/info/CheckIcon";
 
 type Range = {
   startDate: Date;

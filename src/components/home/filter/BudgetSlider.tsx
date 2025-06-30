@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import Slider from "rc-slider";
 
-import CheckIcon from "@/components/signup/info/CheckIcon";
+import CheckIcon from "@/components/common/CheckIcon";
 
 const MIN_BUDGET = 100;
 const MAX_BUDGET = 3000;

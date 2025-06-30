@@ -1,4 +1,4 @@
-import { TimeLabel } from "./time-options";
+import { TimeLabel } from "@/constants/time-options";
 
 export const VIEWING_PERIOD = {
   startDate: "2025-06-18T00:00:00.000Z",
