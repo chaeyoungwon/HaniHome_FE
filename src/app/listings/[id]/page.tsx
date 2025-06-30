@@ -14,7 +14,7 @@ import DetailTabs from "@/components/listings/DetailTabs";
 
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
 import HeartOutlineIcon from "@/public/svgs/common/heart-outline-icon.svg";
-import CertificatedIcon from "@/public/svgs/listings/certificated-icon.svg";
+import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 
 const ListingDetailPage = () => {
   const { id } = useParams();
