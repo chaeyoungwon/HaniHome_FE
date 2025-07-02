@@ -8,7 +8,7 @@ interface TitleHeaderProps {
 
 const TitleHeader = ({ title, rightIcon, onRightClick }: TitleHeaderProps) => {
   return (
-    <header className="sticky top-0 left-1/2 z-50 flex h-12 max-w-[768px] min-w-[375px] items-center justify-between bg-white px-4 py-3">
+    <header className="sticky top-0 left-1/2 z-50 flex h-12 max-w-[480px] min-w-[375px] items-center justify-between bg-white px-4 py-3">
       {title ? (
         <h1 className="text-heading2 flex-grow text-center text-gray-900">
           {title}

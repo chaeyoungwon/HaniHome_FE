@@ -36,7 +36,11 @@ const TextareaField = ({
         maxLength={maxLength}
         onChange={handleChange}
         rows={1}
-        className="text-body1-med bg-gray-0 w-full resize-none rounded p-3 text-gray-700 outline-none placeholder:text-gray-400"
+        className={`text-body1-med bg-gray-0 w-full resize-none rounded p-3 text-gray-700 outline-none placeholder:text-gray-400 ${
+          maxLength === 500
+            ? "scrollbar-hide max-h-[400px] overflow-y-auto"
+            : ""
+        }`}
       />
       <span className="text-cap1-med block text-right text-gray-400">
         {value.length}/{maxLength}

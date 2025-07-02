@@ -12,9 +12,9 @@ import BackHeader from "@/components/layout/header/BackHeader";
 import AddressMap from "@/components/listings/AddressMap";
 import DetailTabs from "@/components/listings/DetailTabs";
 
+import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
 import HeartOutlineIcon from "@/public/svgs/common/heart-outline-icon.svg";
-import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 
 const ListingDetailPage = () => {
   const { id } = useParams();
@@ -44,7 +44,11 @@ const ListingDetailPage = () => {
   return (
     <>
       <div className="flex min-h-screen flex-col pb-16">
-        <BackHeader hideBackIcon={isConfirmMode} rightIcon="report" />
+        <BackHeader
+          hideBackIcon={isConfirmMode}
+          rightIcon="report"
+          onRightClick={() => router.push(`/listings/${id}/report`)}
+        />
         <div className="relative flex">
           <Image
             src="/svgs/common/room-img.svg"
@@ -72,8 +76,12 @@ const ListingDetailPage = () => {
           {/* 프로필 이미지 */}
           <div className="h-12 w-12 rounded-full border border-gray-300" />
           <div className="flex items-center gap-1">
-            <span className="text-body1-sb font-bold text-black">하니하니</span>
-            <CertificatedIcon />
+            <span className="text-body1-sb flex shrink-0 font-bold text-black">
+              하니하니
+            </span>
+            <div className="flex items-center justify-center p-[3px]">
+              <CertificatedIcon className="h-[18px] w-[18px]" />
+            </div>
           </div>
         </div>
 
