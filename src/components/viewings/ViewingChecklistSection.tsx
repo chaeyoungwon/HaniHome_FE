@@ -22,6 +22,7 @@ const ViewingChecklistSection = () => {
           items={section.items}
           checked={checkedItems}
           onToggle={toggleItem}
+          mode="checklist"
           isLast={idx === checklistTerms.length - 1}
         />
       ))}

@@ -3,9 +3,14 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { useState } from "react";
+
+import { useAuth } from "@/hooks/auth/useAuth";
+
 import Divider from "@/components/common/Divider";
 import TitleHeader from "@/components/layout/header/TitleHeader";
 import Section from "@/components/mypage/SectionItems";
+import WithdrawAlertModal from "@/components/mypage/WithdrawAlertModal";
 
 import { getSections } from "@/constants/mypage-section";
 
@@ -16,7 +21,13 @@ import Arrow from "@/public/svgs/common/left-arrow.svg";
 
 const Mypage = () => {
   const router = useRouter();
-  const sections = getSections(router);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const { logout } = useAuth();
+
+  const sections = getSections(router, {
+    onLogout: logout,
+    onOpenWithdrawModal: () => setIsWithdrawModalOpen(true),
+  });
 
   return (
     <div>
@@ -41,7 +52,7 @@ const Mypage = () => {
             <div className="flex items-center gap-1">
               <div className="text-heading2 text-gray-900">김하니</div>
               <div className="flex items-center justify-center p-[3px]">
-                <CertificateBadge className="w-[18px] h-[18px] "/>
+                <CertificateBadge className="h-[18px] w-[18px]" />
               </div>
             </div>
           </div>
@@ -53,11 +64,14 @@ const Mypage = () => {
           {sections.map((section: SectionData, index) => (
             <div key={section.label}>
               <Section label={section.label} items={section.items} />
-              {index !== sections.length - 1 && <Divider className="my= 1"/>}
+              {index !== sections.length - 1 && <Divider className="my= 1" />}
             </div>
           ))}
         </div>
       </div>
+      {isWithdrawModalOpen && (
+        <WithdrawAlertModal onClose={() => setIsWithdrawModalOpen(false)} />
+      )}
     </div>
   );
 };

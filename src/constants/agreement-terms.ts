@@ -9,7 +9,7 @@ export const AgreementTerm = [
     id: 2,
     label: "[필수] 운영 정책 동의",
     required: true,
-    link: "/terms/policy",
+    link: "/terms/operation",
   },
   {
     id: 3,

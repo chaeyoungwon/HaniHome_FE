@@ -13,6 +13,7 @@ interface ModalLayoutProps {
   className?: string;
   closeButtonPosition?: string;
   closeButtonColor?: string;
+  hideCloseButton?: boolean;
 }
 
 const ModalLayout = ({
@@ -21,6 +22,7 @@ const ModalLayout = ({
   className = "p-4",
   closeButtonPosition = "top-4 right-4",
   closeButtonColor,
+  hideCloseButton = false,
 }: ModalLayoutProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -28,20 +30,22 @@ const ModalLayout = ({
   useScrollLock();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-800/60">
+    <div className="fixed inset-0 z-999 flex items-center justify-center bg-gray-800/60">
       <div
         ref={modalRef}
         className={`relative w-[343px] rounded-lg bg-white ${className}`}
       >
-        <button
-          className={`absolute ${closeButtonPosition} cursor-pointer`}
-          onClick={onClose}
-          aria-label="닫기"
-        >
-          <CloseIcon
-            className={`h-6 w-6 ${closeButtonColor ?? "text-gray-700"}`}
-          />
-        </button>
+        {!hideCloseButton && (
+          <button
+            className={`absolute z-20 ${closeButtonPosition} cursor-pointer`}
+            onClick={onClose}
+            aria-label="닫기"
+          >
+            <CloseIcon
+              className={`h-6 w-6 ${closeButtonColor ?? "text-gray-700"}`}
+            />
+          </button>
+        )}
         {children}
       </div>
     </div>

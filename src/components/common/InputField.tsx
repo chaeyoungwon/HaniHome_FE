@@ -9,6 +9,8 @@ interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   successMessage?: string;
   actionClickable?: boolean;
   onActionClick?: () => void;
+  labelClassName?: string;
+  containerClassName?: string;
 }
 
 const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
@@ -21,6 +23,8 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
       successMessage,
       actionClickable,
       onActionClick,
+      labelClassName,
+      containerClassName,
       ...props
     },
     ref,
@@ -28,8 +32,12 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
     const value = typeof props.value === "string" ? props.value : "";
 
     return (
-      <div className="flex flex-col gap-2 py-4">
-        <span className="text-body1-sb text-gray-800">{label}</span>
+      <div
+        className={clsx("flex flex-col", containerClassName ?? "gap-2 py-4")}
+      >
+        <span className={clsx("text-body1-sb text-gray-800", labelClassName)}>
+          {label}
+        </span>
 
         <div className="flex flex-col gap-2">
           <div className="flex gap-1">

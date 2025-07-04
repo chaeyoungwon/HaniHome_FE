@@ -18,6 +18,7 @@ export interface LoginPayload {
 // 로그인 응답 형식
 export interface LoginResponse {
   accessToken: string;
+  memberId: string;
 }
 
 // 유저 정보 수정

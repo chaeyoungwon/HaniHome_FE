@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import Divider from "@/components/common/Divider";
+import ImagePreviewSection from "@/components/common/ImagePreviewSection";
+import TextareaField from "@/components/common/TextareaField";
 
-import ImagePreviewSection from "../common/ImagePreviewSection";
-import TextareaField from "../common/TextareaField";
 import ImageUploadButton from "./ImageUploadButton";
 
 const ViewingNoteSection = () => {
