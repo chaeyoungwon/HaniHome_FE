@@ -13,10 +13,15 @@ export const axiosInstance = axios.create({
 // 요청 인터셉터: accessToken을 Zustand에서 가져와 주입
 axiosInstance.interceptors.request.use(
   config => {
-    const token = useAuthStore.getState().accessToken;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const isAuthRequest = config.url?.includes("api/v1/auth/social/login");
+
+    if (!isAuthRequest) {
+      const token = useAuthStore.getState().accessToken;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
+
     return config;
   },
   error => Promise.reject(error),

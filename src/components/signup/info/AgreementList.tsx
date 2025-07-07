@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { useSignupStore } from "@/stores/useSignupStore";
+
 import CheckIcon from "@/components/common/CheckIcon";
 import Divider from "@/components/common/Divider";
 
@@ -18,15 +20,7 @@ const AgreementList = ({
   onChange,
   onRequiredValidChange,
 }: AgreementListProps) => {
-  const [agreed, setAgreed] = useState({
-    required: false,
-    optional: false,
-  });
-
-  const [openGroup, setOpenGroup] = useState({
-    required: false,
-    optional: false,
-  });
+  const agreedIds = useSignupStore(state => state.agreed);
 
   const requiredTerms = useMemo(
     () => AgreementTerm.filter(t => t.required),
@@ -36,6 +30,16 @@ const AgreementList = ({
     () => AgreementTerm.filter(t => !t.required),
     [],
   );
+
+  const [agreed, setAgreed] = useState({
+    required: requiredTerms.every(term => agreedIds.includes(term.id)),
+    optional: optionalTerms.every(term => agreedIds.includes(term.id)),
+  });
+
+  const [openGroup, setOpenGroup] = useState({
+    required: false,
+    optional: false,
+  });
 
   const isAllChecked = agreed.required && agreed.optional;
 

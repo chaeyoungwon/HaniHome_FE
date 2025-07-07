@@ -36,7 +36,7 @@ const BottomActionBar = ({
         <button
           type="button"
           onClick={onClick}
-          className={`text-heading3 my-2 w-[343px] rounded py-3 text-white transition ${
+          className={`text-heading3 my-2 h-12 w-[343px] rounded py-3 text-white transition ${
             disabled
               ? "cursor-not-allowed bg-gray-300"
               : "bg-mint cursor-pointer"

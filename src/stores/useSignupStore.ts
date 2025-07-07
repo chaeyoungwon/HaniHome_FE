@@ -1,19 +1,21 @@
 import { create } from "zustand";
 
-import { SignupFieldKey } from "@/types/signup";
-
 interface SignupState {
   name: string;
   email: string;
-  phone: string;
+  phoneNumber: string;
   agreed: number[];
-
   nickname: string;
   gender: string;
-  region: string;
-  profileimg: string;
+  interestRegion: string;
 
-  setField: (key: SignupFieldKey, value: string) => void;
+  profileImagePreview: string; // URL.createObjectURL() 결과
+  profileImage: string | null;
+
+  setField: (
+    key: keyof Omit<SignupState, "setField" | "setAgreed" | "reset">,
+    value: SignupState[keyof SignupState],
+  ) => void;
   setAgreed: (ids: number[]) => void;
   reset: () => void;
 }
@@ -21,25 +23,32 @@ interface SignupState {
 export const useSignupStore = create<SignupState>(set => ({
   name: "",
   email: "",
-  phone: "",
+  phoneNumber: "",
   agreed: [],
   nickname: "",
   gender: "",
-  region: "",
-  profileimg: "",
+  interestRegion: "",
+  profileImagePreview: "",
+  profileImage: null,
 
-  setField: (key, value) => set(state => ({ ...state, [key]: value })),
+  setField: (key, value) =>
+    set(state => ({
+      ...state,
+      [key]: value,
+    })),
+
   setAgreed: ids => set({ agreed: ids }),
 
   reset: () =>
     set({
       name: "",
       email: "",
-      phone: "",
+      phoneNumber: "",
       agreed: [],
       nickname: "",
       gender: "",
-      region: "",
-      profileimg: "",
+      interestRegion: "",
+      profileImagePreview: "",
+      profileImage: null,
     }),
 }));

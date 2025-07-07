@@ -17,8 +17,8 @@ interface AccordionProps {
   onToggle?: (id: number) => void;
   mode: "faq" | "checklist";
   isLast?: boolean;
-  isOpen?: boolean; // 외부 제어
-  onClickToggle?: () => void; // 외부 제어
+  isOpen?: boolean;
+  onClickToggle?: () => void;
 }
 
 const Accordion = ({

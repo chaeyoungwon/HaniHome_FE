@@ -9,14 +9,14 @@ export const signupInfoSchema = z.object({
 
   email: z.string().trim().email("이메일을 올바르게 입력해주세요"),
 
-  phone: z
+  phoneNumber: z
     .string()
     .trim()
     .refine(
-      phone =>
-        phone.replace(/-/g, "").length >= 10 &&
-        phone.replace(/-/g, "").length <= 11 &&
-        phone.startsWith("01"),
+      phoneNumber =>
+        phoneNumber.replace(/-/g, "").length >= 10 &&
+        phoneNumber.replace(/-/g, "").length <= 11 &&
+        phoneNumber.startsWith("01"),
       {
         message: "전화번호를 올바르게 입력해주세요",
       },

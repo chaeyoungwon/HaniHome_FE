@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import { nicknameSchema } from "@/schemas/nickname";
 
+import { checkNicknameDuplicate } from "@/apis/auth";
+
 export const useNickname = () => {
   const [message, setMessage] = useState<string | undefined>();
   const [isValid, setIsValid] = useState(false);
@@ -26,16 +28,12 @@ export const useNickname = () => {
 
     setIsChecking(true);
     try {
-      const res = await fetch(`/api/check-nickname?value=${nickname}`);
-      const { available } = await res.json();
+      const { available } = await checkNicknameDuplicate(nickname);
 
-      if (available) {
-        setMessage("사용 가능한 닉네임입니다");
-        setResult("available");
-      } else {
-        setMessage("중복된 닉네임입니다");
-        setResult("unavailable");
-      }
+      setMessage(
+        available ? "사용 가능한 닉네임입니다" : "중복된 닉네임입니다",
+      );
+      setResult(available ? "available" : "unavailable");
     } catch {
       setMessage("중복 확인에 실패했습니다");
       setResult("unavailable");

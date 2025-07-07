@@ -1,12 +1,17 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-
 import { useMemo, useState } from "react";
 
 import { useSignupStore } from "@/stores/useSignupStore";
 
+import { getProfilePresignedUrl } from "@/apis/s3Upload";
+
+import { useAuth } from "@/hooks/auth/useAuth";
 import { useNickname } from "@/hooks/signup/useNickname";
+
+import { formatConsents } from "@/utils/formatConsentType";
+import { formatPhoneNumber } from "@/utils/formatPhoneNumber";
+import { getRandomDefaultProfileFile } from "@/utils/getRandomDefaultProfile";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -15,13 +20,14 @@ import InputField from "@/components/common/InputField";
 import SearchField from "@/components/common/SearchField";
 import ProfileImageUploader from "@/components/signup/profile/ProfileImageUploader";
 
+import { SignupPayload } from "@/types/auth";
+
 const GENDER_OPTIONS = [
-  { label: "남성", value: "male" },
-  { label: "여성", value: "female" },
+  { label: "남성", value: "MALE" },
+  { label: "여성", value: "FEMALE" },
 ];
 
 const SignupProfilePage = () => {
-  const router = useRouter();
   const {
     message,
     isValid,
@@ -31,20 +37,55 @@ const SignupProfilePage = () => {
     checkDuplicate,
     reset,
   } = useNickname();
-  const { nickname, gender, region, setField } = useSignupStore();
-  const [alerts, setAlerts] = useState<string[]>([]);
 
-  const showAlert = (message: string) => {
-    setAlerts(prev => [...prev, message]);
-  };
+  const {
+    name,
+    email,
+    phoneNumber,
+    nickname,
+    gender,
+    interestRegion,
+    profileImage,
+    agreed,
+    setField,
+  } = useSignupStore();
+
+  const { signup, isSignupLoading } = useAuth();
+
+  const [alerts, setAlerts] = useState<string[]>([]);
+  const showAlert = (msg: string) => setAlerts(prev => [...prev, msg]);
 
   const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setField("nickname", e.target.value);
+    const value = e.target.value;
+    setField("nickname", value);
     reset();
+    validate(value);
   };
 
-  const handleSubmit = () => {
-    if (!isValid || !nickname || !gender || !region) {
+  /** 기본 프로필 이미지를 S3에 업로드 후 URL 반환 */
+  const uploadDefaultProfileImage = async (): Promise<string | null> => {
+    try {
+      const defaultFile = await getRandomDefaultProfileFile();
+      const ext = defaultFile.name.split(".").pop() || "jpg";
+      const { presignedUrl, fileUrl } = await getProfilePresignedUrl(ext);
+
+      await fetch(presignedUrl, {
+        method: "PUT",
+        headers: { "Content-Type": defaultFile.type },
+        body: defaultFile,
+      });
+
+      return fileUrl;
+    } catch (err) {
+      console.error("기본 프로필 이미지 업로드 실패:", err);
+      showAlert("기본 이미지 업로드에 실패했습니다.");
+      return null;
+    }
+  };
+
+  /* 최종 제출 */
+  const handleSubmit = async () => {
+    if (!isValid || !nickname || !gender || !interestRegion) {
       showAlert("모든 항목에 답변해주세요");
       return;
     }
@@ -53,12 +94,31 @@ const SignupProfilePage = () => {
       return;
     }
     if (result !== "available") return;
-    router.push("/signup/complete");
+
+    // 프로필 이미지 비어 있으면 기본 이미지 처리
+    let finalProfileImage = profileImage;
+    if (!finalProfileImage) {
+      finalProfileImage = await uploadDefaultProfileImage();
+      if (!finalProfileImage) return;
+    }
+
+    const payload: SignupPayload = {
+      name,
+      email,
+      phoneNumber: formatPhoneNumber(phoneNumber),
+      nickname,
+      gender,
+      interestRegion,
+      profileImage: finalProfileImage ?? null,
+      consents: formatConsents(agreed),
+    };
+
+    signup(payload);
   };
 
   const isFormReady = useMemo(
-    () => nickname && gender && region && result === "available",
-    [nickname, gender, region, result],
+    () => nickname && gender && interestRegion && result === "available",
+    [nickname, gender, interestRegion, result],
   );
 
   return (
@@ -67,13 +127,9 @@ const SignupProfilePage = () => {
         프로필을 만들어주세요
       </h1>
 
-      <ProfileImageUploader
-        onUpload={file => {
-          const url = URL.createObjectURL(file);
-          setField("profileimg", url);
-        }}
-      />
+      <ProfileImageUploader />
 
+      {/* 닉네임 */}
       <InputField
         label="닉네임"
         placeholder="한영문, 숫자로 5 - 12글자"
@@ -89,6 +145,7 @@ const SignupProfilePage = () => {
         successMessage={result === "available" ? message : undefined}
       />
 
+      {/* 성별 */}
       <DropdownField
         label="성별"
         value={gender}
@@ -96,24 +153,25 @@ const SignupProfilePage = () => {
         options={GENDER_OPTIONS}
       />
 
+      {/* 관심 지역 */}
       <SearchField
         label="관심 지역 검색"
-        value={region}
-        onChange={val => setField("region", val)}
-        isSelected={!!region}
+        value={interestRegion}
+        onChange={val => setField("interestRegion", val)}
+        isSelected={!!interestRegion}
       />
 
       <BottomActionBar
         label="완료"
         onClick={handleSubmit}
-        disabled={!isFormReady}
+        disabled={!isFormReady || isSignupLoading}
       />
 
       {alerts.length > 0 && (
         <AlertMessage
           message={alerts.at(-1)!}
           className="bottom-17"
-          onDone={() => setAlerts(prev => prev.slice(0, prev.length - 1))}
+          onDone={() => setAlerts(prev => prev.slice(0, -1))}
         />
       )}
     </div>

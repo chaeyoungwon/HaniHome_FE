@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 interface AuthStore {
   accessToken: string;
@@ -8,28 +7,34 @@ interface AuthStore {
 
   setAuth: (accessToken: string, memberId: string) => void;
   setAccessToken: (accessToken: string) => void;
+  setMemberId: (memberId: string) => void;
   clearAuth: () => void;
 }
 
-export const useAuthStore = create<AuthStore>()(
-  persist(
-    set => ({
+export const useAuthStore = create<AuthStore>(set => ({
+  accessToken: "",
+  memberId: "",
+  isLoggedIn: false,
+
+  setAuth: (accessToken, memberId) =>
+    set({ accessToken, memberId, isLoggedIn: true }),
+
+  setAccessToken: accessToken =>
+    set(state => ({
+      accessToken,
+      isLoggedIn: !!accessToken && !!state.memberId,
+    })),
+
+  setMemberId: memberId =>
+    set(state => ({
+      memberId,
+      isLoggedIn: !!memberId && !!state.accessToken,
+    })),
+
+  clearAuth: () =>
+    set({
       accessToken: "",
       memberId: "",
       isLoggedIn: false,
-
-      setAuth: (accessToken, memberId) =>
-        set({ accessToken, memberId, isLoggedIn: true }),
-
-      setAccessToken: accessToken =>
-        set({ accessToken, isLoggedIn: !!accessToken }),
-
-      clearAuth: () =>
-        set({ accessToken: "", memberId: "", isLoggedIn: false }),
     }),
-    {
-      name: "auth-storage",
-      partialize: state => ({ memberId: state.memberId }),
-    },
-  ),
-);
+}));

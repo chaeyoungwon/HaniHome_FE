@@ -17,7 +17,8 @@ import { AgreementTerm } from "@/constants/agreement-terms";
 
 const SignupInfoPage = () => {
   const router = useRouter();
-  const { name, email, phone, agreed, setField, setAgreed } = useSignupStore();
+  const { name, email, phoneNumber, agreed, setField, setAgreed } =
+    useSignupStore();
 
   const {
     register,
@@ -28,38 +29,33 @@ const SignupInfoPage = () => {
     resolver: zodResolver(signupInfoSchema),
     mode: "onChange",
     shouldFocusError: false,
+    defaultValues: { name, email, phoneNumber },
   });
 
   const requiredTermIds = AgreementTerm.filter(term =>
     term.label.includes("[필수]"),
   ).map(term => term.id);
-
   const allRequiredChecked = requiredTermIds.every(id => agreed.includes(id));
 
-  const onSubmit = (data: SignupInfoInput) => {
+  const onSubmit = () => {
     if (!allRequiredChecked) return;
-
-    console.log("제출 성공", { ...data, agreed });
     router.push("/signup/profile");
   };
+
   const values = watch();
   const isFormReady =
     allRequiredChecked &&
     values.name?.trim() &&
     values.email?.trim() &&
-    values.phone?.trim() &&
+    values.phoneNumber?.trim() &&
     isValid;
 
   useEffect(() => {
-    const subscription = watch((value, { name: changedName }) => {
-      if (!changedName) return;
-      const fieldValue = value[changedName as keyof SignupInfoInput];
-
-      if (typeof fieldValue === "string") {
-        setField(changedName, fieldValue);
-      }
+    const subscription = watch((value, { name: changed }) => {
+      if (!changed) return;
+      const v = value[changed as keyof SignupInfoInput];
+      if (typeof v === "string") setField(changed, v);
     });
-
     return () => subscription.unsubscribe();
   }, [watch, setField]);
 
@@ -76,23 +72,25 @@ const SignupInfoPage = () => {
         <InputField
           label="이름"
           placeholder="이름을 입력해주세요"
-          value={name}
           {...register("name")}
+          value={name}
           errorMessage={touchedFields.name ? errors.name?.message : undefined}
         />
         <InputField
           label="이메일"
           placeholder="이메일을 입력해주세요"
-          value={email}
           {...register("email")}
+          value={email}
           errorMessage={touchedFields.email ? errors.email?.message : undefined}
         />
         <InputField
           label="전화번호"
           placeholder="전화번호를 입력해주세요"
-          value={phone}
-          {...register("phone")}
-          errorMessage={touchedFields.phone ? errors.phone?.message : undefined}
+          {...register("phoneNumber")}
+          value={phoneNumber}
+          errorMessage={
+            touchedFields.phoneNumber ? errors.phoneNumber?.message : undefined
+          }
         />
       </form>
 

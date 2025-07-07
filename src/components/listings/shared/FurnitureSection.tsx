@@ -17,7 +17,7 @@ const FurnitureSection = ({ listingId }: { listingId: string }) => {
         className="flex cursor-pointer justify-between px-4 py-3"
       >
         <Label>제공되는 가구</Label>
-        <Arrow className="rotate-180 text-gray-700" />
+        <Arrow className="h-6 w-6 rotate-180 text-gray-700" />
       </div>
     </Section>
   );

@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useSignupStore } from "@/stores/useSignupStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -22,22 +23,29 @@ export const useAuth = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { accessToken, memberId, setAuth, setAccessToken, clearAuth } =
-    useAuthStore();
+  const { accessToken, setAccessToken, clearAuth } = useAuthStore();
 
-  /* 1. 회원가입 */
+  // 1. 온보딩 회원정보 등록
   const signupMutation = useMutation({
     mutationFn: (payload: SignupPayload) => signup(payload),
-    onSuccess: () => router.push("/signup/complete"),
-    onError: () => console.error("회원가입 실패"),
+    onSuccess: () => {
+      useSignupStore.getState().reset();
+      router.push("/signup/complete");
+    },
+    onError: () => {
+      console.error("회원가입 실패");
+    },
   });
 
   /* 2. 로그인 */
   const loginMutation = useMutation({
     mutationFn: (payload: { code: string }) => login(payload),
     onSuccess: (data: LoginResponse) => {
-      setAuth(data.accessToken, data.memberId);
-      router.push("/home");
+      if (data.newUser) {
+        router.push("/signup/info");
+      } else {
+        router.push("/home");
+      }
     },
     onError: () => console.error("로그인 실패"),
   });
@@ -97,7 +105,6 @@ export const useAuth = () => {
   return {
     /* 상태 */
     accessToken,
-    memberId,
 
     /* 쿼리 */
     useUser,

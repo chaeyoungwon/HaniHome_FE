@@ -79,9 +79,7 @@ const ListingDetailPage = () => {
             <span className="text-body1-sb flex shrink-0 font-bold text-black">
               하니하니
             </span>
-            <div className="flex items-center justify-center p-[3px]">
-              <CertificatedIcon className="h-[18px] w-[18px]" />
-            </div>
+            <CertificatedIcon className="h-6 w-6" />
           </div>
         </div>
 
