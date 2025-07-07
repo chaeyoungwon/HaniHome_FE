@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
+import SelectTab from "@/components/common/SelectTab";
 import BackHeader from "@/components/layout/header/BackHeader";
-import SelectTab from "@/components/viewings/SelectTab";
 import ViewingChecklistSection from "@/components/viewings/ViewingChecklistSection";
 import ViewingNoteSection from "@/components/viewings/ViewingNoteSection";
 import ViewingSaveButton from "@/components/viewings/ViewingSaveButton";

@@ -12,7 +12,7 @@ interface DropdownOption {
 }
 
 interface DropdownFieldProps {
-  label: string;
+  label?: string;
   value: string;
   placeholder?: string;
   options: DropdownOption[];
@@ -53,8 +53,8 @@ const DropdownField = ({
   }, []);
 
   return (
-    <div className="flex flex-col gap-2 py-4">
-      <span className="text-body1-sb text-gray-800">{label}</span>
+    <div className={clsx("flex flex-col gap-2", label ? "py-4" : "py-0")}>
+      {label && <span className="text-body1-sb text-gray-800">{label}</span>}
 
       <div
         ref={dropdownRef}

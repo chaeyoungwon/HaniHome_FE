@@ -10,14 +10,14 @@ import { useNickname } from "@/hooks/signup/useNickname";
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import Divider from "@/components/common/Divider";
+import DropdownField from "@/components/common/DropdownField";
 import InputField from "@/components/common/InputField";
 import BackHeader from "@/components/layout/header/BackHeader";
-import DropdownField from "@/components/signup/profile/DropdownField";
 
+import Arrow from "@/public/svgs/common/left-arrow.svg";
 import PlusIcon from "@/public/svgs/common/plus-icon.svg";
 import GoogleIcon from "@/public/svgs/mypage/google-icon.svg";
 import InstaIcon from "@/public/svgs/mypage/insta-icon.svg";
-import Arrow from "@/public/svgs/common/left-arrow.svg";
 
 const GENDER_OPTIONS = [
   { label: "남성", value: "male" },
@@ -70,6 +70,7 @@ const ProfileEdit = () => {
     return nickname && gender && result === "available";
   }, [nickname, gender, result]);
   const DEFAULT_IMAGE = "/svgs/common/profile-img.svg";
+
   return (
     <div className="flex h-screen flex-col">
       <BackHeader />
@@ -87,7 +88,7 @@ const ProfileEdit = () => {
             )}
           </div>
 
-          <div className="px-4 pb-[66px]">
+          <div className="w-[343px] pb-[66px]">
             <InputField
               label="닉네임"
               placeholder="한영문, 숫자로 5 - 12글자"
@@ -111,11 +112,12 @@ const ProfileEdit = () => {
               onChange={val => setGender(val)}
               options={GENDER_OPTIONS}
             />
-            <div className="py-4">
-              <Divider />
-            </div>
-            <div className="flex flex-row justify-between items-center py-5">
-              <div className="flex flex-col items-start">
+            <Divider className="my-6"/>
+            <div
+              className="flex cursor-pointer flex-row items-center justify-between py-5"
+              onClick={() => router.push("/profile/verifications")}
+            >
+              <div className="flex flex-col items-start gap-1">
                 <div className="text-body1-sb text-gray-800">인증 강화</div>
                 <div className="text-cap1-med text-gray-600">
                   여권 / 운전면허증 / 거주허가증 등 신원 인증 수단 업로드
@@ -123,13 +125,15 @@ const ProfileEdit = () => {
               </div>
               <Arrow className="h-6 w-6 rotate-180 text-gray-700" />
             </div>
-            <div className="flex items-center justify-between py-5">
-              <div className="text-body1-sb text-gray-800">연결된 소셜 계정</div>
-              <GoogleIcon className="w-6 h-6" />
+            <div className="flex cursor-pointer items-center justify-between py-5">
+              <div className="text-body1-sb text-gray-800">
+                연결된 소셜 계정
+              </div>
+              <GoogleIcon className="h-6 w-6" />
             </div>
-            <div className="flex items-center justify-between py-5">
+            <div className="flex cursor-pointer items-center justify-between py-5">
               <div className="text-body1-sb text-gray-800">SNS</div>
-              <InstaIcon className="w-6 h-6"/>
+              <InstaIcon className="h-6 w-6" />
             </div>
           </div>
         </div>

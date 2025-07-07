@@ -1,7 +1,7 @@
 "use client";
 
-import EmptyCheck from "@/public/svgs/signup/empty-check.svg";
-import FilledCheck from "@/public/svgs/signup/filled-check.svg";
+import EmptyCheck from "@/public/svgs/common/empty-check.svg";
+import FilledCheck from "@/public/svgs/common/filled-check.svg";
 
 interface CheckIconProps {
   checked: boolean;

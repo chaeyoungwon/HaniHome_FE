@@ -5,18 +5,19 @@ import { useRef, useState } from "react";
 import { useSignupStore } from "@/stores/useSignupStore";
 import clsx from "clsx";
 
+import { uploadImage } from "@/utils/uploadSingleImage";
+
+import { SignupFieldKey } from "@/types/signup";
+
 import PlusIcon from "@/public/svgs/common/plus-icon.svg";
 
 import ImageAlertModal from "./ImageAlertModal";
 
-interface ProfileImageUploaderProps {
+interface ImageUploaderProps {
   onUpload?: (file: File) => void;
 }
 
-const MAX_SIZE_MB = 5;
-const ALLOWED_TYPES = ["image/jpeg", "image/png"];
-
-const ProfileImageUploader = ({ onUpload }: ProfileImageUploaderProps) => {
+const ProfileImageUploader = ({ onUpload }: ImageUploaderProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { profileimg, setField } = useSignupStore();
   const [previewUrl, setPreviewUrl] = useState(profileimg || "");
@@ -27,18 +28,14 @@ const ProfileImageUploader = ({ onUpload }: ProfileImageUploaderProps) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const isValidType = ALLOWED_TYPES.includes(file.type);
-    const isValidSize = file.size / 1024 / 1024 <= MAX_SIZE_MB;
-
-    if (!isValidType || !isValidSize) {
-      setShowErrorModal(true);
-      return;
-    }
-
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-    setField("profileimg", url);
-    onUpload?.(file);
+    uploadImage<SignupFieldKey>({
+      file,
+      setPreviewUrl,
+      setField,
+      fieldName: "profileimg",
+      setShowErrorModal,
+      onUpload,
+    });
   };
 
   return (

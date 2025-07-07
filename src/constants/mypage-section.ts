@@ -14,8 +14,8 @@ export const getSections = (
   {
     label: "나의 활동",
     items: [
-      { label: "내놓은 매물", onClick: () => router.push("") },
-      { label: "구한 매물", onClick: () => router.push("") },
+      { label: "내놓은 매물", onClick: () => router.push("/mypage/listings") },
+      { label: "구한 매물", onClick: () => router.push("/mypage/purchases") },
     ],
   },
   {

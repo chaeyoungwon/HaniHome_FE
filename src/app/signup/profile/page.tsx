@@ -10,9 +10,9 @@ import { useNickname } from "@/hooks/signup/useNickname";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
+import DropdownField from "@/components/common/DropdownField";
 import InputField from "@/components/common/InputField";
 import SearchField from "@/components/common/SearchField";
-import DropdownField from "@/components/signup/profile/DropdownField";
 import ProfileImageUploader from "@/components/signup/profile/ProfileImageUploader";
 
 const GENDER_OPTIONS = [

@@ -26,6 +26,7 @@ const ListingCard = ({
   isLiked,
   onToggleLike,
   onClick,
+  heartColor = "text-mint",
 }: ListingCardProps) => {
   return (
     <div
@@ -81,9 +82,9 @@ const ListingCard = ({
           aria-label="좋아요"
         >
           {isLiked ? (
-            <HeartFilledIcon className="h-[18px] w-[18px]" />
+            <HeartFilledIcon className={`h-[18px] w-[18px] ${heartColor}`} />
           ) : (
-            <HeartOutlineIcon className="h-[18px] w-[18px]" />
+            <HeartOutlineIcon className={`h-[18px] w-[18px] ${heartColor}`} />
           )}
           {likes}
         </button>

@@ -24,6 +24,7 @@ const RoomList = ({
   isLiked,
   onToggleLike,
   onClick,
+  heartColor = "text-mint",
 }: ListingCardProps) => {
   return (
     <div
@@ -89,9 +90,9 @@ const RoomList = ({
               className="cursor-pointer"
             >
               {isLiked ? (
-                <FilledHeart className="text-mint" />
+                <FilledHeart className={heartColor} />
               ) : (
-                <EmptyHeart className="text-mint" />
+                <EmptyHeart className={heartColor} />
               )}
             </div>
             <div className="text-cap1-med text-center text-gray-400">

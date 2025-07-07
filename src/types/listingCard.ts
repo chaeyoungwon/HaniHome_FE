@@ -13,4 +13,5 @@ export interface ListingCardProps {
   isLiked: boolean;
   onToggleLike: () => void;
   onClick?: () => void;
+  heartColor?: string;
 }
