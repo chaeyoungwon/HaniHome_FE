@@ -11,6 +11,7 @@ import CheckIcon from "@/components/common/CheckIcon";
 import BackHeader from "@/components/layout/header/BackHeader";
 import AddressMap from "@/components/listings/AddressMap";
 import DetailTabs from "@/components/listings/DetailTabs";
+import DropDownMenu from "@/components/listings/DropDownMenu";
 
 import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
@@ -23,11 +24,16 @@ const ListingDetailPage = () => {
   const mode = useSearchParams().get("mode");
   const isConfirmMode = mode === "confirm";
   const isViewingMode = mode === "viewing";
+  const isEditMode = mode === "edit";
 
   const router = useRouter();
 
   const [isBillIncluded, setIsBillIncluded] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [tradeStatus, setTradeStatus] = useState<"active" | "completed">(
+    "active",
+  );
+  const isCompleted = tradeStatus === "completed";
 
   const region = {
     // 임시 하드코딩
@@ -46,7 +52,7 @@ const ListingDetailPage = () => {
       <div className="flex min-h-screen flex-col pb-16">
         <BackHeader
           hideBackIcon={isConfirmMode}
-          rightIcon="report"
+          rightIcon={isEditMode ? "more" : "report"}
           onRightClick={() => router.push(`/listings/${id}/report`)}
         />
         <div className="relative flex">
@@ -72,15 +78,30 @@ const ListingDetailPage = () => {
           </button>
         </div>
 
-        <div className="flex items-center gap-[14px] border-b border-gray-200 px-4 py-3">
-          {/* 프로필 이미지 */}
-          <div className="h-12 w-12 rounded-full border border-gray-300" />
-          <div className="flex items-center gap-1">
-            <span className="text-body1-sb flex shrink-0 font-bold text-black">
-              하니하니
-            </span>
-            <CertificatedIcon className="h-6 w-6" />
+
+        {/* 프로필 영역 */}
+        <div className="flex items-center justify-between border-b border-gray-200">
+          <div className="flex items-center gap-[14px] px-4 py-3">
+            <div className="h-12 w-12 rounded-full border border-gray-300" />
+            <div className="flex items-center gap-1">
+              <span className="text-body1-sb font-bold text-black">
+                하니하니
+              </span>
+              <div className="flex items-center justify-center p-[3px]">
+                <CertificatedIcon className="h-[18px] w-[18px]" />
+              </div>
+            </div>
           </div>
+
+          {/* 거래 상태 드롭다운 (edit 모드만) */}
+          {isEditMode && (
+            <div className="pr-4">
+              <DropDownMenu
+                selectedKey={tradeStatus}
+                onSelect={setTradeStatus}
+              />
+            </div>
+          )}
         </div>
 
         <div className="flex justify-between px-4 py-7">
@@ -124,17 +145,28 @@ const ListingDetailPage = () => {
 
             <AddressMap
               region={region}
-              isReservationConfirmed={isConfirmMode || isViewingMode}
+              isReservationConfirmed={
+                isConfirmMode || isViewingMode || isEditMode
+              }
             />
           </div>
         </div>
       </div>
-      {isConfirmMode ? (
+      {isConfirmMode && (
         <BottomActionBar
           label="홈으로 이동"
           onClick={() => router.push("/home")}
         />
-      ) : isViewingMode ? null : (
+      )}
+
+      {isEditMode && isCompleted && (
+        <BottomActionBar
+          label="거래한 게스트 입력하기"
+          onClick={() => router.push(`/listings/${id}/guests`)}
+        />
+      )}
+
+      {!isConfirmMode && !isViewingMode && !isEditMode && (
         <BottomActionBar
           label="뷰잉 예약하기"
           onClick={() => router.push(`/viewing/reservation/${listingId}`)}

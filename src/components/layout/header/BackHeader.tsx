@@ -8,10 +8,11 @@ import CloseIcon from "@/public/svgs/common/close-icon.svg";
 import BackArrow from "@/public/svgs/common/left-arrow.svg";
 import ReportIcon from "@/public/svgs/header/report-icon.svg";
 import TrashIcon from "@/public/svgs/header/trash-icon.svg";
+import DotThreeIcon from "@/public/svgs/header/dotThree-icon.svg"
 
 interface BackHeaderProps {
   title?: string;
-  rightIcon?: "report" | "close" | "delete";
+  rightIcon?: "report" | "close" | "delete" |"more";
   onRightClick?: () => void;
   onBackClick?: () => void;
   hideBackIcon?: boolean;
@@ -63,6 +64,10 @@ const BackHeader = ({
       ) : rightIcon === "delete" ? (
         <button onClick={onRightClick} className="cursor-pointer">
           <TrashIcon className="h-6 w-6" />
+        </button>
+      ):rightIcon === "more" ?(
+        <button onClick={onRightClick} className="cursor-pointer">
+          <DotThreeIcon className="h-6 w-6"/>
         </button>
       ) : (
         <div className="inline-block h-6 w-6" />
