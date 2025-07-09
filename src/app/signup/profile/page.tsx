@@ -4,14 +4,12 @@ import { useMemo, useState } from "react";
 
 import { useSignupStore } from "@/stores/useSignupStore";
 
-import { getProfilePresignedUrl } from "@/apis/s3Upload";
-
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useNickname } from "@/hooks/signup/useNickname";
 
 import { formatConsents } from "@/utils/formatConsentType";
 import { formatPhoneNumber } from "@/utils/formatPhoneNumber";
-import { getRandomDefaultProfileFile } from "@/utils/getRandomDefaultProfile";
+import { getRandomDefaultProfile } from "@/utils/getRandomDefaultProfile";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -62,27 +60,6 @@ const SignupProfilePage = () => {
     validate(value);
   };
 
-  /** 기본 프로필 이미지를 S3에 업로드 후 URL 반환 */
-  const uploadDefaultProfileImage = async (): Promise<string | null> => {
-    try {
-      const defaultFile = await getRandomDefaultProfileFile();
-      const ext = defaultFile.name.split(".").pop() || "jpg";
-      const { presignedUrl, fileUrl } = await getProfilePresignedUrl(ext);
-
-      await fetch(presignedUrl, {
-        method: "PUT",
-        headers: { "Content-Type": defaultFile.type },
-        body: defaultFile,
-      });
-
-      return fileUrl;
-    } catch (err) {
-      console.error("기본 프로필 이미지 업로드 실패:", err);
-      showAlert("기본 이미지 업로드에 실패했습니다.");
-      return null;
-    }
-  };
-
   /* 최종 제출 */
   const handleSubmit = async () => {
     if (!isValid || !nickname || !gender || !interestRegion) {
@@ -96,11 +73,7 @@ const SignupProfilePage = () => {
     if (result !== "available") return;
 
     // 프로필 이미지 비어 있으면 기본 이미지 처리
-    let finalProfileImage = profileImage;
-    if (!finalProfileImage) {
-      finalProfileImage = await uploadDefaultProfileImage();
-      if (!finalProfileImage) return;
-    }
+    const finalProfileImage = profileImage || getRandomDefaultProfile();
 
     const payload: SignupPayload = {
       name,

@@ -29,7 +29,6 @@ const ProfileImageUploader = () => {
   // 프리뷰 표시용 로컬 URL 처리
   const previewFile = (file: File) => {
     const objectUrl = URL.createObjectURL(file);
-    setField("profileImagePreview", objectUrl);
     setPreviewUrl(objectUrl);
   };
 
@@ -48,6 +47,8 @@ const ProfileImageUploader = () => {
       });
 
       setField("profileImage", fileUrl);
+      setField("profileImagePreview", fileUrl);
+      setPreviewUrl(fileUrl);
     } catch (err) {
       console.error("S3 presigned URL 요청 또는 업로드 실패:", err);
     }
