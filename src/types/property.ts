@@ -1,4 +1,4 @@
-// 공통 Region 타입
+// 공통 지역 정보 타입
 export interface Region {
   country: string;
   postCode: string;
@@ -41,7 +41,7 @@ export interface LivingConditions {
   contractExtendable: boolean;
 }
 
-// 공통 입주 정보
+// 공통 입주 가능 정보
 export interface MoveInInfo {
   availableFrom: string;
   availableTo: string;
@@ -49,7 +49,7 @@ export interface MoveInInfo {
   negotiable: boolean;
 }
 
-// 공통 내부 정보
+// 쉐어 매물 전용 내부 정보
 interface InternalDetailsForShare {
   internalArea: number;
   totalArea: number;
@@ -59,6 +59,7 @@ interface InternalDetailsForShare {
   propertyFloor: number;
 }
 
+// 렌트 매물 전용 내부 정보
 interface InternalDetailsForRent {
   internalArea: number;
   totalArea: number;
@@ -68,7 +69,7 @@ interface InternalDetailsForRent {
   propertyFloors: number;
 }
 
-// 공통 필드를 묶은 베이스 타입
+// 공통 매물 베이스 타입
 interface BaseProperty {
   id: number;
   memberId: number;
@@ -90,7 +91,7 @@ interface BaseProperty {
   wishCount: number;
 }
 
-// 쉐어 매물
+// 쉐어 매물 타입
 export interface ShareProperty extends BaseProperty {
   kind: "SHARE";
   sharePropertySubType: string;
@@ -98,7 +99,7 @@ export interface ShareProperty extends BaseProperty {
   capacityShare: string;
 }
 
-// 렌트 매물
+// 렌트 매물 타입
 export interface RentProperty extends BaseProperty {
   kind: "RENT";
   rentPropertySubType: string;
@@ -108,9 +109,10 @@ export interface RentProperty extends BaseProperty {
   exposure: string;
 }
 
-// 전체 유니언 타입
+// 전체 매물 유니언 타입
 export type Property = ShareProperty | RentProperty;
 
+// 매물 필터링 파라미터
 export interface FilteredPropertyParams {
   kinds?: ("SHARE" | "RENT")[];
   sharePropertySubTypes?: string[];
@@ -118,4 +120,32 @@ export interface FilteredPropertyParams {
   minWeeklyCost?: number;
   maxWeeklyCost?: number;
   billIncluded?: boolean;
+  availableFrom?: string;
+  availableTo?: string;
+  immediate?: boolean;
+  negotiable?: boolean;
+  metroStopLatitude?: number;
+  metroStopLongitude?: number;
+  radiusKm?: number;
 }
+
+// 매물 조회 뷰 타입
+export type PropertyViewType = "DEFAULT" | "SUMMARY";
+
+// SUMMARY 뷰에서 사용하는 요약 매물 타입
+export interface SummaryProperty {
+  id: number;
+  weeklyCost: number;
+  suburb: string;
+  internalArea: number;
+  totalFloors: number;
+  propertySubType: string;
+  billIncluded: boolean;
+  createdAt: string;
+  thumbnailUrl: string | null;
+  tradeStatus: string;
+  wishCount: number;
+}
+
+// 상세 매물 타입
+export type FullProperty = ShareProperty | RentProperty;

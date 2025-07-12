@@ -51,7 +51,7 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    domains: ["hanihome.s3.ap-northeast-2.amazonaws.com"],
+    domains: ["hanihome.s3.ap-northeast-2.amazonaws.com", "example.com"],
   },
 };
 

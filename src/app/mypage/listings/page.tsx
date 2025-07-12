@@ -21,9 +21,9 @@ const Listings = () => {
   const [activeTab, setActiveTab] = useState("active");
 
   const filteredListings = ListingDummies.filter(item => {
-    if (activeTab === "active") return item.status === "거래 중";
-    if (activeTab === "completed") return item.status === "거래 완료";
-    if (activeTab === "hidden") return item.status === "숨김";
+    if (activeTab === "active") return item.tradeStatus === "BEFORE";
+    if (activeTab === "completed") return item.tradeStatus !== "BEFORE";
+    if (activeTab === "hidden") return false;
     return true;
   });
 
@@ -36,7 +36,7 @@ const Listings = () => {
         <div
           key={item.id}
           onClick={() => {
-            if (item.status === "거래 중") {
+            if (item.tradeStatus === "BEFORE") {
               router.push(`/listings/${item.id}/edit`);
             }
           }}

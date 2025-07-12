@@ -4,11 +4,14 @@ import clsx from "clsx";
 
 import { listingDetailTabs } from "@/constants/listing-detail-tabs";
 
+import { Property } from "@/types/property";
+
 interface DetailTabsProps {
   listingId: string;
+  data: Property;
 }
 
-const DetailTabs = ({ listingId }: DetailTabsProps) => {
+const DetailTabs = ({ listingId, data }: DetailTabsProps) => {
   const [activeKey, setActiveKey] =
     useState<(typeof listingDetailTabs)[number]["key"]>("detail");
 
@@ -34,7 +37,11 @@ const DetailTabs = ({ listingId }: DetailTabsProps) => {
         ))}
       </div>
 
-      <div>{ActiveComponent && <ActiveComponent listingId={listingId} />}</div>
+      <div>
+        {ActiveComponent && (
+          <ActiveComponent listingId={listingId} data={data} />
+        )}
+      </div>
     </>
   );
 };

@@ -3,39 +3,47 @@
 import Image from "next/image";
 
 import clsx from "clsx";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 import { ListingCardProps } from "@/types/listingCard";
 
 import FilledHeart from "@/public/svgs/common/heart-filled-icon.svg";
 import EmptyHeart from "@/public/svgs/common/heart-outline-icon.svg";
 
+dayjs.extend(relativeTime);
+
 const RoomList = ({
-  image,
-  price,
-  status,
-  area,
-  floor,
-  type,
-  options,
-  distance,
-  location,
-  timeAgo,
-  likes,
+  thumbnailUrl,
+  weeklyCost,
+  tradeStatus = "BEFORE",
+  internalArea,
+  totalFloors,
+  propertySubType,
+  billIncluded,
+  suburb,
+  createdAt,
+  wishCount,
   isLiked,
   onToggleLike,
   onClick,
   heartColor = "text-mint",
 }: ListingCardProps) => {
+  const statusText = tradeStatus === "BEFORE" ? "거래 중" : "거래 완료";
+  const typeText = propertySubType === "SECOND_ROOM" ? "쉐어" : "렌트";
+  const distanceText = "역까지 0.5km"; // mock
+  const timeAgo = dayjs(createdAt).fromNow();
+
   return (
     <div
       onClick={onClick}
       className={clsx(
         "flex cursor-pointer flex-row gap-4 px-4 py-3",
-        status !== "거래 중" && "opacity-60",
+        statusText !== "거래 중" && "opacity-60",
       )}
     >
       <Image
-        src={image}
+        src={thumbnailUrl ?? "/svgs/common/room-img.svg"}
         alt="thumbnail"
         width={108}
         height={108}
@@ -48,35 +56,37 @@ const RoomList = ({
         <div className="flex flex-col">
           {/* 가격 + 상태 */}
           <div className="flex flex-row gap-[6px] pb-2">
-            <div className="text-body1-sb text-gray-900">{price}</div>
+            <div className="text-body1-sb text-gray-900">
+              {weeklyCost.toLocaleString()}원
+            </div>
             <div
               className={clsx(
                 "text-cap1-med flex h-5 items-center justify-center rounded-[100px] border",
-                status === "거래 중"
+                tradeStatus === "BEFORE"
                   ? "border-violet bg-violet-ultralight text-violet w-[50px]"
                   : "w-[58px] border-gray-300 text-gray-700",
               )}
             >
-              {status}
+              {statusText}
             </div>
           </div>
 
-          {/* 정보들 */}
+          {/* 정보 */}
           <div className="text-cap1-med flex flex-row gap-1 pb-[2px] text-gray-600">
-            <div>{area}</div>
+            <div>{internalArea}㎡</div>
             <div className="text-gray-300">•</div>
-            <div>{floor}</div>
+            <div>전체 {totalFloors}층</div>
             <div className="text-gray-300">•</div>
-            <div>{type}</div>
+            <div>{typeText}</div>
           </div>
 
           <div className="text-cap1-med flex flex-row gap-1 pb-4 text-gray-600">
-            <div>{options}</div>
+            <div>{billIncluded ? "빌 포함" : "빌 미포함"}</div>
             <div className="text-gray-300">•</div>
-            <div>{distance}</div>
+            <div>{distanceText}</div>
           </div>
 
-          <div className="text-cap1-med text-gray-500">{location}</div>
+          <div className="text-cap1-med text-gray-500">{suburb}</div>
         </div>
 
         {/* 우측 하트 및 시간 */}
@@ -96,7 +106,7 @@ const RoomList = ({
               )}
             </div>
             <div className="text-cap1-med text-center text-gray-400">
-              {likes}
+              {wishCount}
             </div>
           </div>
 

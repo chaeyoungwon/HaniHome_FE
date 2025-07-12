@@ -2,10 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 
 import { fetchPropertyDetailList, fetchPropertyList } from "@/apis/property";
 
-export const usePropertyList = () => {
-  return useQuery({
-    queryKey: ["propertyList"],
-    queryFn: fetchPropertyList,
+import { Property, PropertyViewType, SummaryProperty } from "@/types/property";
+
+export const usePropertyList = <T extends PropertyViewType>(params: {
+  view: T;
+}) => {
+  return useQuery<T extends "SUMMARY" ? SummaryProperty[] : Property[]>({
+    queryKey: ["propertyList", params.view],
+    queryFn: () => fetchPropertyList(params.view),
   });
 };
 

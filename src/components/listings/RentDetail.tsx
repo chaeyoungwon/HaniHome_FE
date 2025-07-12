@@ -2,6 +2,10 @@ import InfoCard from "@/components/listings/shared/InfoCard";
 import Label from "@/components/listings/shared/Label";
 import Section from "@/components/listings/shared/Section";
 
+import { RENT_TYPE_MAP } from "@/constants/housing-options";
+
+import { RentProperty } from "@/types/property";
+
 import PersonIcon from "@/public/svgs/common/mypage-icon.svg";
 
 import FurnitureSection from "./shared/FurnitureSection";
@@ -16,10 +20,23 @@ const infoList = [
   { label: "해당 층", value: "n층" },
 ];
 
-const RentDetail = ({ listingId }: { listingId: string }) => {
+const RentDetail = ({
+  listingId,
+  data,
+}: {
+  listingId: string;
+  data: RentProperty;
+}) => {
   return (
     <div className="bg-gray-0 flex flex-col py-3">
-      <InfoRow label="매물 유형" value="아파트 렌트" />
+      <InfoRow
+        label="매물 유형"
+        value={
+          Object.keys(RENT_TYPE_MAP).find(
+            key => RENT_TYPE_MAP[key] === data.rentPropertySubType,
+          ) ?? "쉐어"
+        }
+      />
 
       <Section>
         <div className="flex w-full py-3">
@@ -30,7 +47,7 @@ const RentDetail = ({ listingId }: { listingId: string }) => {
               <div className="flex items-center gap-2" key="person">
                 <PersonIcon className="text-gray-600" />
                 <span className="text-body1-med text-gray-700">
-                  총 거주 n인
+                  총 거주 {data.capacityRent}인
                 </span>
               </div>,
             ]}

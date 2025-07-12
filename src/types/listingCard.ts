@@ -1,16 +1,15 @@
 export interface ListingCardProps {
-  image: string;
   id: number;
-  price: number;
-  status?: string;
-  area?: number;
-  floor?: number;
-  type: string;
+  thumbnailUrl: string | null;
+  weeklyCost: number;
+  tradeStatus: string;
+  internalArea?: number;
+  totalFloors?: number;
+  propertySubType: string;
   billIncluded: boolean;
-  distance: string;
-  location: string;
-  timeAgo: string;
-  likes: number;
+  suburb: string;
+  createdAt: string;
+  wishCount: number;
   isLiked: boolean;
   onToggleLike: () => void;
   onClick?: () => void;

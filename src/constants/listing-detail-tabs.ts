@@ -2,10 +2,12 @@ import ContractInfo from "@/components/listings/ContractInfo";
 import ListingDetail from "@/components/listings/ListingDetail";
 import MoveInCondition from "@/components/listings/MoveInCondition";
 
+import { Property } from "@/types/property";
+
 type TabItem = {
   key: string;
   label: string;
-  Component: React.ComponentType<{ listingId: string }>;
+  Component: React.ComponentType<{ listingId: string; data: Property }>;
 };
 
 export const listingDetailTabs: readonly TabItem[] = [

@@ -27,16 +27,3 @@ export interface LoginResponse {
 
 // 유저 정보 수정
 export interface UpdateUserPayload {}
-
-// 내 정보
-export interface MyInfoResponse {
-  id: number;
-  email: string;
-  name: string;
-  nickname: string;
-  profileImage: string;
-  birthDate: string;
-  phoneNumber: string;
-  gender: "MALE" | "FEMALE";
-  createdAt: string;
-}

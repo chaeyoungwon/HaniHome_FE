@@ -1,22 +1,20 @@
-import { ListingDummies } from "@/constants/mock/listing-card-dummies";
+import { Property } from "@/types/property";
 
 import RentDetail from "./RentDetail";
 import ShareDetail from "./ShareDetail";
 
 interface ListingDetailProps {
   listingId: string;
+  data: Property;
 }
 
-const ListingDetail = ({ listingId }: ListingDetailProps) => {
-  const data = ListingDummies.find(item => item.id === Number(listingId));
-  // 추후 API 연결하면서 변경 예정
-
-  if (data?.type === "렌트") {
-    return <RentDetail listingId={listingId} />;
+const ListingDetail = ({ listingId, data }: ListingDetailProps) => {
+  if (data?.kind === "RENT") {
+    return <RentDetail listingId={listingId} data={data} />;
   }
 
-  if (data?.type === "쉐어") {
-    return <ShareDetail listingId={listingId} />;
+  if (data?.kind === "SHARE") {
+    return <ShareDetail listingId={listingId} data={data} />;
   }
 };
 

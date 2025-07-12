@@ -29,9 +29,8 @@ const Wishlist = () => {
   const [likedMap, setLikedMap] = useState<Record<number, boolean>>({});
   const [sortOrder, setSortOrder] = useState<"latest" | "popular">("latest");
 
-  const extractTime = (timeAgo: string): number => {
-    const match = timeAgo.match(/\d+/);
-    return match ? parseInt(match[0]) : 0;
+  const extractTime = (createdAt: string): number => {
+    return new Date(createdAt).getTime();
   };
 
   const sortedListings = useMemo(() => {
@@ -40,15 +39,19 @@ const Wishlist = () => {
       item => likedMap[item.id] !== false,
     );
 
-    const available = likedFiltered.filter(item => item.status !== "거래 완료");
-    const completed = likedFiltered.filter(item => item.status === "거래 완료");
+    const available = likedFiltered.filter(
+      item => item.tradeStatus === "BEFORE",
+    );
+    const completed = likedFiltered.filter(
+      item => item.tradeStatus !== "BEFORE",
+    );
 
     const sortedAvailable = [...available].sort((a, b) => {
       if (sortOrder === "latest") {
-        return extractTime(a.timeAgo) - extractTime(b.timeAgo);
+        return extractTime(b.createdAt) - extractTime(a.createdAt);
       }
       if (sortOrder === "popular") {
-        return b.likes - a.likes;
+        return b.wishCount - a.wishCount;
       }
       return 0;
     });
@@ -138,10 +141,10 @@ const Wishlist = () => {
                 isLiked={
                   likedMap[item.id] !== undefined ? likedMap[item.id] : true
                 }
-                likes={
+                wishCount={
                   likedMap[item.id] !== undefined
-                    ? item.likes + (likedMap[item.id] ? 0 : -1)
-                    : item.likes
+                    ? item.wishCount + (likedMap[item.id] ? 0 : -1)
+                    : item.wishCount
                 }
                 onToggleLike={() => toggleLike(item.id)}
               />
@@ -169,8 +172,8 @@ const Wishlist = () => {
               onClick: () => handleNavigate("reservation"),
               variant: "filled",
               disabled:
-                sortedListings.find(item => item.id === selectedId)?.status ===
-                "거래 완료",
+                sortedListings.find(item => item.id === selectedId)
+                  ?.tradeStatus !== "BEFORE",
             },
           ]}
           layout="equal"
