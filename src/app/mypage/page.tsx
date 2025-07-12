@@ -13,6 +13,7 @@ import { useAuth } from "@/hooks/auth/useAuth";
 
 import Divider from "@/components/common/Divider";
 import TitleHeader from "@/components/layout/header/TitleHeader";
+import GoogleLoginButton from "@/components/login/GoogleLoginButton";
 import Section from "@/components/mypage/SectionItems";
 import WithdrawAlertModal from "@/components/mypage/WithdrawAlertModal";
 
@@ -26,8 +27,9 @@ import Arrow from "@/public/svgs/common/left-arrow.svg";
 const Mypage = () => {
   const router = useRouter();
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+
   const { logout } = useAuth();
-  const setMemberId = useAuthStore(state => state.setMemberId);
+  const { isLoggedIn, setMemberId } = useAuthStore();
 
   const [myInfo, setMyInfo] = useState<{
     nickname: string;
@@ -53,8 +55,8 @@ const Mypage = () => {
       }
     };
 
-    fetchMyInfo();
-  }, [setMemberId]);
+    if (isLoggedIn) fetchMyInfo();
+  }, [isLoggedIn, setMemberId]);
 
   return (
     <div>
@@ -63,38 +65,55 @@ const Mypage = () => {
       <div className="cursor-pointer pb-[62px]">
         <div
           className="flex h-22 items-center justify-between px-4 py-2"
-          onClick={() => router.push("profile/edit")}
+          onClick={() => {
+            if (isLoggedIn) router.push("profile/edit");
+          }}
         >
           <div className="flex gap-[24px]">
             <div className="relative h-[72px] w-[72px] overflow-hidden rounded-full bg-gray-100">
               <Image
-                src={myInfo?.profileImage || "/svgs/common/profile-img.svg"}
+                src={
+                  isLoggedIn
+                    ? myInfo?.profileImage ||
+                      "/svgs/common/profile-default1.svg"
+                    : "/svgs/common/guest-profile.svg"
+                }
                 fill
                 alt="profileImg"
                 className="object-cover object-center"
               />
             </div>
             <div className="flex items-center gap-1">
-              <div className="text-heading2 text-gray-900">
-                {myInfo?.nickname || ""}
+              <div
+                className={`text-heading2 ${
+                  isLoggedIn ? "text-gray-900" : "text-gray-800"
+                }`}
+              >
+                {isLoggedIn ? (myInfo?.nickname ?? "닉네임") : "게스트"}
               </div>
-              <CertificateBadge className="h-6 w-6" />
+              {isLoggedIn && <CertificateBadge className="h-6 w-6" />}
             </div>
           </div>
-          <Arrow className="h-6 w-6 rotate-180 text-gray-700" />
+          {isLoggedIn && <Arrow className="h-6 w-6 rotate-180 text-gray-700" />}
         </div>
 
         <div className="py-4">
-          {sections.map((section: SectionData, index) => (
-            <div key={section.label}>
-              <Section label={section.label} items={section.items} />
-              {index !== sections.length - 1 && <Divider className="my-1" />}
+          {isLoggedIn ? (
+            sections.map((section: SectionData, index) => (
+              <div key={section.label}>
+                <Section label={section.label} items={section.items} />
+                {index !== sections.length - 1 && <Divider className="my-1" />}
+              </div>
+            ))
+          ) : (
+            <div className="px-4">
+              <GoogleLoginButton />
             </div>
-          ))}
+          )}
         </div>
       </div>
 
-      {isWithdrawModalOpen && (
+      {isLoggedIn && isWithdrawModalOpen && (
         <WithdrawAlertModal onClose={() => setIsWithdrawModalOpen(false)} />
       )}
     </div>

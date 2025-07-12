@@ -4,7 +4,12 @@ import { useRouter } from "next/navigation";
 
 import { useMemo, useState } from "react";
 
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useLoginModalStore } from "@/stores/useLoginModalStore";
+
 import BottomActionBar from "@/components/common/BottomActionBar";
+import GuestLoginGuide from "@/components/common/GuestLoginGuide";
+import LoginAlertModal from "@/components/common/LoginAlertModal";
 import ContentWrapper from "@/components/layout/ContentWrapper";
 import TitleHeader from "@/components/layout/header/TitleHeader";
 import DropDownMenu from "@/components/wishlist/dropDownMenu";
@@ -12,8 +17,13 @@ import RoomList from "@/components/wishlist/roomList";
 
 import { ListingDummies } from "@/constants/mock/listing-card-dummies";
 
+import ListIcon from "@/public/svgs/header/list-icon.svg";
+
 const Wishlist = () => {
   const router = useRouter();
+  const { isLoggedIn } = useAuthStore();
+  const { openModal } = useLoginModalStore();
+
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [likedMap, setLikedMap] = useState<Record<number, boolean>>({});
@@ -25,8 +35,9 @@ const Wishlist = () => {
   };
 
   const sortedListings = useMemo(() => {
+    if (!isLoggedIn) return [];
     const likedFiltered = ListingDummies.filter(
-      item => likedMap[item.id] !== false, // false일 경우 제외
+      item => likedMap[item.id] !== false,
     );
 
     const available = likedFiltered.filter(item => item.status !== "거래 완료");
@@ -43,30 +54,35 @@ const Wishlist = () => {
     });
 
     return [...sortedAvailable, ...completed];
-  }, [sortOrder, likedMap]);
+  }, [isLoggedIn, sortOrder, likedMap]);
+
+  const ensureLogin = () => {
+    if (isLoggedIn) return true;
+    openModal();
+    return false;
+  };
 
   const handleRoomClick = (id: number) => {
+    if (!ensureLogin()) return;
     setSelectedId(prevId => (prevId === id ? null : id));
+  };
+
+  const toggleLike = (id: number) => {
+    if (!ensureLogin()) return;
+    setLikedMap(prev => {
+      const current = prev[id] ?? true;
+      return { ...prev, [id]: !current };
+    });
+    if (selectedId === id) setSelectedId(null);
   };
 
   const handleNavigate = (type: "overview" | "reservation") => {
     if (!selectedId) return;
-    const url =
+    router.push(
       type === "overview"
         ? `/listings/${selectedId}`
-        : `/viewing/reservation/${selectedId}`;
-    router.push(url);
-  };
-
-  const toggleLike = (id: number) => {
-    setLikedMap(prev => {
-      const current = prev[id] ?? true;
-      return {
-        ...prev,
-        [id]: !current,
-      };
-    });
-    if (selectedId === id) setSelectedId(null);
+        : `/viewing/reservation/${selectedId}`,
+    );
   };
 
   return (
@@ -76,8 +92,8 @@ const Wishlist = () => {
     >
       <TitleHeader
         title="즐겨찾기"
-        rightIcon="list"
-        onRightClick={() => setIsOpen(prev => !prev)}
+        rightIcon={isLoggedIn ? "list" : undefined}
+        onRightClick={isLoggedIn ? () => setIsOpen(prev => !prev) : undefined}
       />
 
       {isOpen && (
@@ -92,58 +108,75 @@ const Wishlist = () => {
         </div>
       )}
 
-      <div>
-        <div className="text-body2-med flex items-center gap-1 px-4 py-3 text-gray-800">
+      {/* 개수 표시 */}
+      <div className="text-body2-med flex items-center justify-between px-4 py-3 text-gray-800">
+        <div className="flex gap-1">
           <div>즐겨찾기 매물</div>
           <div>{sortedListings.length}개</div>
         </div>
-
-        {sortedListings.map(item => (
-          <div
-            key={item.id}
-            onClick={() => handleRoomClick(item.id)}
-            className={`cursor-pointer transition ${
-              selectedId === item.id ? "bg-mint-light" : ""
-            }`}
-          >
-            <RoomList
-              {...item}
-              isLiked={
-                likedMap[item.id] !== undefined ? likedMap[item.id] : true
-              }
-              likes={
-                likedMap[item.id] !== undefined
-                  ? item.likes + (likedMap[item.id] ? 0 : -1)
-                  : item.likes
-              }
-              onToggleLike={() => toggleLike(item.id)}
-            />
-          </div>
-        ))}
+        {!isLoggedIn && (
+          <button onClick={ensureLogin} className="cursor-pointer">
+            <ListIcon className="h-6 w-6" />
+          </button>
+        )}
       </div>
 
-      {selectedId !== null && (
-        <div className="duration-300">
-          <BottomActionBar
-            buttons={[
-              {
-                label: "상세페이지 이동",
-                onClick: () => handleNavigate("overview"),
-                variant: "outline",
-              },
-              {
-                label: "뷰잉 예약",
-                onClick: () => handleNavigate("reservation"),
-                variant: "filled",
-                disabled:
-                  sortedListings.find(item => item.id === selectedId)
-                    ?.status === "거래 완료",
-              },
-            ]}
-            layout="equal"
-          />
-        </div>
+      {/* 목록 */}
+      {isLoggedIn ? (
+        <>
+          {/* 매물 리스트 */}
+          {sortedListings.map(item => (
+            <div
+              key={item.id}
+              onClick={() => handleRoomClick(item.id)}
+              className={`cursor-pointer transition ${
+                selectedId === item.id ? "bg-mint-light" : ""
+              }`}
+            >
+              <RoomList
+                {...item}
+                isLiked={
+                  likedMap[item.id] !== undefined ? likedMap[item.id] : true
+                }
+                likes={
+                  likedMap[item.id] !== undefined
+                    ? item.likes + (likedMap[item.id] ? 0 : -1)
+                    : item.likes
+                }
+                onToggleLike={() => toggleLike(item.id)}
+              />
+            </div>
+          ))}
+        </>
+      ) : (
+        <GuestLoginGuide
+          type="wishlist"
+          description={`로그인 후 마음에 드는 매물을\n즐겨찾기할 수 있어요`}
+        />
       )}
+
+      {/* 하단 바 */}
+      {isLoggedIn && selectedId !== null && (
+        <BottomActionBar
+          buttons={[
+            {
+              label: "상세페이지 이동",
+              onClick: () => handleNavigate("overview"),
+              variant: "outline",
+            },
+            {
+              label: "뷰잉 예약",
+              onClick: () => handleNavigate("reservation"),
+              variant: "filled",
+              disabled:
+                sortedListings.find(item => item.id === selectedId)?.status ===
+                "거래 완료",
+            },
+          ]}
+          layout="equal"
+        />
+      )}
+      <LoginAlertModal />
     </ContentWrapper>
   );
 };

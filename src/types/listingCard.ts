@@ -1,11 +1,12 @@
 export interface ListingCardProps {
   image: string;
-  price: string;
-  status: string;
-  area: string;
-  floor: string;
+  id: number;
+  price: number;
+  status?: string;
+  area?: number;
+  floor?: number;
   type: string;
-  options: string;
+  billIncluded: boolean;
   distance: string;
   location: string;
   timeAgo: string;

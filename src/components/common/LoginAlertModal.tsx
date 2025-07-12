@@ -2,18 +2,20 @@
 
 import { useRouter } from "next/navigation";
 
+import { useLoginModalStore } from "@/stores/useLoginModalStore";
+
 import AlertModal from "./AlertModal";
 
-interface LoginAlertModalProps {
-  onClose: () => void;
-}
-
-const LoginAlertModal = ({ onClose }: LoginAlertModalProps) => {
+const LoginAlertModal = () => {
   const router = useRouter();
+  const { isOpen, closeModal } = useLoginModalStore();
 
   const handleLogin = () => {
+    closeModal();
     router.push("/auth/login");
   };
+
+  if (!isOpen) return null;
 
   return (
     <AlertModal
@@ -24,7 +26,7 @@ const LoginAlertModal = ({ onClose }: LoginAlertModalProps) => {
       ]}
       onActionClick={handleLogin}
       actionLabel="로그인 / 회원가입 하러가기"
-      onClose={onClose}
+      onClose={closeModal}
     />
   );
 };

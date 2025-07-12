@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useFilterStore } from "@/stores/useFilterStore";
+import { useLoginModalStore } from "@/stores/useLoginModalStore";
 
 import EditIcon from "@/public/svgs/home/filter-icon.svg";
 
@@ -17,15 +19,17 @@ const filters = [
 ];
 
 const FilterBar = () => {
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const router = useRouter();
+  const { isLoggedIn } = useAuthStore();
+  const { openModal } = useLoginModalStore();
+  const selectedFilters = useFilterStore(state => state.selectedFilters);
 
-  const handleSelect = (filter: string) => {
-    setSelectedFilters(prev =>
-      prev.includes(filter)
-        ? prev.filter(f => f !== filter)
-        : [...prev, filter],
-    );
+  const handleClick = () => {
+    if (!isLoggedIn) {
+      openModal();
+    } else {
+      router.push("/home/filter");
+    }
   };
 
   return (
@@ -36,17 +40,12 @@ const FilterBar = () => {
             key={filter}
             text={filter}
             isSelected={selectedFilters.includes(filter)}
-            onClick={() => handleSelect(filter)}
+            onClick={handleClick}
           />
         ))}
       </div>
 
-      <EditIcon
-        className="cursor-pointer"
-        onClick={() => {
-          router.push("/home/filter");
-        }}
-      />
+      <EditIcon className="cursor-pointer" onClick={handleClick} />
     </div>
   );
 };

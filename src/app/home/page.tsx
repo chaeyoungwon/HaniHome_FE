@@ -1,3 +1,7 @@
+"use client";
+
+import { useAuthStore } from "@/stores/useAuthStore";
+
 import AddListingFab from "@/components/home/AddListingFab";
 import CategoryHeader from "@/components/home/CategoryHeader";
 import ListingList from "@/components/home/ListingList";
@@ -8,8 +12,13 @@ import ContentWrapper from "@/components/layout/ContentWrapper";
 import MainHeader from "@/components/layout/header/MainHeader";
 
 const Home = () => {
+  const { isLoggedIn } = useAuthStore();
+
   return (
-    <ContentWrapper className="bg-gray-0" bottomOffset={62}>
+    <ContentWrapper
+      className="bg-gray-0 flex min-h-screen flex-col"
+      bottomOffset={62}
+    >
       <MainHeader />
       <div className="bg-gray-0 flex flex-col pt-6 pb-2">
         <CategoryHeader />
@@ -20,7 +29,7 @@ const Home = () => {
         <FilterBar />
         <ListingList />
       </div>
-      <AddListingFab />
+      {isLoggedIn && <AddListingFab />}
     </ContentWrapper>
   );
 };

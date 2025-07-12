@@ -76,6 +76,7 @@ export const useAuth = () => {
     useQuery({
       queryKey: ["user", id],
       queryFn: () => getUser(id),
+      staleTime: 1000 * 60 * 5,
       enabled: !!accessToken && !!id,
     });
 

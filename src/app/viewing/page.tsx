@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 
+import { useAuthStore } from "@/stores/useAuthStore";
+
+import GuestLoginGuide from "@/components/common/GuestLoginGuide";
 import SelectTab from "@/components/common/SelectTab";
 import ContentWrapper from "@/components/layout/ContentWrapper";
 import TitleHeader from "@/components/layout/header/TitleHeader";
@@ -15,9 +18,10 @@ import { viewingTabs } from "@/constants/viewing-tabs";
 import { ViewingCardItem } from "@/types/viewing";
 
 const Viewing = () => {
-  const currentUserId = 1; // 사용자 본인 ID -> 추후 zustand에서 가져옴
-
+  const { isLoggedIn } = useAuthStore();
+  const currentUserId = 1;
   const [activeTab, setActiveTab] = useState("requested");
+
   const withUserType: ViewingCardItem[] = mockViewings.map(v => ({
     ...v,
     userType: v.memberId === currentUserId ? "guest" : "host",
@@ -37,14 +41,19 @@ const Viewing = () => {
       />
 
       <main className="flex flex-1 flex-col">
-        {activeTab === "requested" && (
+        {!isLoggedIn ? (
+          <GuestLoginGuide
+            type="viewing"
+            description={`로그인 후 마음에 드는 매물의\n뷰잉 일정을 잡을 수 있어요`}
+          />
+        ) : activeTab === "requested" ? (
           <ViewingConfirmedSection
             data={requested}
             currentUserId={currentUserId}
           />
-        )}
-        {activeTab === "canceled" && <ViewingCanceledSection data={canceled} />}
-        {activeTab === "completed" && (
+        ) : activeTab === "canceled" ? (
+          <ViewingCanceledSection data={canceled} />
+        ) : (
           <ViewingCompletedSection data={completed} />
         )}
       </main>

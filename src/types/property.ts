@@ -1,0 +1,121 @@
+// 공통 Region 타입
+export interface Region {
+  country: string;
+  postCode: string;
+  state: string;
+  suburb: string;
+  streetName: string;
+  streetNumber: string;
+  unit: string;
+  buildingName: string;
+  longitude: number;
+  latitude: number;
+}
+
+// 공통 옵션 아이템
+export interface OptionItem {
+  optionItemId: number;
+  itemName: string;
+  isActive: boolean;
+  isCustom: boolean;
+  categoryId: number;
+  categoryName: string;
+  parentItemId: number | null;
+}
+
+// 공통 비용 정보
+export interface CostDetails {
+  weeklyCost: number;
+  costDescription: string;
+  deposit: number;
+  keyDeposit: number;
+  depositAdjustable: boolean;
+  billIncluded: boolean;
+}
+
+// 공통 거주 조건
+export interface LivingConditions {
+  noticePeriodWeeks: number;
+  minimumStayWeeks: number;
+  contractTerms: string;
+  contractExtendable: boolean;
+}
+
+// 공통 입주 정보
+export interface MoveInInfo {
+  availableFrom: string;
+  availableTo: string;
+  immediate: boolean;
+  negotiable: boolean;
+}
+
+// 공통 내부 정보
+interface InternalDetailsForShare {
+  internalArea: number;
+  totalArea: number;
+  totalResidents: number;
+  totalBathUser: number;
+  totalFloors: number;
+  propertyFloor: number;
+}
+
+interface InternalDetailsForRent {
+  internalArea: number;
+  totalArea: number;
+  numberOfRoom: number;
+  numberOfBath: number;
+  totalFloors: number;
+  propertyFloors: number;
+}
+
+// 공통 필드를 묶은 베이스 타입
+interface BaseProperty {
+  id: number;
+  memberId: number;
+  createdAt: string;
+  lastModifiedAt: string;
+  optionItems: OptionItem[];
+  displayStatus: string;
+  tradeStatus: string;
+  genderPreference: string;
+  lgbtAvailable: boolean;
+  region: Region;
+  photoUrls: string[];
+  thumbnailUrl: string | null;
+  costDetails: CostDetails;
+  livingConditions: LivingConditions;
+  moveInInfo: MoveInInfo;
+  parkingOption: string;
+  description: string;
+  wishCount: number;
+}
+
+// 쉐어 매물
+export interface ShareProperty extends BaseProperty {
+  kind: "SHARE";
+  sharePropertySubType: string;
+  internalDetails: InternalDetailsForShare;
+  capacityShare: string;
+}
+
+// 렌트 매물
+export interface RentProperty extends BaseProperty {
+  kind: "RENT";
+  rentPropertySubType: string;
+  internalDetails: InternalDetailsForRent;
+  capacityRent: string;
+  isRealEstateIntervention: string;
+  exposure: string;
+}
+
+// 전체 유니언 타입
+export type Property = ShareProperty | RentProperty;
+
+export interface FilteredPropertyParams {
+  kinds?: ("SHARE" | "RENT")[];
+  sharePropertySubTypes?: string[];
+  rentPropertySubTypes?: string[];
+  minWeeklyCost?: number;
+  maxWeeklyCost?: number;
+  billIncluded?: boolean;
+}

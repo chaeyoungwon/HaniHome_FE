@@ -16,3 +16,5 @@ export interface ViewingCardItem extends ViewingItem {
   roomImageUrl: string;
   nickname: string;
 }
+
+export type ViewingViewType = "DEFAULT" | "DATE_PROFILE" | "DATE_WITH_PROPERTY";

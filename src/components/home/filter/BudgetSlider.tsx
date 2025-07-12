@@ -1,5 +1,4 @@
-import { useState } from "react";
-
+import { useFilterStore } from "@/stores/useFilterStore";
 import Slider from "rc-slider";
 
 import CheckIcon from "@/components/common/CheckIcon";
@@ -9,11 +8,13 @@ const MAX_BUDGET = 3000;
 const MIN_GAP = 50;
 
 const BudgetSlider = () => {
-  const [budgetRange, setBudgetRange] = useState<[number, number]>([
-    MIN_BUDGET,
-    MAX_BUDGET,
-  ]);
-  const [checked, setChecked] = useState(false);
+  const { minWeeklyCost, maxWeeklyCost, billIncluded, setFilters } =
+    useFilterStore();
+
+  const budgetRange: [number, number] = [
+    minWeeklyCost ?? MIN_BUDGET,
+    maxWeeklyCost ?? MAX_BUDGET,
+  ];
 
   return (
     <div className="flex flex-col items-center py-4">
@@ -42,7 +43,7 @@ const BudgetSlider = () => {
               const [start, end] = value as [number, number];
               const distance = Math.abs(end - start);
               if (distance < MIN_GAP) return;
-              setBudgetRange([start, end]);
+              setFilters({ minWeeklyCost: start, maxWeeklyCost: end });
             }}
             marks={{
               [MIN_BUDGET]: {
@@ -65,9 +66,11 @@ const BudgetSlider = () => {
 
         <div
           className="flex cursor-pointer items-center justify-end gap-1"
-          onClick={() => setChecked(prev => !prev)}
+          onClick={() => {
+            setFilters({ billIncluded: !billIncluded });
+          }}
         >
-          <CheckIcon checked={checked} />
+          <CheckIcon checked={billIncluded ?? false} />
           <span className="text-cap1-med text-gray-700">빌 포함</span>
         </div>
       </div>

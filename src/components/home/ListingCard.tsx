@@ -14,11 +14,11 @@ const Dot = () => (
 const ListingCard = ({
   image,
   price,
-  status,
+  status = "거래 중",
   area,
   floor,
   type,
-  options,
+  billIncluded,
   distance,
   location,
   timeAgo,
@@ -47,7 +47,7 @@ const ListingCard = ({
       <div className="flex h-24 flex-1 flex-col justify-between">
         <div className="flex flex-col">
           <div className="flex items-center gap-[6px]">
-            <p className="text-body1-sb text-gray-900">{price}</p>
+            <p className="text-body1-sb text-gray-900">주/ {price}$</p>
             <span
               className={clsx(
                 "text-cap1-med flex rounded-full border px-2 py-[2px]",
@@ -61,11 +61,23 @@ const ListingCard = ({
           </div>
 
           <p className="text-cap1-med mt-2 flex items-center gap-1 text-gray-600">
-            {area} <Dot /> {floor} <Dot /> {type}
+            {area !== undefined && (
+              <>
+                {area}㎡{(floor !== undefined || type) && <Dot />}
+              </>
+            )}
+
+            {floor !== undefined && (
+              <>
+                전체 {floor}층{type && <Dot />}
+              </>
+            )}
+
+            {type}
           </p>
 
           <p className="text-cap1-med mt-[2px] flex items-center gap-1 text-gray-600">
-            {options} <Dot /> {distance}
+            {billIncluded ? "빌 포함" : "빌 미포함"} <Dot /> 역까지 {distance}km
           </p>
         </div>
 

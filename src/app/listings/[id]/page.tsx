@@ -1,10 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useParams, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useState } from "react";
+
+import { usePropertyDetailList } from "@/hooks/property/useProperty";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import CheckIcon from "@/components/common/CheckIcon";
@@ -28,24 +29,15 @@ const ListingDetailPage = () => {
 
   const router = useRouter();
 
-  const [isBillIncluded, setIsBillIncluded] = useState(false);
   const [liked, setLiked] = useState(false);
-  const [tradeStatus, setTradeStatus] = useState<"active" | "completed">(
-    "active",
-  );
-  const isCompleted = tradeStatus === "completed";
 
-  const region = {
-    // 임시 하드코딩
-    streetNumber: "25",
-    streetName: "Smith St",
-    suburb: "Chatswood",
-    state: "NSW",
-    postCode: "2067",
-    country: "Australia",
-    unit: "",
-    buildingName: "",
-  };
+  const { data, isLoading, isError } = usePropertyDetailList(listingId);
+
+  if (isLoading) return <p className="p-4">불러오는 중...</p>;
+  if (isError || !data)
+    return <p className="p-4">매물 정보를 불러오지 못했어요.</p>;
+
+  const isCompleted = data.tradeStatus === "COMPLETED";
 
   return (
     <>
@@ -55,9 +47,11 @@ const ListingDetailPage = () => {
           rightIcon={isEditMode ? "more" : "report"}
           onRightClick={() => router.push(`/listings/${id}/report`)}
         />
+
+        {/* 매물 이미지 */}
         <div className="relative flex">
           <Image
-            src="/svgs/common/room-img.svg"
+            src={data.photoUrls[0] ?? "/svgs/common/room-img.svg"}
             width={375}
             height={375}
             alt="매물 이미지"
@@ -78,7 +72,6 @@ const ListingDetailPage = () => {
           </button>
         </div>
 
-
         {/* 프로필 영역 */}
         <div className="flex items-center justify-between border-b border-gray-200">
           <div className="flex items-center gap-[14px] px-4 py-3">
@@ -93,58 +86,63 @@ const ListingDetailPage = () => {
             </div>
           </div>
 
-          {/* 거래 상태 드롭다운 (edit 모드만) */}
+          {/* 거래 상태 드롭다운 */}
           {isEditMode && (
             <div className="pr-4">
               <DropDownMenu
-                selectedKey={tradeStatus}
-                onSelect={setTradeStatus}
+                selectedKey={
+                  data.tradeStatus === "COMPLETED" ? "completed" : "active"
+                }
+                onSelect={() => {}} // 거래 상태 수정 로직
               />
             </div>
           )}
         </div>
 
+        {/* 상단 요약 */}
         <div className="flex justify-between px-4 py-7">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
               <span className="text-heading1">
                 <span className="text-gray-900">주 / </span>
-                <span className="text-mint">300$</span>
+                <span className="text-mint">
+                  {data.costDetails.weeklyCost.toLocaleString()}$
+                </span>
               </span>
               <span className="text-body2-med flex h-fit items-center justify-center rounded-[100px] border border-gray-300 px-[10px] py-1 text-gray-700">
-                거래중
+                {data.tradeStatus === "COMPLETED" ? "거래 완료" : "거래 중"}
               </span>
             </div>
             <div className="text-body1-sb flex gap-3 text-gray-700">
-              <span>City</span>
+              <span>{data.region.state}</span>
               <span>|</span>
-              <span>suburb</span>
+              <span>{data.region.suburb}</span>
             </div>
           </div>
+
           <div className="text-cap1-med flex flex-col items-end justify-between gap-4 text-gray-700">
-            <button
-              type="button"
-              className="flex items-center gap-1"
-              onClick={() => setIsBillIncluded(prev => !prev)}
-            >
+            <button type="button" className="flex items-center gap-1">
               <span>빌 포함</span>
-              <CheckIcon checked={isBillIncluded} />
+              <CheckIcon checked={data.costDetails.billIncluded} />
             </button>
 
             <div className="flex flex-col items-end gap-1">
-              <span>(Internal Area)㎡ </span>
-              <span className="text-gray-500">(Total Area)㎡ </span>
+              <span>{data.internalDetails.internalArea}㎡ </span>
+              <span className="text-gray-500">
+                {data.internalDetails.totalArea}㎡{" "}
+              </span>
             </div>
           </div>
         </div>
 
         <DetailTabs listingId={listingId} />
+
+        {/* 위치 영역 */}
         <div className="mt-6 mb-15">
           <div className="flex flex-col gap-3 px-4 py-8">
             <span className="text-body1-sb text-gray-900">위치</span>
-
             <AddressMap
-              region={region}
+              region={data.region}
               isReservationConfirmed={
                 isConfirmMode || isViewingMode || isEditMode
               }
@@ -152,20 +150,20 @@ const ListingDetailPage = () => {
           </div>
         </div>
       </div>
+
+      {/* 하단 액션바 */}
       {isConfirmMode && (
         <BottomActionBar
           label="홈으로 이동"
           onClick={() => router.push("/home")}
         />
       )}
-
       {isEditMode && isCompleted && (
         <BottomActionBar
           label="거래한 게스트 입력하기"
           onClick={() => router.push(`/listings/${id}/guests`)}
         />
       )}
-
       {!isConfirmMode && !isViewingMode && !isEditMode && (
         <BottomActionBar
           label="뷰잉 예약하기"
