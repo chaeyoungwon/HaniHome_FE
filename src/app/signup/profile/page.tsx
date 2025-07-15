@@ -38,7 +38,6 @@ const SignupProfilePage = () => {
 
   const {
     name,
-    email,
     phoneNumber,
     nickname,
     gender,
@@ -77,7 +76,6 @@ const SignupProfilePage = () => {
 
     const payload: SignupPayload = {
       name,
-      email,
       phoneNumber: formatPhoneNumber(phoneNumber),
       nickname,
       gender,

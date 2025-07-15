@@ -1,9 +1,4 @@
-import {
-  LoginPayload,
-  LoginResponse,
-  SignupPayload,
-  UpdateUserPayload,
-} from "@/types/auth";
+import { LoginPayload, LoginResponse, SignupPayload } from "@/types/auth";
 
 import { axiosInstance } from "./axios";
 
@@ -41,32 +36,5 @@ export const refreshToken = async () => {
 // 로그아웃
 export const logout = async () => {
   const res = await axiosInstance.post<void>("/api/v1/auth/logout");
-  return res.data;
-};
-
-// 내 정보 조회
-export const getMyInfo = async () => {
-  const res = await axiosInstance.get(`/api/v1/members/me`);
-  return res.data.data;
-};
-
-// 사용자 상세 조회
-export const getUser = async (memberId: string) => {
-  const res = await axiosInstance.get(`/api/v1/members/${memberId}`);
-  return res.data;
-};
-
-// 사용자 정보 수정
-export const updateUser = async (
-  memberId: string,
-  payload: UpdateUserPayload,
-) => {
-  const res = await axiosInstance.patch(`/api/v1/members/${memberId}`, payload);
-  return res.data;
-};
-
-// 회원 탈퇴
-export const deleteUser = async (memberId: string) => {
-  const res = await axiosInstance.delete(`/api/v1/members/${memberId}`);
   return res.data;
 };

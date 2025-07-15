@@ -7,8 +7,6 @@ export const signupInfoSchema = z.object({
     .min(2, "이름을 올바르게 입력해주세요")
     .max(20, "이름을 올바르게 입력해주세요"),
 
-  email: z.string().trim().email("이메일을 올바르게 입력해주세요"),
-
   phoneNumber: z
     .string()
     .trim()

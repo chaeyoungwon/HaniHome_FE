@@ -6,10 +6,12 @@ import { Property, PropertyViewType, SummaryProperty } from "@/types/property";
 
 export const usePropertyList = <T extends PropertyViewType>(params: {
   view: T;
+  enabled?: boolean;
 }) => {
   return useQuery<T extends "SUMMARY" ? SummaryProperty[] : Property[]>({
     queryKey: ["propertyList", params.view],
     queryFn: () => fetchPropertyList(params.view),
+    enabled: params.enabled ?? true,
   });
 };
 

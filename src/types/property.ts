@@ -114,7 +114,7 @@ export type Property = ShareProperty | RentProperty;
 
 // 매물 필터링 파라미터
 export interface FilteredPropertyParams {
-  kinds?: ("SHARE" | "RENT")[];
+  kinds: ("SHARE" | "RENT")[];
   sharePropertySubTypes?: string[];
   rentPropertySubTypes?: string[];
   minWeeklyCost?: number;

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
+import { useFilterStore } from "@/stores/useFilterStore";
 import Slider from "rc-slider";
 
 import SearchField from "@/components/common/SearchField";
@@ -7,20 +8,41 @@ import SearchField from "@/components/common/SearchField";
 const MIN_DISTANCE = 0.5;
 const MAX_DISTANCE = 10;
 
-const SubwayStationSelector = () => {
-  const [inputValue, setInputValue] = useState("");
-  const [distanceRange, setDistanceRange] = useState(MAX_DISTANCE);
+interface SubwayStationSelectorProps {
+  radiusKm: number | null;
+  onChangeRadiusKm: (value: number) => void;
+  onSelectStop: (stopId: number | null, stopName: string) => void;
+}
+
+const SubwayStationSelector = ({
+  radiusKm,
+  onChangeRadiusKm,
+  onSelectStop,
+}: SubwayStationSelectorProps) => {
+  const { selectedMetroStop } = useFilterStore();
+
+  const [inputValue, setInputValue] = useState(selectedMetroStop?.name || "");
+  const [localRadiusKm, setLocalRadiusKm] = useState(radiusKm ?? MAX_DISTANCE);
+
+  useEffect(() => {
+    setLocalRadiusKm(radiusKm ?? MAX_DISTANCE);
+  }, [radiusKm]);
 
   const handleChange = (value: number | number[]) => {
-    setDistanceRange(value as number);
+    setLocalRadiusKm(value as number);
   };
 
   const handleAfterChange = (value: number | number[]) => {
     const v = value as number;
-    if (v === 0) {
-      setDistanceRange(MIN_DISTANCE);
-    }
+    const newDistance = v === 0 ? MIN_DISTANCE : v;
+
+    setLocalRadiusKm(newDistance);
+    onChangeRadiusKm(newDistance);
   };
+
+  useEffect(() => {
+    setInputValue(selectedMetroStop?.name || "");
+  }, [selectedMetroStop]);
 
   return (
     <div className="flex flex-col gap-3 px-4 py-4">
@@ -29,9 +51,23 @@ const SubwayStationSelector = () => {
         <SearchField
           label="기준 지하철 역 검색"
           value={inputValue}
-          onChange={setInputValue}
+          onChange={val => {
+            setInputValue(val);
+
+            if (val.trim() === "") {
+              onSelectStop(null, "");
+            }
+          }}
           placeholder="검색어를 입력해주세요"
           type="subway"
+          onSearchClick={(id, name) => {
+            setInputValue(name);
+            if (!id || id === "") {
+              onSelectStop(null, "");
+            } else {
+              onSelectStop(Number(id), name);
+            }
+          }}
         />
       </div>
 
@@ -44,7 +80,7 @@ const SubwayStationSelector = () => {
           <div className="w-[327px] pb-[30px]">
             <Slider
               className="custom-slider my-[1px]"
-              value={distanceRange}
+              value={localRadiusKm}
               min={0}
               max={MAX_DISTANCE}
               step={0.5}
@@ -72,7 +108,7 @@ const SubwayStationSelector = () => {
 
         <div className="text-lab1-sb flex gap-2 py-1">
           <span className="text-gray-600">지하철 역으로부터</span>
-          <span className="text-mint">{distanceRange}km</span>
+          <span className="text-mint">{localRadiusKm} km</span>
           <span className="text-gray-600">내 매물까지 포함해요</span>
         </div>
       </div>

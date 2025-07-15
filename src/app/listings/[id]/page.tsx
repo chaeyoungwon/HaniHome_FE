@@ -92,14 +92,14 @@ const ListingDetailPage = () => {
                 className="h-12 w-12 rounded-full border border-gray-300 object-cover"
               />
             ) : (
-              <div className="h-12 w-12 rounded-full border border-gray-300 bg-gray-100" />
+              <div className="h-12 w-12 rounded-full border border-gray-300 bg-white" />
             )}
 
             <div className="flex items-center gap-1">
               <span className="text-body1-sb font-bold text-black">
                 {member?.nickname ?? "사용자"}
               </span>
-              <CertificatedIcon className="h-6 w-6" />
+              {member?.verifiedUser && <CertificatedIcon className="h-6 w-6" />}
             </div>
           </div>
 

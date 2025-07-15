@@ -7,9 +7,8 @@ import { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
-import { getMyInfo } from "@/apis/auth";
-
 import { useAuth } from "@/hooks/auth/useAuth";
+import { useMyInfo } from "@/hooks/member/useMember";
 
 import Divider from "@/components/common/Divider";
 import TitleHeader from "@/components/layout/header/TitleHeader";
@@ -31,32 +30,18 @@ const Mypage = () => {
   const { logout } = useAuth();
   const { isLoggedIn, setMemberId } = useAuthStore();
 
-  const [myInfo, setMyInfo] = useState<{
-    nickname: string;
-    profileImage: string;
-  } | null>(null);
+  const { data: myInfo } = useMyInfo();
+
+  useEffect(() => {
+    if (isLoggedIn && myInfo?.id) {
+      setMemberId(String(myInfo.id));
+    }
+  }, [isLoggedIn, myInfo, setMemberId]);
 
   const sections = getSections(router, {
     onLogout: logout,
     onOpenWithdrawModal: () => setIsWithdrawModalOpen(true),
   });
-
-  useEffect(() => {
-    const fetchMyInfo = async () => {
-      try {
-        const data = await getMyInfo();
-        setMemberId(String(data.id));
-        setMyInfo({
-          nickname: data.nickname,
-          profileImage: data.profileImage,
-        });
-      } catch (error) {
-        console.error("유저 정보 조회 실패:", error);
-      }
-    };
-
-    if (isLoggedIn) fetchMyInfo();
-  }, [isLoggedIn, setMemberId]);
 
   return (
     <div>
@@ -91,7 +76,9 @@ const Mypage = () => {
               >
                 {isLoggedIn ? (myInfo?.nickname ?? "닉네임") : "게스트"}
               </div>
-              {isLoggedIn && <CertificateBadge className="h-6 w-6" />}
+              {isLoggedIn && myInfo?.verifiedUser && (
+                <CertificateBadge className="h-6 w-6" />
+              )}
             </div>
           </div>
           {isLoggedIn && <Arrow className="h-6 w-6 rotate-180 text-gray-700" />}

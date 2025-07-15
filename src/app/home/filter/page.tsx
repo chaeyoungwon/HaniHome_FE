@@ -1,12 +1,18 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
 
 import { useFilterStore } from "@/stores/useFilterStore";
+import { useMetroStore } from "@/stores/useMetroStore";
 
-import { getFilteredPropertyCount } from "@/apis/property";
-
+import { useCountUp } from "@/hooks/filter/useCountup";
 import { useDebouncedValue } from "@/hooks/filter/useDebouncedValue";
+import { usePropertySearch } from "@/hooks/filter/useFilter";
+import { useMetroStops } from "@/hooks/filter/useMetro";
+
+import { buildQueryParams } from "@/utils/buildQueryParams";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -18,188 +24,266 @@ import SubwayStationSelector from "@/components/home/filter/SubwayStationSelecto
 import TypeSelector from "@/components/home/filter/TypeSelector";
 import BackHeader from "@/components/layout/header/BackHeader";
 
-import {
-  RENT_TYPE_MAP,
-  SHARE_ONLY_ROOM_TYPES,
-  SHARE_TYPE_MAP,
-} from "@/constants/housing-options";
-
-import { FilteredPropertyParams } from "@/types/property";
-
-export type RoomKind = "SHARE" | "RENT";
+import { SHARE_ONLY_ROOM_TYPES } from "@/constants/housing-options";
 
 const Filter = () => {
-  const [selectedTypes, setSelectedTypes] = useState<("쉐어" | "렌트")[]>([]);
-  const [selectedRoomTypes, setSelectedRoomTypes] = useState<string[]>([]);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
-  const [count, setCount] = useState<number>(0);
+  const router = useRouter();
 
   const {
-    setFilters,
-    resetFilters,
+    selectedTypes,
+    selectedRoomTypes,
     billIncluded,
+    availableFrom,
+    availableTo,
+    immediate,
+    negotiable,
     minWeeklyCost,
     maxWeeklyCost,
+    radiusKm,
+    setFilters,
+    isHydrated,
+    resetFilters,
   } = useFilterStore();
 
-  const debouncedMinCost = useDebouncedValue(minWeeklyCost, 500);
-  const debouncedMaxCost = useDebouncedValue(maxWeeklyCost, 500);
+  const { data: metroStops } = useMetroStops();
+
+  useEffect(() => {
+    if (metroStops) {
+      useMetroStore.getState().setStops(metroStops);
+    }
+  }, [metroStops]);
+
+  const [tempFilters, setTempFilters] = useState({
+    selectedTypes,
+    selectedRoomTypes,
+    billIncluded,
+    availableFrom,
+    availableTo,
+    immediate,
+    negotiable,
+    minWeeklyCost,
+    maxWeeklyCost,
+    radiusKm,
+    selectedMetroStop: null as null | {
+      id: number | null;
+      name: string;
+      latitude: number | null;
+      longitude: number | null;
+    },
+  });
+
+  const debouncedMinCost = useDebouncedValue(tempFilters.minWeeklyCost, 500);
+  const debouncedMaxCost = useDebouncedValue(tempFilters.maxWeeklyCost, 500);
+  const debouncedRadiusKm = useDebouncedValue(tempFilters.radiusKm, 500);
+
+  const params = buildQueryParams({
+    ...tempFilters,
+    minWeeklyCost: debouncedMinCost,
+    maxWeeklyCost: debouncedMaxCost,
+    radiusKm: debouncedRadiusKm,
+    metroStopLatitude: tempFilters.selectedMetroStop?.latitude ?? null,
+    metroStopLongitude: tempFilters.selectedMetroStop?.longitude ?? null,
+  });
+
+  const { data } = usePropertySearch(params);
+  const count = data?.count ?? 0;
 
   const isDisabled = (type: string) => {
-    if (selectedTypes.includes("쉐어") && selectedTypes.includes("렌트"))
+    if (
+      tempFilters.selectedTypes.includes("쉐어") &&
+      tempFilters.selectedTypes.includes("렌트")
+    ) {
       return false;
-    if (selectedTypes.includes("쉐어"))
+    }
+
+    if (tempFilters.selectedTypes.includes("쉐어")) {
       return !SHARE_ONLY_ROOM_TYPES.includes(type);
-    if (selectedTypes.includes("렌트"))
+    }
+
+    if (tempFilters.selectedTypes.includes("렌트")) {
       return SHARE_ONLY_ROOM_TYPES.includes(type);
+    }
+
     return false;
   };
 
+  const handleChange = <K extends keyof typeof tempFilters>(
+    key: K,
+    value:
+      | (typeof tempFilters)[K]
+      | ((prev: (typeof tempFilters)[K]) => (typeof tempFilters)[K]),
+  ) => {
+    setTempFilters(prev => ({
+      ...prev,
+      [key]:
+        typeof value === "function"
+          ? (
+              value as (
+                prev: (typeof tempFilters)[K],
+              ) => (typeof tempFilters)[K]
+            )(prev[key])
+          : value,
+    }));
+  };
+
   const toggleType = (type: "쉐어" | "렌트") => {
-    setSelectedTypes(prev => {
+    handleChange("selectedTypes", prev => {
       const next = prev.includes(type)
         ? prev.filter(t => t !== type)
         : [...prev, type];
 
-      if (next.length === 0) setSelectedRoomTypes([]);
+      if (next.length === 0) {
+        handleChange("selectedRoomTypes", []);
+      }
+
       return next;
     });
   };
 
   const toggleRoomType = (type: string) => {
-    if (selectedTypes.length === 0) {
+    if (tempFilters.selectedTypes.length === 0) {
       setAlertMessage("매물종류를 선택해주세요");
       return;
     }
     if (isDisabled(type)) return;
-    setSelectedRoomTypes(prev =>
+    handleChange("selectedRoomTypes", prev =>
       prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type],
     );
   };
 
   const handleReset = () => {
+    setTempFilters({
+      selectedTypes: [],
+      selectedRoomTypes: [],
+      billIncluded: false,
+      availableFrom: null,
+      availableTo: null,
+      immediate: false,
+      negotiable: false,
+      minWeeklyCost: null,
+      maxWeeklyCost: null,
+      radiusKm: null,
+      selectedMetroStop: null,
+    });
     resetFilters();
-    setSelectedTypes([]);
-    setSelectedRoomTypes([]);
-  };
-
-  const mapRoomTypesToApi = (
-    selectedTypes: ("쉐어" | "렌트")[],
-    selectedRoomTypes: string[],
-  ) => {
-    const sharePropertySubTypes: string[] = [];
-    const rentPropertySubTypes: string[] = [];
-
-    for (const room of selectedRoomTypes) {
-      if (selectedTypes.includes("쉐어") && SHARE_TYPE_MAP[room]) {
-        sharePropertySubTypes.push(SHARE_TYPE_MAP[room]);
-      }
-      if (selectedTypes.includes("렌트") && RENT_TYPE_MAP[room]) {
-        rentPropertySubTypes.push(RENT_TYPE_MAP[room]);
-      }
-    }
-
-    return { sharePropertySubTypes, rentPropertySubTypes };
   };
 
   const handleApply = () => {
-    const kinds = selectedTypes.map(type =>
-      type === "쉐어" ? "SHARE" : "RENT",
-    ) as RoomKind[];
-
-    const { sharePropertySubTypes, rentPropertySubTypes } = mapRoomTypesToApi(
-      selectedTypes,
-      selectedRoomTypes,
-    );
-
     setFilters({
-      kinds,
-      sharePropertySubTypes,
-      rentPropertySubTypes,
+      selectedTypes: tempFilters.selectedTypes,
+      selectedRoomTypes: tempFilters.selectedRoomTypes,
+      billIncluded: tempFilters.billIncluded,
+      availableFrom: tempFilters.availableFrom,
+      availableTo: tempFilters.availableTo,
+      immediate: tempFilters.immediate,
+      negotiable: tempFilters.negotiable,
+      minWeeklyCost: debouncedMinCost,
+      maxWeeklyCost: debouncedMaxCost,
+      radiusKm: debouncedRadiusKm,
+      selectedMetroStop: tempFilters.selectedMetroStop,
     });
+
+    router.push("/home");
   };
-
-  const buildQueryParams = (): FilteredPropertyParams => {
-    const kinds = selectedTypes
-      .map(type =>
-        type === "쉐어" ? "SHARE" : type === "렌트" ? "RENT" : null,
-      )
-      .filter((k): k is "SHARE" | "RENT" => k !== null);
-
-    const { sharePropertySubTypes, rentPropertySubTypes } = mapRoomTypesToApi(
-      selectedTypes,
-      selectedRoomTypes,
-    );
-
-    const { minWeeklyCost, maxWeeklyCost, billIncluded } =
-      useFilterStore.getState();
-
-    const params: FilteredPropertyParams = {
-      kinds,
-      sharePropertySubTypes,
-      rentPropertySubTypes,
-      minWeeklyCost: minWeeklyCost ?? undefined,
-      maxWeeklyCost: maxWeeklyCost ?? undefined,
-    };
-
-    if (typeof billIncluded === "boolean") {
-      params.billIncluded = billIncluded;
-    }
-
-    return params;
-  };
+  const animatedCount = useCountUp(count, 800);
 
   useEffect(() => {
-    const fetchCount = async () => {
-      const params = buildQueryParams();
-      try {
-        const res = await getFilteredPropertyCount(params);
-        setCount(res.totalElements ?? 0);
-      } catch (err) {
-        console.error("매물 수 조회 실패", err);
-        setCount(0);
-      }
-    };
-
-    fetchCount();
-  }, [
-    selectedTypes,
-    selectedRoomTypes,
-    debouncedMinCost,
-    debouncedMaxCost,
-    billIncluded,
-  ]);
+    if (isHydrated) {
+      setTempFilters(prev => ({
+        ...prev,
+        selectedTypes,
+        selectedRoomTypes,
+        billIncluded,
+        availableFrom,
+        availableTo,
+        immediate,
+        negotiable,
+        minWeeklyCost,
+        maxWeeklyCost,
+        radiusKm,
+        selectedMetroStop: useFilterStore.getState().selectedMetroStop ?? null,
+      }));
+    }
+  }, [isHydrated]);
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-hidden pb-39.5">
       <BackHeader />
 
-      <TypeSelector selectedTypes={selectedTypes} onSelect={toggleType} />
+      <TypeSelector
+        selectedTypes={tempFilters.selectedTypes}
+        onSelect={toggleType}
+      />
       <Divider />
 
       <RoomTypeSelector
-        selectedRoomTypes={selectedRoomTypes}
+        selectedRoomTypes={tempFilters.selectedRoomTypes}
         toggleRoomType={toggleRoomType}
         isDisabled={isDisabled}
       />
       <Divider />
 
-      <BudgetSlider />
+      <BudgetSlider
+        minWeeklyCost={tempFilters.minWeeklyCost}
+        maxWeeklyCost={tempFilters.maxWeeklyCost}
+        billIncluded={tempFilters.billIncluded}
+        onBudgetChange={(min, max) => {
+          handleChange("minWeeklyCost", min);
+          handleChange("maxWeeklyCost", max);
+        }}
+        onBillToggle={() => {
+          handleChange("billIncluded", !tempFilters.billIncluded);
+        }}
+      />
       <Divider />
 
-      <AvailableDatePicker />
+      <AvailableDatePicker
+        availableFrom={tempFilters.availableFrom}
+        availableTo={tempFilters.availableTo}
+        immediate={tempFilters.immediate}
+        negotiable={tempFilters.negotiable}
+        onDateChange={(from, to) => {
+          handleChange("availableFrom", from);
+          handleChange("availableTo", to);
+        }}
+        onImmediateToggle={() =>
+          handleChange("immediate", !tempFilters.immediate)
+        }
+        onNegotiableToggle={() =>
+          handleChange("negotiable", !tempFilters.negotiable)
+        }
+      />
       <Divider />
 
-      <SubwayStationSelector />
+      <SubwayStationSelector
+        radiusKm={tempFilters.radiusKm}
+        onChangeRadiusKm={value => handleChange("radiusKm", value)}
+        onSelectStop={id => {
+          const stop = useMetroStore.getState().stops.find(s => s.id === id);
+          if (stop) {
+            handleChange("selectedMetroStop", {
+              id: stop.id,
+              name: stop.stopName,
+              latitude: stop.stopLatitude,
+              longitude: stop.stopLongitude,
+            });
+          } else {
+            handleChange("selectedMetroStop", null);
+          }
+        }}
+      />
 
       <BottomActionBar
         buttons={[
           { label: "초기화", onClick: handleReset, variant: "outline" },
           {
-            label: `매물 ${count}개`,
+            label: `매물 ${animatedCount}개`,
             onClick: handleApply,
             disabled:
-              selectedTypes.length === 0 || selectedRoomTypes.length === 0,
+              tempFilters.selectedTypes.length === 0 ||
+              tempFilters.selectedRoomTypes.length === 0 ||
+              count === 0,
           },
         ]}
       />

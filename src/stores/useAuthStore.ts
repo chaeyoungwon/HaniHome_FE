@@ -5,6 +5,7 @@ interface AuthStore {
   accessToken: string;
   memberId: string;
   isLoggedIn: boolean;
+  isAuthInitialized: boolean;
 
   setAuth: (accessToken: string, memberId: string) => void;
   setAccessToken: (accessToken: string) => void;
@@ -18,14 +19,21 @@ export const useAuthStore = create<AuthStore>()(
       accessToken: "",
       memberId: "",
       isLoggedIn: false,
+      isAuthInitialized: false,
 
       setAuth: (accessToken, memberId) =>
-        set({ accessToken, memberId, isLoggedIn: true }),
+        set({
+          accessToken,
+          memberId,
+          isLoggedIn: true,
+          isAuthInitialized: true,
+        }),
 
       setAccessToken: accessToken =>
         set({
           accessToken,
           isLoggedIn: !!accessToken,
+          isAuthInitialized: true,
         }),
 
       setMemberId: memberId =>
@@ -38,6 +46,7 @@ export const useAuthStore = create<AuthStore>()(
           accessToken: "",
           memberId: "",
           isLoggedIn: false,
+          isAuthInitialized: true,
         }),
     }),
     {
@@ -46,7 +55,15 @@ export const useAuthStore = create<AuthStore>()(
         accessToken: state.accessToken,
         memberId: state.memberId,
         isLoggedIn: state.isLoggedIn,
+        isAuthInitialized: state.isAuthInitialized,
       }),
+      onRehydrateStorage: () => state => {
+        if (state && state.accessToken) {
+          state.setAuth(state.accessToken, state.memberId);
+        } else {
+          state?.clearAuth();
+        }
+      },
     },
   ),
 );

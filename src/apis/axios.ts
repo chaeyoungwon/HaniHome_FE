@@ -11,7 +11,9 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   config => {
-    const isAuthRequest = config.url?.includes("api/v1/auth/social/login");
+    const isAuthRequest =
+      config.url?.includes("api/v1/auth/social/login") ||
+      config.url?.includes("api/v1/auth/refresh");
 
     if (!isAuthRequest) {
       const token = useAuthStore.getState().accessToken;
@@ -34,31 +36,17 @@ axiosInstance.interceptors.response.use(
     }
     return response;
   },
-  async error => {
-    const originalRequest = error.config;
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      !originalRequest.url.includes("/auth/refresh")
-    ) {
-      originalRequest._retry = true;
+  error => {
+    const res = error.response;
+    const resData = res?.data;
 
-      try {
-        const res = await axiosInstance.post("/api/v1/auth/refresh");
+    const isAccessTokenExpired =
+      res?.status === 400 &&
+      (resData?.serviceCode === "ACCESS_TOKEN_EXPIRED" ||
+        resData?.data?.codeName === "ACCESS_TOKEN_EXPIRED");
 
-        const newTokenHeader = res.headers["authorization"];
-        if (newTokenHeader?.startsWith("Bearer ")) {
-          const newToken = newTokenHeader.split(" ")[1];
-          useAuthStore.getState().setAccessToken(newToken);
-
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          return axiosInstance(originalRequest);
-        }
-      } catch (refreshError) {
-        console.error("토큰 재발급 실패", refreshError);
-        useAuthStore.getState().clearAuth();
-        return Promise.reject(refreshError);
-      }
+    if (isAccessTokenExpired) {
+      useAuthStore.getState().clearAuth();
     }
 
     return Promise.reject(error);

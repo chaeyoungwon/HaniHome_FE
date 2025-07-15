@@ -17,8 +17,7 @@ import { AgreementTerm } from "@/constants/agreement-terms";
 
 const SignupInfoPage = () => {
   const router = useRouter();
-  const { name, email, phoneNumber, agreed, setField, setAgreed } =
-    useSignupStore();
+  const { name, phoneNumber, agreed, setField, setAgreed } = useSignupStore();
 
   const {
     register,
@@ -29,7 +28,7 @@ const SignupInfoPage = () => {
     resolver: zodResolver(signupInfoSchema),
     mode: "onChange",
     shouldFocusError: false,
-    defaultValues: { name, email, phoneNumber },
+    defaultValues: { name, phoneNumber },
   });
 
   const requiredTermIds = AgreementTerm.filter(term =>
@@ -46,7 +45,6 @@ const SignupInfoPage = () => {
   const isFormReady =
     allRequiredChecked &&
     values.name?.trim() &&
-    values.email?.trim() &&
     values.phoneNumber?.trim() &&
     isValid;
 
@@ -68,7 +66,7 @@ const SignupInfoPage = () => {
         </span>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
         <InputField
           label="이름"
           placeholder="이름을 입력해주세요"
@@ -76,13 +74,7 @@ const SignupInfoPage = () => {
           value={name}
           errorMessage={touchedFields.name ? errors.name?.message : undefined}
         />
-        <InputField
-          label="이메일"
-          placeholder="이메일을 입력해주세요"
-          {...register("email")}
-          value={email}
-          errorMessage={touchedFields.email ? errors.email?.message : undefined}
-        />
+
         <InputField
           label="전화번호"
           placeholder="전화번호를 입력해주세요"

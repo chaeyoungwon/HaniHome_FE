@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
-import { useAuth } from "@/hooks/auth/useAuth";
+import { useDeleteUser } from "@/hooks/member/useMember";
 
 import AlertModal from "@/components/common/AlertModal";
 import CompleteModal from "@/components/common/CompleteModal";
@@ -14,7 +14,7 @@ interface WithdrawAlertModalProps {
 const WithdrawAlertModal = ({ onClose }: WithdrawAlertModalProps) => {
   const [isCompleted, setIsCompleted] = useState(false);
 
-  const { deleteUser, isDeleteLoading } = useAuth();
+  const { mutate: deleteUser, isPending } = useDeleteUser();
   const memberId = useAuthStore(state => state.memberId);
 
   const handleWithdraw = async () => {
@@ -42,7 +42,7 @@ const WithdrawAlertModal = ({ onClose }: WithdrawAlertModalProps) => {
       onClose={onClose}
       actionLabel="탈퇴"
       onActionClick={handleWithdraw}
-      loading={isDeleteLoading}
+      loading={isPending}
       description={[
         "탈퇴 시 본 계정에 저장된 기록이 소멸되며",
         "탈퇴 후 14일 내로 재가입할 수 없습니다.",

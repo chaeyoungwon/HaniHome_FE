@@ -2,7 +2,7 @@
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
-// import { useMyViewingList } from "@/hooks/viewing/useViewing";
+import { useMyViewingList } from "@/hooks/viewing/useViewing";
 
 import ViewingBox from "@/components/home/ViewingBox";
 
@@ -10,10 +10,12 @@ import { viewingLists } from "@/constants/mock/viewing-lists";
 
 const ViewingSection = () => {
   const isLoggedIn = useAuthStore(state => state.isLoggedIn);
-  // const { data, isLoading, isError } = useMyViewingList({
-  //   view: "DATE_PROFILE",
-  //   enabled: isLoggedIn === true,
-  // });
+  const { data } = useMyViewingList({
+    view: "DATE_PROFILE",
+    enabled: isLoggedIn === true,
+  });
+
+  console.log(data);
 
   return (
     <div className="flex flex-col gap-3 border-t border-gray-200 bg-white py-5">

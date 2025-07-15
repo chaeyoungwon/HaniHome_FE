@@ -2,7 +2,6 @@ import { create } from "zustand";
 
 interface SignupState {
   name: string;
-  email: string;
   phoneNumber: string;
   agreed: number[];
   nickname: string;
@@ -22,7 +21,6 @@ interface SignupState {
 
 export const useSignupStore = create<SignupState>(set => ({
   name: "",
-  email: "",
   phoneNumber: "",
   agreed: [],
   nickname: "",
@@ -42,7 +40,6 @@ export const useSignupStore = create<SignupState>(set => ({
   reset: () =>
     set({
       name: "",
-      email: "",
       phoneNumber: "",
       agreed: [],
       nickname: "",

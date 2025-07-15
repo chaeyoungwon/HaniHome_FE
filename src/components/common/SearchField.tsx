@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
+import { useMetroStore } from "@/stores/useMetroStore";
 import clsx from "clsx";
 
 import { fetchPlaceSuggestions } from "@/apis/googlePlaces";
@@ -19,7 +19,7 @@ interface SearchFieldProps {
   onChange: (val: string) => void;
   placeholder?: string;
   isSelected?: boolean;
-  onSearchClick?: () => void;
+  onSearchClick?: (id: string, text: string) => void;
   onConfirm?: (confirmed: boolean) => void;
   type?: string;
 }
@@ -35,6 +35,7 @@ const SearchField = ({
   onConfirm,
 }: SearchFieldProps) => {
   const [results, setResults] = useState<PlacePrediction[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
 
   const isSelectedRef = useRef(false);
   const controllerRef = useRef<AbortController | null>(null);
@@ -44,15 +45,18 @@ const SearchField = ({
 
   useEffect(() => {
     setIsSelected(isSelectedProp ?? false);
+    isSelectedRef.current = isSelectedProp ?? false;
+    // 전역값 받아올 때는 타이핑 상태 false 유지
+    setIsTyping(false);
   }, [isSelectedProp]);
 
   const { highlightedIndex, setHighlightedIndex, handleKeyDown } =
     useKeyboardNavigation(results.length, index => {
-      handleSelect(results[index].text);
+      handleSelect(results[index].placeId, results[index].text);
     });
 
   const fetchPlaces = useCallback(async () => {
-    if (!value.trim() || isSelected) {
+    if (!value.trim() || !isTyping) {
       setResults([]);
       return;
     }
@@ -65,12 +69,30 @@ const SearchField = ({
     controllerRef.current = controller;
 
     try {
-      const suggestions = await fetchPlaceSuggestions(value, controller.signal);
-      setResults(suggestions);
+      if (type === "subway") {
+        const stops = useMetroStore.getState().stops;
+        const filtered = stops
+          .filter(stop =>
+            stop.stopName.toLowerCase().includes(value.trim().toLowerCase()),
+          )
+          .slice(0, 5)
+          .map(stop => ({
+            placeId: String(stop.id),
+            text: stop.stopName,
+          }));
+
+        setResults(filtered);
+      } else {
+        const suggestions = await fetchPlaceSuggestions(
+          value,
+          controller.signal,
+        );
+        setResults(suggestions);
+      }
     } catch {
       // silent fail
     }
-  }, [value]);
+  }, [value, isTyping, type]);
 
   useEffect(() => {
     const debounce = setTimeout(() => {
@@ -80,18 +102,23 @@ const SearchField = ({
     return () => clearTimeout(debounce);
   }, [fetchPlaces]);
 
-  const handleSelect = (text: string) => {
+  const handleSelect = (id: string, text: string) => {
+    setIsTyping(false);
     isSelectedRef.current = true;
     setIsSelected(true);
     onChange(text);
     onConfirm?.(true);
+    if (type === "subway" && onSearchClick) {
+      onSearchClick(id, text);
+    }
+
     setResults([]);
     setHighlightedIndex(-1);
   };
 
   const handleClick = () => {
-    if (onSearchClick) {
-      onSearchClick();
+    if (type === "subway") {
+      onSearchClick?.("", value);
     } else {
       fetchPlaces();
     }
@@ -112,6 +139,7 @@ const SearchField = ({
         <div className="group relative w-full">
           <input
             id="search-input"
+            autoComplete="off"
             className={clsx(
               "text-body1-med h-[44px] w-full rounded-sm border py-3 placeholder:text-gray-500 focus:outline-none",
               isSelected
@@ -121,6 +149,7 @@ const SearchField = ({
             placeholder={placeholder}
             value={value}
             onChange={e => {
+              setIsTyping(true);
               isSelectedRef.current = false;
               setIsSelected(false);
               onChange(e.target.value);
@@ -149,7 +178,7 @@ const SearchField = ({
               {results.map((r, index) => (
                 <li
                   key={r.placeId}
-                  onClick={() => handleSelect(r.text)}
+                  onClick={() => handleSelect(r.placeId, r.text)}
                   className={`text-body1-med cursor-pointer truncate px-4 py-2 text-gray-700 ${
                     index === highlightedIndex
                       ? "bg-gray-100"
@@ -160,9 +189,12 @@ const SearchField = ({
                 </li>
               ))}
             </ul>
-            <div className="px-4 pb-2 text-right text-[6.625px] text-gray-700">
-              powered by google
-            </div>
+
+            {type !== "subway" && (
+              <div className="px-4 pb-2 text-right text-[6.625px] text-gray-700">
+                powered by google
+              </div>
+            )}
           </div>
         )}
       </div>

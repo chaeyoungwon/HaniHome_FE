@@ -16,7 +16,7 @@ const RoomTypeSelector = ({
   return (
     <div className="flex items-center gap-3 py-4">
       <span className="text-heading3 px-4 py-2 text-gray-900">매물유형</span>
-      <div className="flex w-fit max-w-[269px] flex-wrap items-center justify-center gap-2 px-4 py-2">
+      <div className="flex w-fit max-w-[269px] flex-wrap items-center gap-2 px-4 py-2">
         {ROOM_TYPES.map(type => (
           <SelectableChip
             key={type}

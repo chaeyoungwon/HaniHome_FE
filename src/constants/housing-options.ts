@@ -25,6 +25,6 @@ export const RENT_TYPE_MAP: Record<string, string> = {
   아파트: "APARTMENT",
   유닛: "UNIT",
   스튜디오: "STUDIO",
-  타운하우스: "TOWNHOUSE",
+  타운하우스: "TOWN_HOUSE",
   "그래니 플랫": "GRANNY_FLAT",
 };

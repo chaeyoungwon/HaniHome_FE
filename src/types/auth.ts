@@ -7,7 +7,6 @@ export interface Consent {
 
 export interface SignupPayload {
   name: string;
-  email: string;
   phoneNumber: string;
   nickname: string;
   gender: string;

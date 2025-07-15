@@ -1,4 +1,3 @@
-import { useFilterStore } from "@/stores/useFilterStore";
 import Slider from "rc-slider";
 
 import CheckIcon from "@/components/common/CheckIcon";
@@ -7,10 +6,21 @@ const MIN_BUDGET = 100;
 const MAX_BUDGET = 3000;
 const MIN_GAP = 50;
 
-const BudgetSlider = () => {
-  const { minWeeklyCost, maxWeeklyCost, billIncluded, setFilters } =
-    useFilterStore();
+interface BudgetSliderProps {
+  minWeeklyCost: number | null;
+  maxWeeklyCost: number | null;
+  billIncluded: boolean;
+  onBudgetChange: (min: number, max: number) => void;
+  onBillToggle: () => void;
+}
 
+const BudgetSlider = ({
+  minWeeklyCost,
+  maxWeeklyCost,
+  billIncluded,
+  onBudgetChange,
+  onBillToggle,
+}: BudgetSliderProps) => {
   const budgetRange: [number, number] = [
     minWeeklyCost ?? MIN_BUDGET,
     maxWeeklyCost ?? MAX_BUDGET,
@@ -23,7 +33,7 @@ const BudgetSlider = () => {
         <div className="text-heading3 text-mint flex items-center gap-2">
           <span className="text-gray-500">주/$</span>
           <span>{budgetRange[0]}</span>
-          <span>–</span>
+          <span>-</span>
           <span>{budgetRange[1]}</span>
         </div>
       </div>
@@ -41,9 +51,8 @@ const BudgetSlider = () => {
             step={50}
             onChange={value => {
               const [start, end] = value as [number, number];
-              const distance = Math.abs(end - start);
-              if (distance < MIN_GAP) return;
-              setFilters({ minWeeklyCost: start, maxWeeklyCost: end });
+              if (Math.abs(end - start) < MIN_GAP) return;
+              onBudgetChange(start, end);
             }}
             marks={{
               [MIN_BUDGET]: {
@@ -66,11 +75,9 @@ const BudgetSlider = () => {
 
         <div
           className="flex cursor-pointer items-center justify-end gap-1"
-          onClick={() => {
-            setFilters({ billIncluded: !billIncluded });
-          }}
+          onClick={onBillToggle}
         >
-          <CheckIcon checked={billIncluded ?? false} />
+          <CheckIcon checked={billIncluded} />
           <span className="text-cap1-med text-gray-700">빌 포함</span>
         </div>
       </div>

@@ -6,6 +6,8 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useLoginModalStore } from "@/stores/useLoginModalStore";
 import { useSignupStore } from "@/stores/useSignupStore";
 
+import { extractSuburb } from "@/utils/extractSuburb";
+
 import LoginAlertModal from "@/components/common/LoginAlertModal";
 
 import Arrow from "@/public/svgs/common/left-arrow.svg";
@@ -19,17 +21,15 @@ const LocationHeader = () => {
   const { openModal } = useLoginModalStore();
 
   const { interestRegion, setField } = useSignupStore();
-  const displayRegion =
-    interestRegion && interestRegion.includes(",")
-      ? interestRegion.slice(0, interestRegion.lastIndexOf(",")).trim()
-      : interestRegion || "chatswood";
+
+  const displayRegion = extractSuburb(interestRegion);
 
   const handleOpenModal = () => {
     if (!isLoggedIn) {
-      openModal(); // ❗ 로그인 안 돼 있으면 로그인 모달 열기
+      openModal();
       return;
     }
-    setIsModalOpen(true); // ❗ 로그인 상태면 기존 지역 모달 열기
+    setIsModalOpen(true);
   };
 
   return (
