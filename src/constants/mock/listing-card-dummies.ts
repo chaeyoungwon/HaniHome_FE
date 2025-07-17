@@ -8,9 +8,10 @@ export const ListingDummies: ListingCardProps[] = [
     tradeStatus: "BEFORE",
     internalArea: 55,
     totalFloors: 4,
-    propertySubType: "SECOND_ROOM",
     billIncluded: true,
     suburb: "서울 강남구",
+    kind: "SHARE",
+    nearestStation: { distanceFromStation: 10, metroStopId: 62, name: "dd" },
     createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(), // 10분 전
     wishCount: 234,
     isLiked: false,
@@ -25,7 +26,8 @@ export const ListingDummies: ListingCardProps[] = [
     tradeStatus: "BEFORE",
     internalArea: 55,
     totalFloors: 4,
-    propertySubType: "SECOND_ROOM",
+    kind: "SHARE",
+    nearestStation: { distanceFromStation: 10, metroStopId: 62, name: "dd" },
     billIncluded: true,
     suburb: "서울 서초구",
     createdAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(), // 2분 전
@@ -42,7 +44,8 @@ export const ListingDummies: ListingCardProps[] = [
     tradeStatus: "BEFORE",
     internalArea: 55,
     totalFloors: 4,
-    propertySubType: "ONE_ROOM",
+    kind: "SHARE",
+    nearestStation: { distanceFromStation: 10, metroStopId: 62, name: "dd" },
     billIncluded: true,
     suburb: "서울 마포구",
     createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(), // 5분 전
@@ -59,7 +62,8 @@ export const ListingDummies: ListingCardProps[] = [
     tradeStatus: "BEFORE",
     internalArea: 55,
     totalFloors: 4,
-    propertySubType: "ONE_ROOM",
+    kind: "SHARE",
+    nearestStation: { distanceFromStation: 10, metroStopId: 62, name: "dd" },
     billIncluded: true,
     suburb: "서울 종로구",
     createdAt: new Date(Date.now() - 1 * 60 * 1000).toISOString(), // 1분 전

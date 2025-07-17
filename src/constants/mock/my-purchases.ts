@@ -8,7 +8,9 @@ export const myPurchases: ListingCardProps[] = [
     tradeStatus: "BEFORE",
     internalArea: 30,
     totalFloors: 4,
-    propertySubType: "렌트",
+    kind: "SHARE",
+    nearestStation: { distanceFromStation: 10, metroStopId: 62, name: "dd" },
+
     billIncluded: true,
     suburb: "chatswood",
     createdAt: "2025-07-12T06:51:31.915Z",
@@ -25,7 +27,9 @@ export const myPurchases: ListingCardProps[] = [
     tradeStatus: "BEFORE",
     internalArea: 28,
     totalFloors: 3,
-    propertySubType: "렌트",
+    kind: "SHARE",
+    nearestStation: { distanceFromStation: 10, metroStopId: 62, name: "dd" },
+
     billIncluded: true,
     suburb: "chatswood",
     createdAt: "2025-07-12T06:51:31.915Z",

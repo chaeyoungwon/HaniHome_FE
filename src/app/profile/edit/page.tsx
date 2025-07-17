@@ -17,7 +17,6 @@ import BackHeader from "@/components/layout/header/BackHeader";
 import Arrow from "@/public/svgs/common/left-arrow.svg";
 import PlusIcon from "@/public/svgs/common/plus-icon.svg";
 import GoogleIcon from "@/public/svgs/mypage/google-icon.svg";
-import InstaIcon from "@/public/svgs/mypage/insta-icon.svg";
 
 const GENDER_OPTIONS = [
   { label: "남성", value: "male" },
@@ -112,7 +111,7 @@ const ProfileEdit = () => {
               onChange={val => setGender(val)}
               options={GENDER_OPTIONS}
             />
-            <Divider className="my-6"/>
+            <Divider className="my-6" />
             <div
               className="flex cursor-pointer flex-row items-center justify-between py-5"
               onClick={() => router.push("/profile/verifications")}
@@ -133,7 +132,12 @@ const ProfileEdit = () => {
             </div>
             <div className="flex cursor-pointer items-center justify-between py-5">
               <div className="text-body1-sb text-gray-800">SNS</div>
-              <InstaIcon className="h-6 w-6" />
+              <Image
+                src="/svgs/mypage/insta-icon.svg"
+                width={24}
+                height={24}
+                alt="인스타"
+              />
             </div>
           </div>
         </div>

@@ -5,6 +5,11 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
 import { formatRelativeTime } from "@/utils/dateFormatter";
+import {
+  getDisplayStatus,
+  getDisplayType,
+  getDistanceInKm,
+} from "@/utils/propertyFormatter";
 
 import Dot from "@/components/common/Dot";
 
@@ -32,15 +37,11 @@ const ListingCard = ({
   onClick,
   heartColor = "text-mint",
 }: ListingCardProps) => {
-  const displayStatus = tradeStatus === "BEFORE" ? "거래 중" : "거래 완료";
-  const displayType = kind === "SHARE" ? "쉐어" : "렌트";
-  const distanceInKm = (nearestStation.distanceFromStation / 1000).toFixed(1);
-
   return (
     <div
       className={clsx(
         "flex cursor-pointer items-center justify-center gap-4 px-4 py-3",
-        displayStatus !== "거래 중" && "opacity-60",
+        getDisplayStatus(tradeStatus) !== "거래 중" && "opacity-60",
       )}
       onClick={onClick}
     >
@@ -59,12 +60,12 @@ const ListingCard = ({
             <span
               className={clsx(
                 "text-cap1-med flex rounded-full border px-2 py-[2px]",
-                displayStatus === "거래 중"
+                getDisplayStatus(tradeStatus) === "거래 중"
                   ? "border-violet bg-violet-ultralight text-violet"
                   : "border-gray-300 bg-white text-gray-700",
               )}
             >
-              {displayStatus}
+              {getDisplayStatus(tradeStatus)}
             </span>
           </div>
 
@@ -81,12 +82,12 @@ const ListingCard = ({
               </>
             )}
 
-            {displayType}
+            {getDisplayType(kind)}
           </p>
 
           <p className="text-cap1-med mt-[2px] flex items-center gap-1 text-gray-600">
             {billIncluded ? "빌 포함" : "빌 미포함"} <Dot /> 역까지{" "}
-            {distanceInKm}km
+            {getDistanceInKm(nearestStation.distanceFromStation)}km
           </p>
         </div>
 

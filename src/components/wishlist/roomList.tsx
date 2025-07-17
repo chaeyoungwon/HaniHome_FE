@@ -6,6 +6,13 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { formatRelativeTime } from "@/utils/dateFormatter";
+import {
+  getDisplayStatus,
+  getDisplayType,
+  getDistanceInKm,
+} from "@/utils/propertyFormatter";
+
 import { ListingCardProps } from "@/types/listingCard";
 
 import FilledHeart from "@/public/svgs/common/heart-filled-icon.svg";
@@ -19,7 +26,8 @@ const RoomList = ({
   tradeStatus = "BEFORE",
   internalArea,
   totalFloors,
-  propertySubType,
+  kind,
+  nearestStation,
   billIncluded,
   suburb,
   createdAt,
@@ -29,17 +37,12 @@ const RoomList = ({
   onClick,
   heartColor = "text-mint",
 }: ListingCardProps) => {
-  const statusText = tradeStatus === "BEFORE" ? "거래 중" : "거래 완료";
-  const typeText = propertySubType === "SECOND_ROOM" ? "쉐어" : "렌트";
-  const distanceText = "역까지 0.5km"; // mock
-  const timeAgo = dayjs(createdAt).fromNow();
-
   return (
     <div
       onClick={onClick}
       className={clsx(
         "flex cursor-pointer flex-row gap-4 px-4 py-3",
-        statusText !== "거래 중" && "opacity-60",
+        getDisplayStatus(tradeStatus) !== "거래 중" && "opacity-60",
       )}
     >
       <Image
@@ -67,7 +70,7 @@ const RoomList = ({
                   : "w-[58px] border-gray-300 text-gray-700",
               )}
             >
-              {statusText}
+              {getDisplayStatus(tradeStatus)}
             </div>
           </div>
 
@@ -77,13 +80,13 @@ const RoomList = ({
             <div className="text-gray-300">•</div>
             <div>전체 {totalFloors}층</div>
             <div className="text-gray-300">•</div>
-            <div>{typeText}</div>
+            <div> {getDisplayType(kind)}</div>
           </div>
 
           <div className="text-cap1-med flex flex-row gap-1 pb-4 text-gray-600">
             <div>{billIncluded ? "빌 포함" : "빌 미포함"}</div>
             <div className="text-gray-300">•</div>
-            <div>{distanceText}</div>
+            <div> {getDistanceInKm(nearestStation.distanceFromStation)}km</div>
           </div>
 
           <div className="text-cap1-med text-gray-500">{suburb}</div>
@@ -110,7 +113,9 @@ const RoomList = ({
             </div>
           </div>
 
-          <div className="text-cap1-med text-gray-500">{timeAgo}</div>
+          <div className="text-cap1-med text-gray-500">
+            {formatRelativeTime(createdAt)}
+          </div>
         </div>
       </div>
     </div>
