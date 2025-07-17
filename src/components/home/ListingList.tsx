@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
+import utc from "dayjs/plugin/utc";
 
 import { addWish, removeWish } from "@/apis/wishlist";
 
@@ -24,6 +25,7 @@ import { SummaryProperty } from "@/types/property";
 
 import ListingCard from "./ListingCard";
 
+dayjs.extend(utc);
 dayjs.extend(relativeTime);
 dayjs.locale("ko");
 
@@ -44,6 +46,7 @@ const ListingList = () => {
     minWeeklyCost,
     maxWeeklyCost,
     radiusKm,
+    selectedMetroStop,
   } = useFilterStore();
 
   const params = buildQueryParams({
@@ -57,6 +60,8 @@ const ListingList = () => {
     minWeeklyCost,
     maxWeeklyCost,
     radiusKm,
+    metroStopLatitude: selectedMetroStop?.latitude ?? null,
+    metroStopLongitude: selectedMetroStop?.longitude ?? null,
   });
 
   const { data: listData } = usePropertyList<"SUMMARY">({
@@ -143,7 +148,8 @@ const ListingList = () => {
           tradeStatus={p.tradeStatus}
           internalArea={p.internalArea}
           totalFloors={p.totalFloors}
-          propertySubType={p.propertySubType}
+          nearestStation={p.nearestStation}
+          kind={p.kind}
           billIncluded={p.billIncluded}
           suburb={p.suburb}
           createdAt={p.createdAt}

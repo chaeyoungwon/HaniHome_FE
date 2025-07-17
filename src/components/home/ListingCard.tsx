@@ -4,6 +4,10 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
+import { formatRelativeTime } from "@/utils/dateFormatter";
+
+import Dot from "@/components/common/Dot";
+
 import { ListingCardProps } from "@/types/listingCard";
 
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
@@ -11,17 +15,14 @@ import HeartOutlineIcon from "@/public/svgs/common/heart-outline-icon.svg";
 
 dayjs.extend(relativeTime);
 
-const Dot = () => (
-  <span className="inline-block h-1 w-1 rounded-full bg-gray-400" />
-);
-
 const ListingCard = ({
   thumbnailUrl,
   weeklyCost,
   tradeStatus = "BEFORE",
   internalArea,
   totalFloors,
-  propertySubType,
+  kind,
+  nearestStation,
   billIncluded,
   suburb,
   createdAt,
@@ -32,8 +33,8 @@ const ListingCard = ({
   heartColor = "text-mint",
 }: ListingCardProps) => {
   const displayStatus = tradeStatus === "BEFORE" ? "거래 중" : "거래 완료";
-
-  const displayType = propertySubType === "SECOND_ROOM" ? "쉐어" : "렌트";
+  const displayType = kind === "SHARE" ? "쉐어" : "렌트";
+  const distanceInKm = (nearestStation.distanceFromStation / 1000).toFixed(1);
 
   return (
     <div
@@ -70,14 +71,13 @@ const ListingCard = ({
           <p className="text-cap1-med mt-2 flex items-center gap-1 text-gray-600">
             {internalArea !== undefined && (
               <>
-                {internalArea}㎡
-                {(totalFloors !== undefined || propertySubType) && <Dot />}
+                {internalArea}㎡{(totalFloors !== undefined || kind) && <Dot />}
               </>
             )}
 
             {totalFloors !== undefined && (
               <>
-                전체 {totalFloors}층{propertySubType && <Dot />}
+                전체 {totalFloors}층 {kind && <Dot />}
               </>
             )}
 
@@ -85,7 +85,8 @@ const ListingCard = ({
           </p>
 
           <p className="text-cap1-med mt-[2px] flex items-center gap-1 text-gray-600">
-            {billIncluded ? "빌 포함" : "빌 미포함"} <Dot /> 역까지 500km
+            {billIncluded ? "빌 포함" : "빌 미포함"} <Dot /> 역까지{" "}
+            {distanceInKm}km
           </p>
         </div>
 
@@ -108,7 +109,7 @@ const ListingCard = ({
           )}
           {wishCount}
         </button>
-        <span>{dayjs(createdAt).fromNow()}</span>
+        <span>{formatRelativeTime(createdAt)}</span>
       </div>
     </div>
   );

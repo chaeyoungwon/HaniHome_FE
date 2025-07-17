@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 
 import clsx from "clsx";
-
-import { getTimeRange } from "@/utils/getTimeRange";
+import dayjs from "dayjs";
 
 import { TIME_OPTIONS, TimeLabel } from "@/constants/time-options";
 
@@ -10,35 +9,35 @@ import AfternoonIcon from "@/public/svgs/reservation/afternoon-icon.svg";
 import EveningIcon from "@/public/svgs/reservation/evening-icon.svg";
 import MorningIcon from "@/public/svgs/reservation/morning-icon.svg";
 
-const TimePicker = ({
-  activeIndex,
-  schedules,
-  updateSchedule,
-  selectedLabel,
-  setSelectedLabel,
-  usedDateTimeSet,
-  viewingTimeSlots,
-}: {
-  activeIndex: number;
-  schedules: { date: Date | null; time: string }[];
-  updateSchedule: (index: number, key: "time", value: string) => void;
+interface TimePickerProps {
+  selectedDate: Date | null;
+  selectedTime: string;
+  setSelectedTime: (time: string) => void;
   selectedLabel: TimeLabel;
   setSelectedLabel: (label: TimeLabel) => void;
   usedDateTimeSet: Set<string>;
-  viewingTimeSlots: {
-    label: TimeLabel;
-    start: string;
-    end: string;
-  }[];
-}) => {
+
+  isDisabledTime: (time: string, date: string) => boolean;
+  isDisabledTimeWithoutDate: (time: string) => boolean;
+}
+
+const TimePicker = ({
+  selectedTime,
+  selectedDate,
+  setSelectedTime,
+  selectedLabel,
+  setSelectedLabel,
+  isDisabledTime,
+  isDisabledTimeWithoutDate,
+}: TimePickerProps) => {
   const [tempLabel, setTempLabel] = useState<TimeLabel>("아침");
 
   useEffect(() => {
     setTempLabel(selectedLabel ?? "아침");
-  }, [activeIndex, selectedLabel]);
+  }, [selectedLabel]);
 
   const handleSelectTime = (time: string) => {
-    updateSchedule(activeIndex, "time", time);
+    setSelectedTime(time);
     setSelectedLabel(tempLabel);
   };
 
@@ -79,31 +78,22 @@ const TimePicker = ({
       {/* 시간 버튼 목록 */}
       <div className="grid grid-cols-3 gap-x-3 gap-y-2 px-[31.5px] pt-5">
         {TIME_OPTIONS[tempLabel].map(time => {
-          const currentDate = schedules[activeIndex].date;
-
-          const isAllowed = viewingTimeSlots.some(
-            slot =>
-              slot.label === tempLabel &&
-              getTimeRange(slot.start, slot.end).includes(time),
-          );
-
-          const isUsed =
-            currentDate instanceof Date &&
-            usedDateTimeSet.has(`${currentDate.toDateString()}-${time}`);
-          const isDisabled = !isAllowed || isUsed;
+          const isDisabled = selectedDate
+            ? isDisabledTime(time, dayjs(selectedDate).format("YYYY-MM-DD"))
+            : isDisabledTimeWithoutDate(time); // ✅ 날짜 없으면 이걸로 판단
 
           return (
             <button
               key={time}
-              disabled={!!isDisabled}
+              disabled={isDisabled}
               onClick={() => handleSelectTime(time)}
               className={clsx(
                 "text-body1-sb h-10 w-24 rounded border py-2 text-center",
                 isDisabled
                   ? "cursor-not-allowed border-gray-300 bg-gray-100 text-gray-400"
-                  : schedules[activeIndex].time === time
+                  : selectedTime === time
                     ? "bg-mint-light text-mint-contrast border-mint-contrast cursor-pointer"
-                    : "border-mint-contrast cursor-pointer bg-white text-gray-700",
+                    : "hover:text-mint-contrast hover:border-mint-contrast hover:bg-mint-light cursor-pointer border-gray-400 bg-white text-gray-700",
               )}
             >
               {time}

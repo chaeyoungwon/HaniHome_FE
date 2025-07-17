@@ -36,9 +36,8 @@ const ListingDetailPage = () => {
   const memberId = data?.memberId;
   const { data: member } = useMember(memberId ?? 0);
 
-  if (isLoading) return <p className="p-4">불러오는 중...</p>;
-  if (isError || !data)
-    return <p className="p-4">매물 정보를 불러오지 못했어요.</p>;
+  if (isLoading) return <></>; //추후 스켈레톤 UI
+  if (isError || !data) return <></>;
 
   const isCompleted = data.tradeStatus === "COMPLETED";
 

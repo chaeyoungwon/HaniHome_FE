@@ -139,12 +139,20 @@ export interface SummaryProperty {
   suburb: string;
   internalArea: number;
   totalFloors: number;
+  kind: string;
   propertySubType: string;
   billIncluded: boolean;
   createdAt: string;
   thumbnailUrl: string | null;
   tradeStatus: string;
   wishCount: number;
+  nearestStation: NearestStation; 
+}
+
+export interface NearestStation {
+  metroStopId: number;
+  name: string;
+  distanceFromStation: number;
 }
 
 // 상세 매물 타입

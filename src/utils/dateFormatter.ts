@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 // 오전/오후, 시/분 분리
 export const getTimeLabel = (timeStr: string) => {
   const [hourStr, minute] = timeStr.split(":");
@@ -83,4 +85,22 @@ export const calculateDday = (meetingDay: string) => {
 
   const diff = meetingDate.getTime() - today.getTime();
   return Math.floor(diff / (1000 * 60 * 60 * 24));
+};
+
+export const formatRelativeTime = (date: string) => {
+  const now = dayjs();
+  const target = dayjs(date);
+
+  const diffMinutes = now.diff(target, "minute");
+  const diffHours = now.diff(target, "hour");
+  const diffDays = now.diff(target, "day");
+  const diffMonths = now.diff(target, "month");
+  const diffYears = now.diff(target, "year");
+
+  if (diffMinutes < 1) return "방금 전";
+  if (diffMinutes < 60) return `${diffMinutes}분 전`;
+  if (diffHours < 24) return `${diffHours}시간 전`;
+  if (diffDays < 30) return `${diffDays}일 전`;
+  if (diffMonths < 12) return `${diffMonths}달 전`;
+  return `${diffYears}년 전`;
 };

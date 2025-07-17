@@ -1,80 +1,186 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
-import { useViewingScheduleStore } from "@/stores/useViewingScheduleStore";
-import { format } from "date-fns";
+import { eachDayOfInterval, endOfMonth, format, startOfMonth } from "date-fns";
+import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 
-import { normalizeTime } from "@/utils/dateFormatter";
+import { useViewingAvailableDates } from "@/hooks/viewing/useViewing";
 
-import { ValidSchedule } from "@/types/schedule";
+import { TIME_OPTIONS, TimeLabel } from "@/constants/time-options";
 
-// 임시로 겹치는 일정 (mock 데이터)
-// 실제로는 서버에서 받아오는 구조로 대체될 예정
-const mockedOverlappingTimes = [
-  { date: "2025-06-19", time: "06:30" },
-  { date: "2025-06-30", time: "14:00" },
-];
+import { MyViewingDates } from "@/types/viewing";
 
-// 해당 날짜/시간이 겹치는 일정인지 여부 확인
-const isOverlapping = (date: Date, time: string) => {
-  const formatted = format(date, "yyyy-MM-dd");
-  const normalized = normalizeTime(time);
-  return mockedOverlappingTimes.some(
-    o => o.date === formatted && o.time === normalized,
-  );
-};
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
-// 뷰잉 예약 확정 페이지에서 사용될 일정 필터링 훅
-export const useConfirmSchedules = (id: string) => {
-  const { setActiveId, getSchedules } = useViewingScheduleStore();
-  const [selectedSchedule, setSelectedSchedule] = useState<{
-    date: Date;
-    time: string;
-  } | null>(null);
+const userTimeZone = dayjs.tz.guess();
 
-  // 현재 보고 있는 매물 ID 설정
-  useEffect(() => {
-    setActiveId(id);
-  }, [id, setActiveId]);
+export const useViewingReservation = ({
+  propertyId,
+  shownDate,
+  selectedTime,
+  currentId,
+  myViewingDatesData,
+}: {
+  propertyId: number;
+  shownDate: Date;
+  selectedTime: string;
+  selectedDate: Date | null;
+  currentId: string;
+  myViewingDatesData: MyViewingDates | undefined;
+}) => {
+  const { data: availableDatesData } = useViewingAvailableDates(propertyId);
 
-  // 유효한 일정만 필터링 ("NN : NN" 제외)
-  const rawSchedules = getSchedules().filter(
-    (s): s is ValidSchedule => s.date !== null && s.time !== "NN : NN",
-  );
-
-  // 일정 정렬 (가장 빠른 시간 순으로)
-  const sorted = rawSchedules.sort((a, b) => {
-    const dateA = new Date(
-      `${a.date!.toISOString().split("T")[0]}T${a.time}:00`,
+  const getTimeLabelByTime = (time: string): TimeLabel => {
+    const found = (Object.keys(TIME_OPTIONS) as TimeLabel[]).find(label =>
+      TIME_OPTIONS[label].includes(time),
     );
-    const dateB = new Date(
-      `${b.date!.toISOString().split("T")[0]}T${b.time}:00`,
+    if (!found) throw new Error(`Invalid time: ${time}`);
+    return found;
+  };
+
+  const usedDateTimeSet = useMemo(() => {
+    const set = new Set<string>();
+
+    //  이미 예약된 slot (호스트가 지정한)
+    if (availableDatesData) {
+      Object.entries(availableDatesData).forEach(([date, slots]) => {
+        slots.forEach(slot => {
+          if (slot.reserved) {
+            const utcDatetime = `${date}T${slot.time}Z`;
+            const localTime = dayjs
+              .utc(utcDatetime)
+              .tz(userTimeZone)
+              .format("HH:mm");
+
+            set.add(`${date}-${localTime}`);
+          }
+        });
+      });
+    }
+
+    //  내 뷰잉 데이터
+    if (myViewingDatesData) {
+      Object.entries<string[]>(myViewingDatesData).forEach(([date, times]) => {
+        times.forEach(time => {
+          const utcDatetime = `${date}T${time}Z`;
+          const localTime = dayjs
+            .utc(utcDatetime)
+            .tz(userTimeZone)
+            .format("HH:mm");
+
+          set.add(`${date}-${localTime}`);
+        });
+      });
+    }
+
+    return set;
+  }, [availableDatesData, myViewingDatesData, currentId]);
+
+  const filteredAvailableDates = useMemo(() => {
+    if (!availableDatesData || selectedTime === "NN : NN") return null;
+
+    return Object.entries(availableDatesData)
+      .filter(([date, slots]) =>
+        slots.some(slot => {
+          const utcDatetime = `${date}T${slot.time}Z`;
+
+          const localTime = dayjs
+            .utc(utcDatetime)
+            .tz(userTimeZone)
+            .format("HH:mm");
+
+          const isMyReserved = myViewingDatesData?.[date]?.some(t => {
+            const myLocalTime = dayjs
+              .utc(`${date}T${t}Z`)
+              .tz(userTimeZone)
+              .format("HH:mm");
+            return myLocalTime === localTime;
+          });
+
+          const isAlreadyReserved = usedDateTimeSet.has(`${date}-${localTime}`);
+
+          return (
+            localTime === selectedTime &&
+            !slot.reserved &&
+            !isAlreadyReserved &&
+            !isMyReserved
+          );
+        }),
+      )
+      .map(([date]) => date);
+  }, [availableDatesData, selectedTime, myViewingDatesData, usedDateTimeSet]);
+
+  const disabledDates = useMemo(() => {
+    if (!availableDatesData) return [];
+
+    const allDatesInMonth = eachDayOfInterval({
+      start: startOfMonth(shownDate),
+      end: endOfMonth(shownDate),
+    });
+
+    return allDatesInMonth.filter(date => {
+      const formatted = format(date, "yyyy-MM-dd");
+
+      if (selectedTime !== "NN : NN" && filteredAvailableDates) {
+        return !filteredAvailableDates.includes(formatted);
+      }
+
+      return !availableDatesData[formatted];
+    });
+  }, [availableDatesData, shownDate, selectedTime, filteredAvailableDates]);
+
+  const isDisabledTime = (time: string, date: string) => {
+    if (!availableDatesData) return true;
+
+    const hasAvailableSlot = (availableDatesData[date] ?? []).some(slot => {
+      const utcDatetime = `${date}T${slot.time}Z`;
+      const localTime = dayjs.utc(utcDatetime).tz(userTimeZone).format("HH:mm");
+
+      return localTime === time && !slot.reserved;
+    });
+
+    if (!hasAvailableSlot) return true; // 호스트 slot 중 사용가능한 게 없으면 비활성화
+
+    // 내 뷰잉 일정과 겹치는지 체크
+    const isMyViewingConflict = (myViewingDatesData?.[date] ?? []).some(t => {
+      const utcDatetime = `${date}T${t}Z`;
+      const localTime = dayjs.utc(utcDatetime).tz(userTimeZone).format("HH:mm");
+
+      return localTime === time;
+    });
+
+    return isMyViewingConflict;
+  };
+
+  const isDisabledTimeWithoutDate = (time: string) => {
+    if (!availableDatesData) return true;
+
+    // 모든 날짜 중 해당 시간 슬롯이 하나라도 있으면 활성화
+    const hasTimeSlot = Object.entries(availableDatesData).some(
+      ([date, slots]) =>
+        slots.some(slot => {
+          const utcDatetime = `${date}T${slot.time}Z`;
+          const localTime = dayjs
+            .utc(utcDatetime)
+            .tz(userTimeZone)
+            .format("HH:mm");
+
+          return localTime === time;
+        }),
     );
-    return dateA.getTime() - dateB.getTime();
-  });
 
-  // 중복되지 않는 가장 빠른 일정
-  const firstValid = sorted.find(s => !isOverlapping(s.date!, s.time));
-
-  // 변경 가능한 나머지 일정 (중복되지 않고, 선택된 일정과는 다른)
-  const valid = sorted.filter(
-    s =>
-      !isOverlapping(s.date, s.time) &&
-      (selectedSchedule == null ||
-        s.date.getTime() !== selectedSchedule.date.getTime() ||
-        s.time !== selectedSchedule.time),
-  );
-  // 중복된 일정 리스트
-  const overlaps = sorted.filter(s => isOverlapping(s.date!, s.time));
-
-  // 초기 선택 일정 설정
-  useEffect(() => {
-    if (firstValid) setSelectedSchedule(firstValid);
-  }, [firstValid]);
+    return !hasTimeSlot;
+  };
 
   return {
-    selectedSchedule, // 선택된 일정
-    changeableSchedules: valid, // 변경 가능한 일정들
-    overlappingSchedules: overlaps, // 겹치는 일정들
-    handleSelectSchedule: setSelectedSchedule, // 일정 선택 핸들러
+    availableDatesData,
+    getTimeLabelByTime,
+    filteredAvailableDates,
+    disabledDates,
+    usedDateTimeSet,
+    isDisabledTime,
+    isDisabledTimeWithoutDate,
   };
 };

@@ -1,15 +1,12 @@
 import clsx from "clsx";
 import { format } from "date-fns";
 
-import CloseIcon from "@/public/svgs/common/close-icon.svg";
-
 interface ScheduleInputListProps {
   schedules: { date: Date | null; time: string }[];
   activeIndex: number;
   mode: "calendar" | "time" | null;
   setMode: (mode: "calendar" | "time") => void;
   setActiveIndex: (idx: number) => void;
-  removeSchedule: (idx: number) => void;
 }
 
 const ScheduleInputList = ({
@@ -18,7 +15,6 @@ const ScheduleInputList = ({
   mode,
   setMode,
   setActiveIndex,
-  removeSchedule,
 }: ScheduleInputListProps) => {
   const activeClass = "border-mint-contrast bg-mint-contrast text-white";
   const inactiveClass = "border-gray-300 bg-white text-gray-700";
@@ -32,9 +28,7 @@ const ScheduleInputList = ({
           key={idx}
           className="bg-gray-0 flex items-center justify-between border-t border-gray-100 px-4 py-3"
         >
-          <span className="text-body2-med text-gray-700">
-            날짜 | 시간 {idx + 1}
-          </span>
+          <span className="text-body2-med text-gray-700">날짜 | 시간</span>
 
           <div className="flex items-center gap-2">
             <button
@@ -72,12 +66,6 @@ const ScheduleInputList = ({
                 <span>{schedule.time}</span>
               )}
             </button>
-
-            {schedules.length > 1 && (
-              <button onClick={() => removeSchedule(idx)}>
-                <CloseIcon className="text-mint-contrast h-4.5 w-4.5 cursor-pointer" />
-              </button>
-            )}
           </div>
         </div>
       ))}
