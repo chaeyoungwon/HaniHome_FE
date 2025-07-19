@@ -1,7 +1,6 @@
-import { useEffect, useState } from "react";
+import Image from "next/image";
 
-import RoomImg1 from "@/public/svgs/listings/room-image1.svg";
-import RoomImg2 from "@/public/svgs/listings/room-image2.svg";
+import { useEffect, useState } from "react";
 
 interface BottomSheetProps {
   onClose: () => void;
@@ -43,8 +42,18 @@ const BottomSheet = ({ onClose }: BottomSheetProps) => {
             매물 사진 업로드 가이드
           </div>
           <div className="flex justify-center gap-2">
-            <RoomImg1 />
-            <RoomImg2 />
+            <Image
+              src="/svgs/listings/room-image1.svg"
+              width={160}
+              height={160}
+              alt="방 사진 예시 1"
+            />
+            <Image
+              src="/svgs/listings/room-image2.svg"
+              width={160}
+              height={160}
+              alt="방 사진 예시 2"
+            />
           </div>
           <div className="flex flex-col gap-3 pb-6">
             <div className="text-body1-sb text-mint">어떤 사진이 좋나요?</div>

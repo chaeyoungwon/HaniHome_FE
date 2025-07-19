@@ -65,7 +65,7 @@ const ViewingNoteSection = forwardRef(
     }));
 
     return (
-      <div className="flex flex-col gap-2 py-4">
+      <div className="mb-[73.5px] flex flex-col gap-2 py-4">
         <section className="flex w-full gap-1 px-4">
           <div className="flex flex-1 flex-col gap-1">
             <p className="text-heading3 text-gray-800">사진 기록</p>

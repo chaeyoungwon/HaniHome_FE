@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useAutosize } from "@/hooks/common/useAutoSize";
 
 interface TextareaFieldProps {
   title: string;
@@ -15,33 +15,41 @@ const TextareaField = ({
   onChange,
   maxLength = 500,
 }: TextareaFieldProps) => {
-  const ref = useRef<HTMLTextAreaElement>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(e.target.value);
-
-    const el = ref.current;
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
-  };
+  const { textareaRef, mirrorRef } = useAutosize(value, 400);
 
   return (
     <section className="flex flex-col gap-4 px-4 py-3">
       <p className="text-heading3 text-gray-800">{title}</p>
-      <textarea
-        ref={ref}
-        value={value}
-        placeholder={placeholder}
-        maxLength={maxLength}
-        onChange={handleChange}
-        rows={1}
-        className={`text-body1-med bg-gray-0 w-full resize-none rounded p-3 text-gray-700 outline-none placeholder:text-gray-400 ${
-          maxLength === 500
-            ? "scrollbar-hide max-h-[400px] overflow-y-auto"
-            : ""
-        }`}
-      />
+      <div className="relative w-full">
+        <textarea
+          ref={textareaRef}
+          value={value}
+          placeholder={placeholder}
+          onChange={e => onChange(e.target.value)}
+          maxLength={maxLength}
+          className="text-body1-med scrollbar-hide bg-gray-0 w-full resize-none rounded p-3 text-gray-700 outline-none placeholder:text-gray-400"
+        />
+        <div
+          ref={mirrorRef}
+          aria-hidden
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            zIndex: -9999,
+            width: "100%",
+            whiteSpace: "pre-wrap",
+            wordBreak: "break-word",
+            overflowWrap: "break-word",
+            boxSizing: "border-box",
+            fontSize: "14px",
+            lineHeight: "20px",
+            fontFamily: "inherit",
+            padding: "12px",
+            visibility: "hidden",
+          }}
+        />
+      </div>
       <span className="text-cap1-med block text-right text-gray-400">
         {value.length}/{maxLength}
       </span>

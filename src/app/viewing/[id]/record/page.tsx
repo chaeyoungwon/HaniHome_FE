@@ -18,6 +18,7 @@ const ViewingRecordPage = () => {
   const viewingId = Number(params.id);
 
   const noteRef = useRef<{ handleSave: () => Promise<void> }>(null);
+  const checklistRef = useRef<{ handleSave: () => Promise<void> }>(null);
 
   const handleClickSave = async () => {
     if (activeTab === "note") {
@@ -25,10 +26,9 @@ const ViewingRecordPage = () => {
     }
 
     if (activeTab === "checklist") {
-      // 체크리스트 저장 로직 추가
+      await checklistRef.current?.handleSave();
     }
   };
-
   return (
     <>
       <BackHeader />
@@ -40,7 +40,9 @@ const ViewingRecordPage = () => {
       {activeTab === "note" && (
         <ViewingNoteSection ref={noteRef} viewingId={viewingId} />
       )}
-      {activeTab === "checklist" && <ViewingChecklistSection />}
+      {activeTab === "checklist" && (
+        <ViewingChecklistSection ref={checklistRef} viewingId={viewingId} />
+      )}
       <ViewingSaveButton onClick={handleClickSave} />
     </>
   );

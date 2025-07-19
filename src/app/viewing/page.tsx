@@ -72,15 +72,15 @@ const Viewing = () => {
       </div>
 
       <main className="flex flex-1 flex-col">
-        {isLoading || Object.keys(nicknameMap).length === 0 ? (
-          <div className="flex flex-1 items-center justify-center text-gray-500">
-            <LoadingLottie />
-          </div>
-        ) : !isLoggedIn ? (
+        {!isLoggedIn ? (
           <GuestLoginGuide
             type="viewing"
             description={`로그인 후 마음에 드는 매물의\n뷰잉 일정을 잡을 수 있어요`}
           />
+        ) : isLoading || Object.keys(nicknameMap).length === 0 ? (
+          <div className="flex flex-1 items-center justify-center">
+            <LoadingLottie />
+          </div>
         ) : activeTab === "REQUESTED" ? (
           <ViewingConfirmedSection
             data={withUserType}
