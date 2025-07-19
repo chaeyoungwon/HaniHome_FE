@@ -2,10 +2,19 @@
 
 import { useParams } from "next/navigation";
 
+import { useEffect } from "react";
+
+import { useQueryClient } from "@tanstack/react-query";
+
 import CompletePage from "@/components/common/CompletePage";
 
 const ViewingCompletePage = () => {
   const { id } = useParams();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey: ["myViewingList"] });
+  }, [queryClient]);
 
   return (
     <CompletePage

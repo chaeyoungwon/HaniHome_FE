@@ -1,13 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  cancelViewing,
   getMyViewingDates,
   getMyViewingList,
   getViewingAvailableDates,
+  getViewingCancelReason,
+  getViewingChecklists,
+  getViewingDetail,
+  putViewingChecklists,
+  putViewingPropertyNotes,
 } from "@/apis/viewing";
 
+import { ViewingStatus, ViewingViewType } from "@/types/viewing";
+
 interface UseMyViewingListOptions {
-  view?: "DEFAULT" | "DATE_PROFILE" | "DATE_WITH_PROPERTY";
+  view?: ViewingViewType;
   enabled?: boolean;
 }
 
@@ -29,12 +37,66 @@ export const useViewingAvailableDates = (propertyId: number) => {
   });
 };
 
-export const useMyViewingDates = (
-  status: "REQUESTED" | "CANCELLED" | "COMPLETED",
-) => {
+export const useMyViewingDates = (status: ViewingStatus) => {
   return useQuery({
     queryKey: ["myViewingDates", status],
     queryFn: () => getMyViewingDates(status),
     select: res => res.data,
+  });
+};
+
+export const useViewingDetail = (viewingId: number) => {
+  return useQuery({
+    queryKey: ["viewingDetail", viewingId],
+    queryFn: () => getViewingDetail(viewingId),
+    enabled: !!viewingId,
+  });
+};
+
+export const useCancelViewing = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      viewingId,
+      optionItemId,
+      reason,
+    }: {
+      viewingId: number;
+      optionItemId: number;
+      reason: string;
+    }) => cancelViewing(viewingId, { optionItemId, reason }),
+
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["myViewingList"] });
+    },
+  });
+};
+
+export const useCancelReason = (viewingId: number, enabled: boolean = true) => {
+  return useQuery({
+    queryKey: ["cancelReason", viewingId],
+    queryFn: () => getViewingCancelReason(viewingId),
+    enabled,
+    staleTime: 0,
+  });
+};
+
+export const useViewingChecklists = (viewingId: number) => {
+  return useQuery({
+    queryKey: ["viewingChecklists", viewingId],
+    queryFn: () => getViewingChecklists(viewingId),
+  });
+};
+
+export const usePutViewingChecklists = () => {
+  return useMutation({
+    mutationFn: putViewingChecklists,
+  });
+};
+
+export const usePutViewingPropertyNotes = () => {
+  return useMutation({
+    mutationFn: putViewingPropertyNotes,
   });
 };

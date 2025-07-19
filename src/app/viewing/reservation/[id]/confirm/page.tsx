@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 
 import { useViewingScheduleStore } from "@/stores/useViewingScheduleStore";
@@ -13,7 +12,7 @@ import { usePropertyList } from "@/hooks/property/useProperty";
 import { formatDateTime, getTimeLabel } from "@/utils/dateFormatter";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
-import Dot from "@/components/common/Dot";
+import ViewingPostCard from "@/components/common/ViewingPostCard";
 import BackHeader from "@/components/layout/header/BackHeader";
 
 import NoteIcon from "@/public/svgs/reservation/note-icon.svg";
@@ -69,9 +68,6 @@ const ViewingConfirmPage = () => {
     });
   };
 
-  const displayType = kind === "SHARE" ? "쉐어" : "렌트";
-  const distanceInKm = (nearestStation.distanceFromStation / 1000).toFixed(1);
-
   return (
     <div className="pb-31">
       <BackHeader title="뷰잉 예약" />
@@ -111,47 +107,17 @@ const ViewingConfirmPage = () => {
         </p>
       </div>
 
-      <div className="flex cursor-pointer items-center justify-center gap-3 px-4 py-3">
-        <Image
-          src={thumbnailUrl ?? "/svgs/common/room-img.svg"}
-          width={108}
-          height={108}
-          alt="매물 이미지"
-          className="h-18 w-18 rounded-sm border border-gray-200 object-cover"
-        />
-
-        <div className="flex flex-1 flex-col justify-between">
-          <div className="flex flex-col gap-2">
-            <div className="flex w-full items-center justify-between">
-              <p className="text-body1-sb text-gray-900">주/ {weeklyCost}$</p>
-              <span className="text-cap1-med text-gray-500">{suburb}</span>
-            </div>
-            <div className="flex flex-col gap-[2px]">
-              <p className="text-cap1-med flex items-center gap-1 text-gray-600">
-                {internalArea !== undefined && (
-                  <>
-                    {internalArea}㎡
-                    {(totalFloors !== undefined || kind) && <Dot />}
-                  </>
-                )}
-
-                {totalFloors !== undefined && (
-                  <>
-                    전체 {totalFloors}층{kind && <Dot />}
-                  </>
-                )}
-
-                {displayType}
-              </p>
-
-              <p className="text-cap1-med flex items-center gap-1 text-gray-600">
-                {billIncluded ? "빌 포함" : "빌 미포함"} <Dot /> 역까지{" "}
-                {distanceInKm}km
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ViewingPostCard
+        thumbnailUrl={thumbnailUrl}
+        weeklyCost={weeklyCost}
+        suburb={suburb}
+        internalArea={internalArea}
+        totalFloors={totalFloors}
+        kind={kind}
+        billIncluded={billIncluded}
+        distanceInKm={nearestStation.distanceFromStation}
+        wrapperClassName="px-4 py-3"
+      />
 
       <BottomActionBar
         label="뷰잉 예약 확정"

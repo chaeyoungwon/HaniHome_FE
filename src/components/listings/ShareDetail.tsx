@@ -3,6 +3,7 @@ import Section from "@/components/listings/shared/Section";
 
 import { SHARE_TYPE_MAP } from "@/constants/housing-options";
 
+import { SharePropertySubType } from "@/types/listingDetail";
 import { ShareProperty } from "@/types/property";
 
 import HomeIcon from "@/public/svgs/common/home-icon.svg";
@@ -27,7 +28,7 @@ const ShareDetail = ({
       <InfoRow
         label="매물 유형"
         value={
-          Object.keys(SHARE_TYPE_MAP).find(
+          (Object.keys(SHARE_TYPE_MAP) as SharePropertySubType[]).find(
             key => SHARE_TYPE_MAP[key] === data.sharePropertySubType,
           ) ?? "쉐어"
         }

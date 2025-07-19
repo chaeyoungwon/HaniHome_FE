@@ -139,14 +139,14 @@ export interface SummaryProperty {
   suburb: string;
   internalArea: number;
   totalFloors: number;
-  kind: string;
+  kind: "SHARE" | "RENT";
   propertySubType: string;
   billIncluded: boolean;
   createdAt: string;
   thumbnailUrl: string | null;
   tradeStatus: string;
   wishCount: number;
-  nearestStation: NearestStation; 
+  nearestStation: NearestStation;
 }
 
 export interface NearestStation {

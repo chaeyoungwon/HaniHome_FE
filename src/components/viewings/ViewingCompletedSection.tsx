@@ -13,7 +13,7 @@ const ViewingCompletedSection = ({ data }: ViewingCompletedSectionProps) => {
   }
 
   return (
-    <ul className="flex flex-col gap-4">
+    <ul className="mt-4 flex flex-col gap-4">
       {data.map(item => {
         return (
           <li key={item.id}>
@@ -21,8 +21,7 @@ const ViewingCompletedSection = ({ data }: ViewingCompletedSectionProps) => {
               id={item.id}
               propertyId={item.propertyId}
               status="COMPLETED"
-              profileImageUrl={item.profileImageUrl}
-              roomImageUrl={item.roomImageUrl}
+              roomImageUrl={item.photoUrls[0]}
               nickname={item.nickname}
               meetingDay={item.meetingDay}
             />

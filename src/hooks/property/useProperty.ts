@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import {fetchPropertyList } from "@/apis/property";
+import { fetchPropertyDetailList, fetchPropertyList } from "@/apis/property";
 
 import { Property, PropertyViewType, SummaryProperty } from "@/types/property";
 

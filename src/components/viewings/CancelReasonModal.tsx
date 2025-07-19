@@ -1,19 +1,38 @@
+import { useCancelReasons } from "@/hooks/optionItem/useOptionItem";
+import { useCancelReason } from "@/hooks/viewing/useViewing";
+
 import ModalLayout from "@/components/common/ModalLayout";
 
 interface CancelReasonModalProps {
   isOpen: boolean;
-  reason: string;
+  viewingId: number;
   onClose: () => void;
+  userType: "guest" | "host";
 }
 
 const CancelReasonModal = ({
   isOpen,
-  reason,
+  viewingId,
+  userType,
   onClose,
 }: CancelReasonModalProps) => {
-  if (!isOpen) return null;
+  const { data: options } = useCancelReasons(userType);
+  const { data: cancelDetail, isLoading } = useCancelReason(viewingId, isOpen);
 
-  const label = "기타"; // 임시 하드코딩
+  if (!isOpen) return null;
+  if (isLoading || !cancelDetail || !options) return <></>;
+
+  const label = cancelDetail.cancelReasonOptionItemIds
+    .map(id => {
+      const found = options.find(opt => opt.optionItemId === id);
+      return found ? found.itemName : "알 수 없음";
+    })
+    .join(", ");
+
+  const isEtcSelected = cancelDetail.cancelReasonOptionItemIds.some(id => {
+    const found = options.find(opt => opt.optionItemId === id);
+    return found?.itemName === "기타";
+  });
 
   return (
     <ModalLayout
@@ -31,12 +50,16 @@ const CancelReasonModal = ({
             {label}
           </span>
 
-          <div className="flex flex-col gap-3">
-            <span className="text-body1-sb text-gray-800">취소 사유 기입</span>
-            <p className="text-body1-med scrollbar-hide bg-gray-0 max-h-[176px] overflow-y-auto rounded p-3 whitespace-pre-wrap text-gray-700">
-              {reason}
-            </p>
-          </div>
+          {isEtcSelected && (
+            <div className="flex flex-col gap-3">
+              <span className="text-body1-sb text-gray-800">
+                취소 사유 기입
+              </span>
+              <p className="text-body1-med scrollbar-hide bg-gray-0 max-h-[176px] overflow-y-auto rounded p-3 whitespace-pre-wrap text-gray-700">
+                {cancelDetail.reason || "-"}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </ModalLayout>

@@ -1,7 +1,7 @@
 export const viewingTabs = [
-  { key: "requested", label: "예약 확정" },
-  { key: "canceled", label: "취소" },
-  { key: "completed", label: "완료" },
+  { key: "REQUESTED", label: "예약 확정" },
+  { key: "CANCELLED", label: "취소" },
+  { key: "COMPLETED", label: "완료" },
 ] as const;
 
 export const viewingNoteTabs = [

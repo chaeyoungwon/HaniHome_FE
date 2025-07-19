@@ -1,6 +1,10 @@
 "use client";
 
+import { useEffect } from "react";
+
 import { useAuthStore } from "@/stores/useAuthStore";
+
+import { useMyInfo } from "@/hooks/member/useMember";
 
 import AddListingFab from "@/components/home/AddListingFab";
 import CategoryHeader from "@/components/home/CategoryHeader";
@@ -12,7 +16,14 @@ import ContentWrapper from "@/components/layout/ContentWrapper";
 import MainHeader from "@/components/layout/header/MainHeader";
 
 const Home = () => {
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn, memberId, setMemberId } = useAuthStore();
+  const { data: myInfo } = useMyInfo();
+
+  useEffect(() => {
+    if (isLoggedIn && myInfo && !memberId) {
+      setMemberId(myInfo.id);
+    }
+  }, [isLoggedIn, myInfo, memberId, setMemberId]);
 
   return (
     <ContentWrapper

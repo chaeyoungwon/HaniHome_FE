@@ -2291,6 +2291,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4":
+  version: 4.17.20
+  resolution: "@types/lodash@npm:4.17.20"
+  checksum: 10c0/98cdd0faae22cbb8079a01a3bb65aa8f8c41143367486c1cbf5adc83f16c9272a2a5d2c1f541f61d0d73da543c16ee1d21cf2ef86cb93cd0cc0ac3bced6dd88f
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:*":
   version: 24.0.13
   resolution: "@types/node@npm:24.0.13"
@@ -4727,6 +4734,7 @@ __metadata:
     "@tanstack/react-query": "npm:^5.75.7"
     "@tanstack/react-query-devtools": "npm:^5.77.2"
     "@trivago/prettier-plugin-sort-imports": "npm:^5.2.2"
+    "@types/lodash": "npm:^4"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19.1.8"
     "@types/react-dom": "npm:^19"
@@ -4744,6 +4752,7 @@ __metadata:
     globals: "npm:^16.1.0"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^16.0.0"
+    lodash: "npm:^4.17.21"
     next: "npm:^15.3.2"
     prettier: "npm:^3.6.2"
     prettier-plugin-tailwindcss: "npm:^0.6.11"
@@ -6161,9 +6170,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:^3.5.3":
-  version: 3.5.3
-  resolution: "prettier@npm:3.5.3"
+"prettier@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "prettier@npm:3.6.2"
   bin:
     prettier: bin/prettier.cjs
   checksum: 10c0/488cb2f2b99ec13da1e50074912870217c11edaddedeadc649b1244c749d15ba94e846423d062e2c4c9ae683e2d65f754de28889ba06e697ac4f988d44f45812

@@ -71,7 +71,7 @@ const ViewingSection = () => {
             })
           ) : (
             <div className="text-cap1-med flex h-[53px] w-full shrink-0 items-center justify-center text-center text-gray-500">
-              예약한 뷰잉이 없어요
+              3일 내 예약한 뷰잉이 없어요
             </div>
           )}
         </div>

@@ -40,17 +40,22 @@ const sizeClassMap: Record<
 };
 
 interface ImagePreviewSectionProps {
-  images: string[];
-  setImages: React.Dispatch<React.SetStateAction<string[]>>;
+  existingImages: string[];
+  setExistingImages: React.Dispatch<React.SetStateAction<string[]>>;
+  newImagePreviews: string[];
+  setNewImagePreviews: React.Dispatch<React.SetStateAction<string[]>>;
+  setNewFiles: React.Dispatch<React.SetStateAction<File[]>>;
   size?: SizeOption;
 }
-
 const ImagePreviewSection = ({
-  images,
-  setImages,
+  existingImages,
+  setExistingImages,
+  newImagePreviews,
+  setNewImagePreviews,
+  setNewFiles,
   size = "md",
 }: ImagePreviewSectionProps) => {
-  if (images.length === 0) return null;
+  if (existingImages.length + newImagePreviews.length === 0) return null;
 
   const { card, gap, border, rounded, buttonPosition, iconSize } =
     sizeClassMap[size];
@@ -58,20 +63,44 @@ const ImagePreviewSection = ({
   return (
     <div className="scrollbar-hide my-4 max-w-[375px] overflow-x-auto">
       <div className={`inline-flex min-w-fit px-4 ${gap}`}>
-        {images.map((src, index) => (
+        {/* 기존 S3 이미지 */}
+        {existingImages.map((src, index) => (
           <div
-            key={index}
+            key={`existing-${index}`}
             className={`relative ${card} ${border} ${rounded} shrink-0 overflow-hidden border-gray-300`}
           >
             <img
               src={src}
-              alt={`uploaded-${index}`}
+              alt={`existing-${index}`}
               className="h-full w-full object-cover"
             />
             <button
               onClick={() =>
-                setImages(prev => prev.filter((_, i) => i !== index))
+                setExistingImages(prev => prev.filter((_, i) => i !== index))
               }
+              className={`absolute ${buttonPosition} cursor-pointer`}
+            >
+              <CloseIcon className={`${iconSize} text-gray-900`} />
+            </button>
+          </div>
+        ))}
+
+        {/* 새로 올린 이미지 (Base64) */}
+        {newImagePreviews.map((src, index) => (
+          <div
+            key={`new-${index}`}
+            className={`relative ${card} ${border} ${rounded} shrink-0 overflow-hidden border-gray-300`}
+          >
+            <img
+              src={src}
+              alt={`new-${index}`}
+              className="h-full w-full object-cover"
+            />
+            <button
+              onClick={() => {
+                setNewImagePreviews(prev => prev.filter((_, i) => i !== index));
+                setNewFiles(prev => prev.filter((_, i) => i !== index));
+              }}
               className={`absolute ${buttonPosition} cursor-pointer`}
             >
               <CloseIcon className={`${iconSize} text-gray-900`} />

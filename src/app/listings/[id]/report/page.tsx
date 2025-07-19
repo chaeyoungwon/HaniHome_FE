@@ -13,7 +13,10 @@ import BackHeader from "@/components/layout/header/BackHeader";
 const ListingReportPage = () => {
   const [content, setContent] = useState("");
   const [isChecked, setIsChecked] = useState(false);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
+
+  const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
+  const [, setNewFiles] = useState<File[]>([]);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUploadClick = () => fileInputRef.current?.click();
@@ -25,27 +28,28 @@ const ListingReportPage = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
+
     const files = Array.from(e.target.files);
-    const validFiles = files.filter(file => {
-      const isImage = file.type.startsWith("image/");
-      const isSupported = isSupportedImage(file);
-      return isImage && isSupported;
-    });
+    const validFiles = files.filter(file => isSupportedImage(file));
+
     if (validFiles.length < files.length) {
       alert("지원되지 않는 이미지 형식이 포함되어 있습니다.");
     }
-    const urls = validFiles.map(file => URL.createObjectURL(file));
-    setImageUrls(prev => [...prev, ...urls]);
+
+    const previews = validFiles.map(file => URL.createObjectURL(file));
+
+    setNewImagePreviews(prev => [...prev, ...previews]);
+    setNewFiles(prev => [...prev, ...validFiles]);
   };
 
   const isFormValid =
-    isChecked && imageUrls.length > 0 && content.trim().length > 0;
+    isChecked && newImagePreviews.length > 0 && content.trim().length > 0;
 
   useEffect(() => {
     return () => {
-      imageUrls.forEach(url => URL.revokeObjectURL(url));
+      newImagePreviews.forEach(url => URL.revokeObjectURL(url));
     };
-  }, []);
+  }, [newImagePreviews]);
 
   return (
     <ContentWrapper bottomOffset={64}>
@@ -102,8 +106,11 @@ const ListingReportPage = () => {
 
       <ImagePreviewSection
         size="sm"
-        images={imageUrls}
-        setImages={setImageUrls}
+        existingImages={[]} // 신고에서는 기존 이미지 없음
+        setExistingImages={() => {}}
+        newImagePreviews={newImagePreviews}
+        setNewImagePreviews={setNewImagePreviews}
+        setNewFiles={setNewFiles}
       />
 
       <BottomActionBar label="신고하기" disabled={!isFormValid} />

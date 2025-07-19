@@ -1,68 +1,85 @@
 import { useEffect, useRef, useState } from "react";
 
+import { useCancelReasons } from "@/hooks/optionItem/useOptionItem";
+
 import ModalLayout from "@/components/common/ModalLayout";
 import SelectableChip from "@/components/common/SelectableChip";
 
-import {
-  GUEST_REASONS,
-  HOST_REASONS,
-  PLACEHOLDER_TEXT,
-} from "@/constants/cancel";
-
 interface CancelModalProps {
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (payload: { optionItemId: number; reason: string }) => void;
   userType: "host" | "guest";
 }
 
 const CancelModal = ({ onClose, onConfirm, userType }: CancelModalProps) => {
+  const { data: reasons = [], isLoading } = useCancelReasons(userType);
+
   const [selected, setSelected] = useState<string | null>(null);
   const [customReason, setCustomReason] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const cancelReasons = userType === "host" ? HOST_REASONS : GUEST_REASONS;
   const isOtherSelected = selected === "기타";
   const isDisabled = !selected || (isOtherSelected && !customReason.trim());
 
-  /* textarea height 조정 로직 */
+  // textarea height 조정
   const resizeTextarea = () => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
     const [min, max, placeholder] = [46, 176, 68];
     textarea.style.height = "auto";
-    textarea.style.height = `${!customReason.trim() ? placeholder : Math.max(min, Math.min(textarea.scrollHeight, max))}px`;
+    textarea.style.height = `${
+      !customReason.trim()
+        ? placeholder
+        : Math.max(min, Math.min(textarea.scrollHeight, max))
+    }px`;
+  };
+
+  const handleConfirm = () => {
+    const option = reasons.find(r => r.itemName === selected);
+    if (!option) return;
+
+    const payload = {
+      optionItemId: option.optionItemId,
+      reason: isOtherSelected ? customReason : option.itemName,
+    };
+
+    onConfirm(payload);
   };
 
   useEffect(() => {
     if (isOtherSelected) resizeTextarea();
   }, [customReason, isOtherSelected]);
 
+  if (isLoading) return <></>;
+
   return (
     <ModalLayout
       onClose={onClose}
-      className="px-4 py-6"
-      closeButtonPosition="top-6 right-4"
+      className="p-5"
+      closeButtonPosition="top-5 right-5"
     >
       <div className="flex flex-col gap-9">
-        <div className="flex flex-col gap-1">
-          <h1 className="text-heading3 text-gray-900">
-            취소 사유를 선택해주세요
-          </h1>
-          <span className="text-cap1-med text-gray-600">
-            예약 시간 1시간 전까지만 취소할 수 있어요
-          </span>
-        </div>
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-heading3 text-gray-900">
+              취소 사유를 선택해주세요
+            </h1>
+            <span className="text-cap1-med text-gray-600">
+              예약 시간 1시간 전까지만 취소할 수 있어요
+            </span>
+          </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {cancelReasons.map(reason => (
-            <SelectableChip
-              key={reason}
-              label={reason}
-              selected={selected === reason}
-              onClick={() => setSelected(reason)}
-            />
-          ))}
+          <div className="flex flex-wrap items-center gap-2">
+            {reasons.map(reason => (
+              <SelectableChip
+                key={reason.optionItemId}
+                label={reason.itemName}
+                selected={selected === reason.itemName}
+                onClick={() => setSelected(reason.itemName)}
+              />
+            ))}
+          </div>
         </div>
 
         {/* 기타 사유 입력 */}
@@ -81,7 +98,7 @@ const CancelModal = ({ onClose, onConfirm, userType }: CancelModalProps) => {
               />
               {!customReason && (
                 <p className="text-body1-med pointer-events-none absolute top-3 left-3 whitespace-pre-line text-gray-400">
-                  {PLACEHOLDER_TEXT[userType]}
+                  직접 입력해주세요
                 </p>
               )}
             </div>
@@ -90,7 +107,7 @@ const CancelModal = ({ onClose, onConfirm, userType }: CancelModalProps) => {
 
         <button
           disabled={isDisabled}
-          onClick={onConfirm}
+          onClick={handleConfirm}
           className={`text-lab1-b h-9 rounded text-white ${
             isDisabled
               ? "cursor-not-allowed bg-gray-300"

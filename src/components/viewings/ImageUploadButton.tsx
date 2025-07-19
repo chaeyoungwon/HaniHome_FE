@@ -5,13 +5,20 @@ import AlertMessage from "@/components/common/AlertMessage";
 import CameraIcon from "@/public/svgs/viewings/camera-icon.svg";
 
 interface ImageUploadButtonProps {
-  images: string[];
-  setImages: React.Dispatch<React.SetStateAction<string[]>>;
+  existingImages: string[];
+  newImagePreviews: string[];
+  setNewImagePreviews: React.Dispatch<React.SetStateAction<string[]>>;
+  setNewFiles: React.Dispatch<React.SetStateAction<File[]>>;
 }
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png"]; // 허용 MIME 타입
+const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
-const ImageUploadButton = ({ images, setImages }: ImageUploadButtonProps) => {
+const ImageUploadButton = ({
+  existingImages,
+  newImagePreviews,
+  setNewImagePreviews,
+  setNewFiles,
+}: ImageUploadButtonProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
@@ -20,12 +27,11 @@ const ImageUploadButton = ({ images, setImages }: ImageUploadButtonProps) => {
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
+    const selectedFiles = e.target.files;
+    if (!selectedFiles) return;
 
-    const fileArray = Array.from(files);
+    const fileArray = Array.from(selectedFiles);
 
-    // 허용된 이미지 타입만 필터링
     const validImages = fileArray.filter(file =>
       ALLOWED_TYPES.includes(file.type),
     );
@@ -35,13 +41,15 @@ const ImageUploadButton = ({ images, setImages }: ImageUploadButtonProps) => {
       return;
     }
 
-    // 최대 10장 제한
-    if (images.length + validImages.length > 10) {
+    const totalImageCount =
+      existingImages.length + newImagePreviews.length + validImages.length;
+
+    if (totalImageCount > 10) {
       setAlertMessage("최대 10장까지 업로드 가능합니다");
       return;
     }
 
-    // Base64 변환
+    // 미리보기용 Base64 생성
     const readers = validImages.map(
       file =>
         new Promise<string>((resolve, reject) => {
@@ -53,7 +61,8 @@ const ImageUploadButton = ({ images, setImages }: ImageUploadButtonProps) => {
     );
 
     Promise.all(readers).then(newImages => {
-      setImages(prev => [...prev, ...newImages]);
+      setNewImagePreviews(prev => [...prev, ...newImages]);
+      setNewFiles(prev => [...prev, ...validImages]); // 실제 파일도 저장
     });
   };
 

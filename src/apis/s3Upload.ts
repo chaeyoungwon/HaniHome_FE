@@ -38,10 +38,11 @@ export const getVerificationPresignedUrl = async (
 /* 매물 기록 이미지 업로드용 Presigned URL 요청 */
 export const getPropertyNotePresignedUrl = async (
   fileExtensions: string[],
-): Promise<PresignedUrlResponse> => {
+): Promise<PresignedUrlResponse[]> => {
   const res = await axiosInstance.post(
     "/api/v1/s3/viewings/property-notes/presigned-url",
     { fileExtensions },
   );
+
   return res.data.data;
 };

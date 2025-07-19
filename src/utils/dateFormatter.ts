@@ -1,4 +1,10 @@
 import dayjs from "dayjs";
+import "dayjs/locale/ko";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
+dayjs.extend(localizedFormat);
 
 // 오전/오후, 시/분 분리
 export const getTimeLabel = (timeStr: string) => {
@@ -110,4 +116,14 @@ export const formatRelativeTime = (date: string) => {
   if (diffDays < 30) return `${diffDays}일 전`;
   if (diffMonths < 12) return `${diffMonths}달 전`;
   return `${diffYears}년 전`;
+};
+
+// 6월 28일 오전 09:00
+export const formatViewingCardTime = (isoString: string) => {
+  const dateObj = dayjs(isoString).local().locale("ko");
+
+  const date = dateObj.format("M월 D일");
+  const time = dateObj.format("A H:mm");
+
+  return { date, time };
 };

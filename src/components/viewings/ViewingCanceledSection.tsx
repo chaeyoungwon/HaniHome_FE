@@ -20,15 +20,14 @@ const ViewingCanceledSection = ({ data }: ViewingCanceledSectionProps) => {
 
   return (
     <>
-      <ul className="flex flex-col gap-4">
+      <ul className="mt-4 flex flex-col gap-4">
         {data.map(item => (
           <li key={item.id}>
             <ViewingManageCard
-              propertyId={item.propertyId}
               id={item.id}
+              propertyId={item.propertyId}
               status="CANCELLED"
-              profileImageUrl={item.profileImageUrl}
-              roomImageUrl={item.roomImageUrl}
+              roomImageUrl={item.photoUrls[0]}
               nickname={item.nickname}
               meetingDay={item.meetingDay}
               onArrowClick={() => setOpenId(item.id)}
@@ -40,8 +39,9 @@ const ViewingCanceledSection = ({ data }: ViewingCanceledSectionProps) => {
       {selectedItem && (
         <CancelReasonModal
           isOpen={openId !== null}
-          reason={selectedItem.cancelReason ?? ""}
           onClose={() => setOpenId(null)}
+          userType={selectedItem.userType}
+          viewingId={selectedItem.id}
         />
       )}
     </>
