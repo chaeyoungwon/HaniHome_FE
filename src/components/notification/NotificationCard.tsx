@@ -1,11 +1,23 @@
+import { usePatchNotificationRead } from "@/hooks/notification/useNotification";
+
 import { NotificationItem } from "@/types/notification";
 
-const NotificationCard = ({ title, description, isRead }: NotificationItem) => {
+const NotificationCard = ({ id, title, content, isRead }: NotificationItem) => {
+  const { mutate } = usePatchNotificationRead();
+
+  const handleClick = () => {
+    if (isRead) return;
+    mutate(id);
+  };
+
   return (
-    <div className="flex h-fit w-[343px] flex-col gap-1 rounded-lg bg-white p-4">
+    <div
+      onClick={handleClick}
+      className="flex h-fit w-[343px] cursor-pointer flex-col gap-1 rounded-lg bg-white p-4"
+    >
       {!isRead && <div className="bg-red h-2 w-2 rounded-full" />}
       <p className="text-body1-sb text-gray-900">{title}</p>
-      <p className="text-cap1-med text-gray-600">{description}</p>
+      <p className="text-cap1-med text-gray-600">{content}</p>
     </div>
   );
 };
