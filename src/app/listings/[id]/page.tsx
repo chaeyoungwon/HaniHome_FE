@@ -11,6 +11,7 @@ import { usePropertyDetailList } from "@/hooks/property/useProperty";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import BackHeader from "@/components/layout/header/BackHeader";
 import AddressMap from "@/components/listings/AddressMap";
+import BottomSheet from "@/components/listings/BottomSheet";
 import DetailTabs from "@/components/listings/DetailTabs";
 import DropDownMenu from "@/components/listings/DropDownMenu";
 
@@ -30,6 +31,7 @@ const ListingDetailPage = () => {
   const router = useRouter();
 
   const [liked, setLiked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
 
   const { data, isLoading, isError } = usePropertyDetailList(listingId);
 
@@ -47,7 +49,11 @@ const ListingDetailPage = () => {
         <BackHeader
           hideBackIcon={isConfirmMode}
           rightIcon={isEditMode ? "more" : "report"}
-          onRightClick={() => router.push(`/listings/${id}/report`)}
+          onRightClick={
+            isEditMode
+              ? () => setIsClicked(true)
+              : () => router.push(`/listings/${id}/report`)
+          }
         />
 
         {/* 매물 이미지 */}
@@ -104,18 +110,16 @@ const ListingDetailPage = () => {
 
           {/* 거래 상태 드롭다운 */}
           {isEditMode && (
-            <div className="pr-4">
-              <DropDownMenu
-                selectedKey={
-                  data.tradeStatus === "COMPLETED"
-                    ? "completed"
-                    : data.tradeStatus === "BEFORE"
-                      ? "active"
-                      : "active"
-                }
-                onSelect={() => {}}
-              />
-            </div>
+            <DropDownMenu
+              selectedKey={
+                data.tradeStatus === "COMPLETED"
+                  ? "completed"
+                  : data.tradeStatus === "BEFORE"
+                    ? "active"
+                    : "active"
+              }
+              onSelect={() => {}}
+            />
           )}
         </div>
 
@@ -204,6 +208,7 @@ const ListingDetailPage = () => {
           onClick={() => router.push(`/viewing/reservation/${listingId}`)}
         />
       )}
+      {isClicked && <BottomSheet onClose={() => setIsClicked(false)} />}
     </>
   );
 };

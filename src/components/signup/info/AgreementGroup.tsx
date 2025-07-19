@@ -4,7 +4,7 @@ import CheckIcon from "@/components/common/CheckIcon";
 
 import { AgreementTerm } from "@/constants/agreement-terms";
 
-import DownArrow from "@/public/svgs/signup/down-arrow.svg";
+import DownArrow from "@/public/svgs/common/down-arrow.svg";
 
 import AgreementItem from "./AgreementItem";
 

@@ -55,7 +55,7 @@ const VerificationPage = () => {
       VERIFICATION_OPTIONS.find(opt => opt.value === verif)?.label ?? "";
 
     uploadMultipleImages({
-      file,
+      file,   
       setPreviewUrls,
       setUploadedFiles,
       setField: (key, files) => {

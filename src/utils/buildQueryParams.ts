@@ -1,5 +1,9 @@
 import { RENT_TYPE_MAP, SHARE_TYPE_MAP } from "@/constants/housing-options";
 
+import {
+  RentPropertySubType,
+  SharePropertySubType,
+} from "@/types/listingDetail";
 import { FilteredPropertyParams } from "@/types/property";
 
 interface ParamsInput {
@@ -43,11 +47,22 @@ export const buildQueryParams = (
   const rentPropertySubTypes: string[] = [];
 
   for (const room of selectedRoomTypes) {
-    if (selectedTypes.includes("쉐어") && SHARE_TYPE_MAP[room]) {
-      sharePropertySubTypes.push(SHARE_TYPE_MAP[room]);
+    if (selectedTypes.includes("쉐어")) {
+      const found = Object.entries(SHARE_TYPE_MAP).find(
+        ([, value]) => value === room,
+      );
+      if (found) {
+        sharePropertySubTypes.push(found[0] as SharePropertySubType);
+      }
     }
-    if (selectedTypes.includes("렌트") && RENT_TYPE_MAP[room]) {
-      rentPropertySubTypes.push(RENT_TYPE_MAP[room]);
+
+    if (selectedTypes.includes("렌트")) {
+      const found = Object.entries(RENT_TYPE_MAP).find(
+        ([, value]) => value === room,
+      );
+      if (found) {
+        rentPropertySubTypes.push(found[0] as RentPropertySubType);
+      }
     }
   }
 

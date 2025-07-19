@@ -1,5 +1,5 @@
 import { GooglePlacesAPIResponse, PlacePrediction } from "@/types/googlePlaces";
-import { RegionType } from "@/types/listingDetail";
+import { PropertyRegion } from "@/types/listingDetail";
 
 export const fetchPlaceSuggestions = async (
   input: string,
@@ -49,7 +49,7 @@ export const fetchPlaceSuggestions = async (
   }
 };
 
-export const getCoordsFromRegion = async (region: RegionType) => {
+export const getCoordsFromRegion = async (region: PropertyRegion) => {
   const address = [
     region.streetNumber,
     region.streetName,

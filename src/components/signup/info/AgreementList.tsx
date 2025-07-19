@@ -12,8 +12,8 @@ import { AgreementTerm } from "@/constants/agreement-terms";
 import AgreementGroup from "./AgreementGroup";
 
 interface AgreementListProps {
-  onChange: (checked: number[]) => void;
-  onRequiredValidChange?: (valid: boolean) => void;
+  onChange: (_: number[]) => void;
+  onRequiredValidChange?: (_: boolean) => void;
 }
 
 const AgreementList = ({

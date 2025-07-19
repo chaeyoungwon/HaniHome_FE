@@ -37,7 +37,7 @@ const Listings = () => {
           key={item.id}
           onClick={() => {
             if (item.tradeStatus === "BEFORE") {
-              router.push(`/listings/${item.id}/edit`);
+              router.push(`/listings/${item.id}?mode=edit`);
             }
           }}
         >

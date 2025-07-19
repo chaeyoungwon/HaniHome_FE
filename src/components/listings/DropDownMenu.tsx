@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import DownArrow from "@/public/svgs/signup/down-arrow.svg";
+import DownArrow from "@/public/svgs/common/down-arrow.svg";
 
 const TABS = [
   { label: "거래 중", key: "active" },

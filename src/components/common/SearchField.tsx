@@ -11,7 +11,7 @@ import useKeyboardNavigation from "@/hooks/common/useKeyboardNavigation";
 
 import { PlacePrediction } from "@/types/googlePlaces";
 
-import SearchIcon from "@/public/svgs/signup/search-icon.svg";
+import SearchIcon from "@/public/svgs/common/search-icon.svg";
 
 interface SearchFieldProps {
   label?: string;

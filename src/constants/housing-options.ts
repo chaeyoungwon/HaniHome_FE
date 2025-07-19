@@ -1,3 +1,8 @@
+import {
+  RentPropertySubType,
+  SharePropertySubType,
+} from "@/types/listingDetail";
+
 export const ROOM_TYPES = [
   "하우스",
   "아파트",
@@ -14,17 +19,17 @@ export const SHARE_ONLY_ROOM_TYPES = ["마스터 룸", "거실 쉐어", "세컨�
 
 export const HOUSE_TYPES = ["쉐어", "렌트"] as const;
 
-export const SHARE_TYPE_MAP: Record<string, string> = {
-  "마스터 룸": "MASTER_ROOM",
-  "거실 쉐어": "LIVING_SHARE",
-  "세컨드 룸": "SECOND_ROOM",
+export const SHARE_TYPE_MAP: Record<SharePropertySubType, string> = {
+  SECOND_ROOM: "세컨드 룸",
+  MASTER_ROOM: "마스터 룸",
+  LIVING_SHARE: "거실 쉐어",
 };
 
-export const RENT_TYPE_MAP: Record<string, string> = {
-  하우스: "HOUSE",
-  아파트: "APARTMENT",
-  유닛: "UNIT",
-  스튜디오: "STUDIO",
-  타운하우스: "TOWN_HOUSE",
-  "그래니 플랫": "GRANNY_FLAT",
+export const RENT_TYPE_MAP: Record<RentPropertySubType, string> = {
+  HOUSE: "하우스",
+  APARTMENT: "아파트",
+  UNIT: "유닛",
+  GRANNY_FLAT: "그라니플랫",
+  STUDIO: "스튜디오",
+  TOWN_HOUSE: "타운하우스",
 };

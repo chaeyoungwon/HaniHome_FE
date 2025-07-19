@@ -4,6 +4,7 @@ import Section from "@/components/listings/shared/Section";
 
 import { RENT_TYPE_MAP } from "@/constants/housing-options";
 
+import { RentPropertySubType } from "@/types/listingDetail";
 import { RentProperty } from "@/types/property";
 
 import PersonIcon from "@/public/svgs/common/mypage-icon.svg";
@@ -32,9 +33,8 @@ const RentDetail = ({
       <InfoRow
         label="매물 유형"
         value={
-          Object.keys(RENT_TYPE_MAP).find(
-            key => RENT_TYPE_MAP[key] === data.rentPropertySubType,
-          ) ?? "쉐어"
+          RENT_TYPE_MAP[data.rentPropertySubType as RentPropertySubType] ??
+          "쉐어"
         }
       />
 

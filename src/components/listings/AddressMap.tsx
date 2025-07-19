@@ -8,10 +8,10 @@ import { formatAddress } from "@/utils/formatAddress";
 
 import GoogleMap from "@/components/common/GoogleMap";
 
-import { RegionType } from "@/types/listingDetail";
+import { PropertyRegion } from "@/types/listingDetail";
 
 interface AddressMapProps {
-  region: RegionType;
+  region: PropertyRegion;
   isReservationConfirmed: boolean;
 }
 

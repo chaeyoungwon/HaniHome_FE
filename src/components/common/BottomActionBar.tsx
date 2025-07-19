@@ -2,7 +2,7 @@ interface BottomActionBarProps {
   label?: string;
   onClick?: () => void;
   disabled?: boolean;
-
+  variant?: "filled" | "outline";
   // 버튼 2개 이상인 경우
   buttons?: {
     label: string;
@@ -23,6 +23,7 @@ const BottomActionBar = ({
   buttons,
   showDivider = true,
   layout = "default",
+  variant = "filled",
 }: BottomActionBarProps) => {
   const isSingle = !buttons || buttons.length === 0;
 
@@ -36,10 +37,12 @@ const BottomActionBar = ({
         <button
           type="button"
           onClick={onClick}
-          className={`text-heading3 my-2 h-12 w-[343px] rounded py-3 text-white transition ${
+          className={`text-heading3 my-2 w-[343px] rounded py-3 transition ${
             disabled
-              ? "cursor-not-allowed bg-gray-300"
-              : "bg-mint cursor-pointer"
+              ? "cursor-not-allowed bg-gray-300 text-white"
+              : variant === "outline"
+                ? "border-mint text-mint cursor-pointer border bg-white"
+                : "bg-mint cursor-pointer text-white"
           }`}
         >
           {label}

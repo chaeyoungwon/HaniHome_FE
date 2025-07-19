@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
 
-import DropdownArrow from "@/public/svgs/signup/down-arrow.svg";
+import DropdownArrow from "@/public/svgs/common/down-arrow.svg";
 
 interface DropdownOption {
   label: string;

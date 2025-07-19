@@ -1,6 +1,6 @@
-import { RegionType } from "@/types/listingDetail";
+import { PropertyRegion } from "@/types/listingDetail";
 
-export const formatAddress = (region: RegionType): string => {
+export const formatAddress = (region: PropertyRegion): string => {
   const { streetNumber, streetName, suburb, state, postCode } = region;
 
   return [
