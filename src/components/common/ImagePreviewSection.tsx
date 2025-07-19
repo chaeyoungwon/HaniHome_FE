@@ -1,3 +1,5 @@
+import clsx from "clsx";
+
 import CloseIcon from "@/public/svgs/common/close-icon.svg";
 
 type SizeOption = "sm" | "md" | "lg";
@@ -46,7 +48,9 @@ interface ImagePreviewSectionProps {
   setNewImagePreviews: React.Dispatch<React.SetStateAction<string[]>>;
   setNewFiles: React.Dispatch<React.SetStateAction<File[]>>;
   size?: SizeOption;
+  wrapperClassName?: string;
 }
+
 const ImagePreviewSection = ({
   existingImages,
   setExistingImages,
@@ -54,6 +58,7 @@ const ImagePreviewSection = ({
   setNewImagePreviews,
   setNewFiles,
   size = "md",
+  wrapperClassName = "my-4",
 }: ImagePreviewSectionProps) => {
   if (existingImages.length + newImagePreviews.length === 0) return null;
 
@@ -61,7 +66,12 @@ const ImagePreviewSection = ({
     sizeClassMap[size];
 
   return (
-    <div className="scrollbar-hide my-4 max-w-[375px] overflow-x-auto">
+    <div
+      className={clsx(
+        "scrollbar-hide max-w-[375px] overflow-x-auto",
+        wrapperClassName,
+      )}
+    >
       <div className={`inline-flex min-w-fit px-4 ${gap}`}>
         {/* 기존 S3 이미지 */}
         {existingImages.map((src, index) => (

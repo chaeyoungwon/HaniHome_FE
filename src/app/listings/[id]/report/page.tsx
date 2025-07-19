@@ -1,45 +1,67 @@
 "use client";
 
+import { useParams } from "next/navigation";
+
 import { useEffect, useRef, useState } from "react";
 
+import axios from "axios";
+
+import { postReport } from "@/apis/property";
+import { getReportPresignedUrls } from "@/apis/s3Upload";
+
+import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import CheckIcon from "@/components/common/CheckIcon";
 import Divider from "@/components/common/Divider";
 import ImagePreviewSection from "@/components/common/ImagePreviewSection";
+import LoadingLottie from "@/components/common/LoadingLottie";
 import TextareaField from "@/components/common/TextareaField";
 import ContentWrapper from "@/components/layout/ContentWrapper";
 import BackHeader from "@/components/layout/header/BackHeader";
 
+const MAX_IMAGES = 5;
+const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 const ListingReportPage = () => {
+  const params = useParams();
+  const propertyId = Number(params.id);
+
   const [content, setContent] = useState("");
   const [isChecked, setIsChecked] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
   const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
-  const [, setNewFiles] = useState<File[]>([]);
+  const [newFiles, setNewFiles] = useState<File[]>([]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleUploadClick = () => fileInputRef.current?.click();
 
-  const isSupportedImage = (file: File) => {
-    const supportedTypes = ["image/jpeg", "image/png"];
-    return supportedTypes.includes(file.type);
-  };
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
 
     const files = Array.from(e.target.files);
-    const validFiles = files.filter(file => isSupportedImage(file));
+    const validFiles = files.filter(file => ALLOWED_TYPES.includes(file.type));
 
     if (validFiles.length < files.length) {
-      alert("지원되지 않는 이미지 형식이 포함되어 있습니다.");
+      setAlertMessage("JPG, PNG 파일만 업로드할 수 있어요");
+      return;
+    }
+
+    const totalCount = newImagePreviews.length + validFiles.length;
+
+    if (totalCount > MAX_IMAGES) {
+      setAlertMessage(
+        `이미지는 최대 ${MAX_IMAGES}장까지 업로드할 수 있습니다.`,
+      );
+      return;
     }
 
     const previews = validFiles.map(file => URL.createObjectURL(file));
 
     setNewImagePreviews(prev => [...prev, ...previews]);
     setNewFiles(prev => [...prev, ...validFiles]);
+    setAlertMessage(""); // 에러 메시지 초기화
   };
 
   const isFormValid =
@@ -50,6 +72,44 @@ const ListingReportPage = () => {
       newImagePreviews.forEach(url => URL.revokeObjectURL(url));
     };
   }, [newImagePreviews]);
+
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+
+      const extensions = newFiles.map(
+        file => file.name.split(".").pop() || "png",
+      );
+      const presignedUrls = await getReportPresignedUrls(
+        "PROPERTY",
+        extensions,
+      );
+
+      await Promise.all(
+        presignedUrls.map((item, idx) =>
+          axios.put(item.presignedUrl, newFiles[idx], {
+            headers: { "Content-Type": newFiles[idx].type },
+          }),
+        ),
+      );
+
+      await postReport({
+        targetId: propertyId,
+        targetType: "PROPERTY",
+        documentImageUrls: presignedUrls.map(item => item.fileUrl),
+        description: content,
+      });
+
+      setContent("");
+      setIsChecked(false);
+      setNewImagePreviews([]);
+      setNewFiles([]);
+    } catch (err) {
+      console.error("신고 실패", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <ContentWrapper bottomOffset={64}>
@@ -106,14 +166,38 @@ const ListingReportPage = () => {
 
       <ImagePreviewSection
         size="sm"
-        existingImages={[]} // 신고에서는 기존 이미지 없음
+        existingImages={[]}
         setExistingImages={() => {}}
         newImagePreviews={newImagePreviews}
         setNewImagePreviews={setNewImagePreviews}
         setNewFiles={setNewFiles}
+        wrapperClassName="my-2"
       />
 
-      <BottomActionBar label="신고하기" disabled={!isFormValid} />
+      {newImagePreviews.length > 0 && (
+        <span className="text-cap1-med flex px-4 text-gray-600">
+          이미지는 최대 5장까지 업로드할 수 있습니다.
+        </span>
+      )}
+
+      <BottomActionBar
+        label="신고하기"
+        disabled={!isFormValid}
+        onClick={handleSubmit}
+      />
+      {isLoading && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-white/80 backdrop-blur-[2px]">
+          <LoadingLottie />
+        </div>
+      )}
+
+      {alertMessage && (
+        <AlertMessage
+          message={alertMessage}
+          className="bottom-[76px]"
+          onDone={() => setAlertMessage(null)}
+        />
+      )}
     </ContentWrapper>
   );
 };

@@ -35,3 +35,13 @@ export const fetchPropertySearch = async (params: FilteredPropertyParams) => {
     count: data?.length ?? 0,
   };
 };
+
+// 매물 신고
+export const postReport = async (body: {
+  targetId: number;
+  targetType: string;
+  documentImageUrls: string[];
+  description: string;
+}) => {
+  return axiosInstance.post("/api/v1/reports", body);
+};
