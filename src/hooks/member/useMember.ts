@@ -52,7 +52,7 @@ export const useDeleteUser = () => {
   const { clearAuth } = useAuthStore();
 
   return useMutation({
-    mutationFn: (id: string) => deleteUser(id),
+    mutationFn: () => deleteUser(),
     onSuccess: () => {
       clearAuth();
       queryClient.clear();

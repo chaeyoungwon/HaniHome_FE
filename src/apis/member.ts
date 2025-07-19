@@ -25,7 +25,6 @@ export const updateUser = async (
 };
 
 // 회원 탈퇴
-export const deleteUser = async (memberId: string) => {
-  const res = await axiosInstance.delete(`/api/v1/members/${memberId}`);
-  return res.data;
+export const deleteUser = async () => {
+  await axiosInstance.delete(`/api/v1/members/me`);
 };

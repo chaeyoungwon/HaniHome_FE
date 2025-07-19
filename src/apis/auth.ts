@@ -35,6 +35,5 @@ export const refreshToken = async () => {
 
 // 로그아웃
 export const logout = async () => {
-  const res = await axiosInstance.post<void>("/api/v1/auth/logout");
-  return res.data;
+  await axiosInstance.post("/api/v1/auth/logout");
 };

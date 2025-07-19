@@ -1,7 +1,5 @@
 import { useState } from "react";
 
-import { useAuthStore } from "@/stores/useAuthStore";
-
 import { useDeleteUser } from "@/hooks/member/useMember";
 
 import AlertModal from "@/components/common/AlertModal";
@@ -13,13 +11,11 @@ interface WithdrawAlertModalProps {
 
 const WithdrawAlertModal = ({ onClose }: WithdrawAlertModalProps) => {
   const [isCompleted, setIsCompleted] = useState(false);
-
   const { mutate: deleteUser, isPending } = useDeleteUser();
-  const memberId = useAuthStore(state => state.memberId);
 
   const handleWithdraw = async () => {
     try {
-      await deleteUser(memberId);
+      await deleteUser();
       setIsCompleted(true);
     } catch (err) {
       console.error("탈퇴 실패", err);
