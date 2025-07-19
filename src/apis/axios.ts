@@ -40,13 +40,33 @@ axiosInstance.interceptors.response.use(
     const res = error.response;
     const resData = res?.data;
 
+    const authHeader = res?.headers?.["authorization"];
+    const { clearAuth } = useAuthStore.getState();
+
     const isAccessTokenExpired =
       res?.status === 400 &&
       (resData?.serviceCode === "ACCESS_TOKEN_EXPIRED" ||
         resData?.data?.codeName === "ACCESS_TOKEN_EXPIRED");
 
+    const isRefreshTokenExpired =
+      res?.status === 400 &&
+      (resData?.serviceCode === "INVALID_REFRESH_TOKEN" ||
+        resData?.data?.codeName === "INVALID_REFRESH_TOKEN");
+
     if (isAccessTokenExpired) {
-      useAuthStore.getState().clearAuth();
+      if (authHeader?.startsWith("Bearer ")) {
+        const newToken = authHeader.split(" ")[1];
+        useAuthStore.getState().setAccessToken(newToken);
+        return Promise.resolve(res);
+      }
+
+      clearAuth();
+      return Promise.reject(error);
+    }
+
+    if (isRefreshTokenExpired) {
+      clearAuth();
+      return Promise.reject(error);
     }
 
     return Promise.reject(error);
