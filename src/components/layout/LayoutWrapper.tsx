@@ -11,10 +11,18 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
 
   const showNavbar = showBottomNavbarPaths.includes(pathname);
 
+  const isAdmin = pathname.startsWith("/admin");
+
   return (
-    <div className="scrollbar-hide mx-auto h-screen max-w-[480px] min-w-[375px] overflow-y-auto">
+    <div
+      className={
+        isAdmin
+          ? "w-full min-h-screen overflow-y-auto bg-white"
+          : "scrollbar-hide mx-auto h-screen max-w-[480px] min-w-[375px] overflow-y-auto"
+      }
+    >
       {children}
-      {showNavbar && <TabBar />}
+      {!isAdmin && showNavbar && <TabBar />}
     </div>
   );
 };
