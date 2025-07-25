@@ -4,9 +4,6 @@ import { format } from "date-fns";
 
 import Calendar from "@/components/common/calendar/Calendar";
 
-import StatusOffIcon from "@/public/svgs/listings/status-off-icon.svg";
-import StatusOnIcon from "@/public/svgs/listings/status-on-icon.svg";
-
 interface Range {
   startDate: Date;
   endDate: Date;
@@ -96,13 +93,26 @@ const MeetingTimeField = ({
         onCloseWheel={() => setTimeout(() => setIsWheelOpen(false), 0)}
         disabled={isClicked}
       />
-      <div className="flex justify-between px-4 py-3" onClick={handleStatus}>
+      <div
+        className="flex items-center justify-between border-t-[2px] border-gray-200 px-4 py-3"
+        onClick={handleStatus}
+      >
         <div
-          className={`text-body1-med ${isClicked ? "text-mint" : "text-gray-500"}`}
+          className={`text-body1-med ${isClicked ? "text-mint-contrast" : "text-gray-500"}`}
         >
           기한 상관 없음
         </div>
-        {isClicked ? <StatusOnIcon /> : <StatusOffIcon />}
+        <div
+          className={`flex h-7 w-[50px] cursor-pointer items-center rounded-full p-[3px] duration-300 ease-in-out ${
+            isClicked ? "bg-mint-contrast" : "bg-gray-300"
+          }`}
+        >
+          <div
+            className={`h-[22px] w-[22px] transform rounded-full bg-white duration-300 ease-in-out ${
+              isClicked ? "translate-x-[22px]" : "translate-x-0"
+            }`}
+          />
+        </div>
       </div>
     </div>
   );

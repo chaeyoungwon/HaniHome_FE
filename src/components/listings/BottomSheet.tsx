@@ -38,13 +38,13 @@ const BottomSheet = ({ onClose, onHideClick }: BottomSheetProps) => {
     <>
       {/* 오버레이 */}
       <div
-        className="fixed inset-0 z-80 bg-[rgba(72,74,79,0.6)]"
+        className="bg-gradient-bottom-overlay fixed inset-0 z-[100]"
         onClick={handleClose}
       />
 
       {/* 바텀시트 */}
       <div
-        className={`fixed bottom-0 left-1/2 z-100 w-[375px] -translate-x-1/2 rounded-t-2xl border border-gray-500 bg-white pt-3 transition-transform duration-300 ease-in-out ${
+        className={`fixed bottom-0 left-1/2 z-[100] w-[375px] -translate-x-1/2 rounded-t-2xl border border-gray-500 bg-white pt-3 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
         onClick={e => e.stopPropagation()}

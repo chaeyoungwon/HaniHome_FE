@@ -43,8 +43,8 @@ const InternalDetailsContent = ({
   };
 
   return (
-    <div className="max-w-[375px] py-3 px-4">
-      <div className="flex flex-col gap-4 pb-3">
+    <div className="max-w-[375px]">
+      <div className="flex flex-col gap-4 px-4 py-3">
         <div className="flex justify-between">
           <div className="flex items-center gap-1">
             <div className="text-body1-sb text-gray-800">방 면적</div>
@@ -104,7 +104,7 @@ const InternalDetailsContent = ({
             return acc;
           }, [])
           .map((pair, rowIdx) => (
-            <div key={rowIdx} className="flex justify-between py-5">
+            <div key={rowIdx} className="flex justify-between px-4 py-5">
               {pair.map(option => (
                 <div key={option} className="flex flex-col">
                   <div className="text-body1-sb mb-3 text-gray-800">
@@ -187,7 +187,7 @@ const InternalDetailsContent = ({
           ))}
       </div>
       {listingType === "RENT" && (
-        <div className="flex flex-col gap-3 pt-3">
+        <div className="flex flex-col gap-3 px-4 pt-3">
           <div
             className="flex cursor-pointer items-center gap-1 select-none"
             onClick={() => setHasYardChecked(prev => !prev)}

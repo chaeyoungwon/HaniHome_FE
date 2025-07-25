@@ -148,7 +148,7 @@ const ListingDetailPage = () => {
 
           <div className="text-cap1-med flex flex-col items-end gap-3 text-gray-700">
             {data.costDetails.billIncluded ? (
-              <div className="text-cap1-med flex gap-1 text-gray-700">
+              <div className="text-cap1-med flex items-center gap-1 text-gray-700">
                 <span>빌</span>
                 <span className="text-mint">주세에 포함</span>
               </div>
@@ -156,7 +156,7 @@ const ListingDetailPage = () => {
               <div className="text-cap1-med flex gap-2 text-gray-700">
                 <span>빌 미포함</span>
                 <div className="h-3 border-l border-gray-500" />
-                <div className="flex gap-1">
+                <div className="flex items-center gap-1">
                   <span>총 빌 가격</span>
                   <span className="text-mint">
                     {data.costDetails.weeklyCost.toLocaleString()}$

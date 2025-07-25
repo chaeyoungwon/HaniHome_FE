@@ -47,10 +47,13 @@ const CostDetailField = ({ options, onChange }: CostDetailFieldProps) => {
             주/$
           </span>
         </div>
-        <div onClick={handleBillIncluded} className="flex gap-1">
+        <button
+          onClick={handleBillIncluded}
+          className="flex cursor-pointer items-center gap-1"
+        >
           <CheckIcon checked={isBillIncluded} />
           <div className="text-cap1-med text-gray-700">빌 포함</div>
-        </div>
+        </button>
       </div>
 
       <Divider className="my-[2px]" />
@@ -113,10 +116,13 @@ const CostDetailField = ({ options, onChange }: CostDetailFieldProps) => {
               $
             </span>
           </div>
-          <div onClick={handleDepositNegotiable} className="flex gap-1">
+          <button
+            onClick={handleDepositNegotiable}
+            className="flex cursor-pointer items-center gap-1"
+          >
             <CheckIcon checked={depositNegotiable} />
             <div className="text-cap1-med text-gray-700">디파짓 조정 가능</div>
-          </div>
+          </button>
         </div>
         {/**key디파짓 */}
         <div className="flex flex-col gap-2">

@@ -86,7 +86,7 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
               className="flex cursor-pointer justify-between gap-2 rounded-[4px] border border-gray-300 px-2 py-[6px]"
               onClick={() => setIsOpen(true)}
             >
-              <QuestionMarkIcon />
+              <QuestionMarkIcon className="text-gray-600" />
               <div className="text-cap1-med flex justify-center text-gray-600">
                 매물 사진 <br />
                 업로드 가이드

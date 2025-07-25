@@ -56,7 +56,7 @@ const Calendar = ({
           className={clsx(
             "rdrDateDisplayItem",
             focusedRange[1] === 0 && !disabled && "rdrDateDisplayItemActive",
-            disabled && "bg-gray-0 !text-mint",
+            disabled && "bg-gray-0 !text-mint-contrast",
           )}
         >
           {disabled ? "0000.00.00" : format(startDate, "yyyy. MM. dd")}
@@ -70,7 +70,7 @@ const Calendar = ({
           className={clsx(
             "rdrDateDisplayItem",
             focusedRange[1] === 1 && !disabled && "rdrDateDisplayItemActive",
-            disabled && "bg-gray-0 !text-mint",
+            disabled && "bg-gray-0 !text-mint-contrast",
           )}
         >
           {disabled ? "0000.00.00" : format(endDate, "yyyy. MM. dd")}
@@ -81,7 +81,9 @@ const Calendar = ({
       <div
         className={clsx(
           "flex items-center justify-between gap-17 px-11 py-3",
-          disabled ? "bg-gray-100 text-gray-300" : "text-gray-900",
+          disabled
+            ? "border-y border-gray-200 bg-gray-100 text-gray-300"
+            : "text-gray-900",
         )}
       >
         <button onClick={() => !disabled && moveMonthBy(-1)}>
@@ -133,7 +135,8 @@ const Calendar = ({
           rangeColors={["#2ED8A7"]}
           className={clsx(
             isSingleSelection && "single-selection",
-            disabled && "pointer-events-none",
+            disabled &&
+              "rdrCalendarWrapper disabled pointer-events-none bg-gray-100",
           )}
         />
       )}

@@ -30,7 +30,7 @@ const BottomActionBar = ({
   // 단일 버튼 케이스
   if (isSingle) {
     return (
-      <div className="fixed bottom-0 left-1/2 z-100 flex w-[375px] -translate-x-1/2 flex-col items-center bg-white">
+      <div className="fixed bottom-0 left-1/2 z-[50] flex w-[375px] -translate-x-1/2 flex-col items-center bg-white">
         {showDivider && (
           <div className="h-[1px] w-full self-center bg-gray-300" />
         )}
@@ -53,7 +53,7 @@ const BottomActionBar = ({
 
   // 버튼 두 개 이상 케이스
   return (
-    <div className="fixed bottom-0 left-1/2 z-100 flex w-[375px] -translate-x-1/2 flex-col items-center bg-white">
+    <div className="fixed bottom-0 left-1/2 z-[50] flex w-[375px] -translate-x-1/2 flex-col items-center bg-white">
       {showDivider && <div className="h-[1px] w-full bg-gray-300" />}
 
       <div

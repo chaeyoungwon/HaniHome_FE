@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import TimeSpinner from "@/components/common/calendar/TimeSpinner";
-
-// 경로 맞게 조정하세요
 
 const PERIODS = ["아침", "점심", "저녁"] as const;
 type Period = (typeof PERIODS)[number];
@@ -84,36 +82,42 @@ const TimeSlotField = () => {
         <div key={period} className="px-4 py-3">
           <div className="flex items-center justify-between px-4 py-3">
             <div
-              className={`text-body1-sb mb-2 ${activeSpinner?.period === period ? "text-gray-800" : "text-gray-400"}`}
+              className={`text-body1-sb ${activeSpinner?.period === period ? "text-gray-800" : "text-gray-400"}`}
             >
               {period}
             </div>
-            <div className="flex gap-3">
-              {(["start", "end"] as const).map(type => (
-                <button
-                  key={type}
-                  className={`flex h-[33px] gap-1 rounded-[4px] border px-3 py-1 ${
-                    activeSpinner?.period === period &&
-                    activeSpinner?.type === type
-                      ? "bg-mint-contrast border-mint-contrast"
-                      : "border-gray-400"
-                  } `}
-                  onClick={() => handleButtonClick(period, type)}
-                >
-                  {times[period][type].split(":").map((t, i) => (
-                    <span
-                      key={i}
-                      className={`text-body1-med ${
-                        activeSpinner?.period === period &&
-                        activeSpinner?.type === type
-                          ? "text-white"
-                          : "text-mint-contrast"
-                      }`}
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </button>
+            <div className="flex items-center gap-3">
+              {(["start", "end"] as const).map((type, idx) => (
+                <Fragment key={type}>
+                  <button
+                    key={type}
+                    className={`flex h-[30px] items-center rounded-[4px] border px-3 py-1 ${
+                      activeSpinner?.period === period &&
+                      activeSpinner?.type === type
+                        ? "bg-mint-contrast border-mint-contrast"
+                        : "border-gray-400"
+                    }`}
+                    onClick={() => handleButtonClick(period, type)}
+                  >
+                    {times[period][type].split(":").map((t, i) => (
+                      <span
+                        key={i}
+                        className={`text-body1-med ${
+                          activeSpinner?.period === period &&
+                          activeSpinner?.type === type
+                            ? "text-white"
+                            : "text-mint-contrast"
+                        }`}
+                      >
+                        {t}
+                        {i === 0 && <span className="mx-1">:</span>}
+                      </span>
+                    ))}
+                  </button>
+                  {idx === 0 && (
+                    <span className="text-body1-med text-gray-700">~</span>
+                  )}
+                </Fragment>
               ))}
             </div>
           </div>

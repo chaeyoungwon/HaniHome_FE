@@ -71,7 +71,7 @@ const LivingConditionsContent = ({
         ))}
       </div>
 
-      <div className="flex flex-col gap-2 px-4 py-3">
+      <div className="flex flex-col gap-2 px-4 pt-3 pb-5">
         {secondLine.map(option => (
           <div key={option} className="text-body1-sb text-gray-700">
             {option}
@@ -87,15 +87,15 @@ const LivingConditionsContent = ({
               : "border-gray-400 text-gray-500"
           }`}
         />
-        <div
+        <button
           onClick={() => setIsChecked(prev => !prev)}
-          className="flex cursor-pointer gap-1"
+          className="flex cursor-pointer items-center gap-1"
         >
           <CheckIcon checked={isChecked} />
           <div className="text-cap1-med flex items-center text-gray-700">
             계약 연장 가능
           </div>
-        </div>
+        </button>
       </div>
     </div>
   );

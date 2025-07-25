@@ -250,3 +250,44 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background-color: #37cdac !important;
   border-radius: 50%;
 }
+
+/* 강제 캘린더 비활성화 스타일 */
+.rdrCalendarWrapper.disabled {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-300);
+}
+
+.rdrCalendarWrapper.disabled .rdrDay {
+  background-color: transparent;
+  color: var(--color-gray-300);
+}
+
+.rdrCalendarWrapper.disabled .rdrDayNumber span {
+  color: var(--color-gray-300);
+}
+
+.rdrCalendarWrapper.disabled .rdrDay:nth-child(7n + 1) .rdrDayNumber span,
+.rdrCalendarWrapper.disabled .rdrDay:nth-child(7n) .rdrDayNumber span {
+  color: var(--color-gray-300) !important;
+}
+
+.rdrCalendarWrapper.disabled .rdrDay .rdrDayToday {
+  background-color: transparent !important;
+}
+.rdrCalendarWrapper.disabled .rdrDay {
+  pointer-events: none;
+}
+
+.rdrCalendarWrapper.disabled .rdrDay .rdrStartEdge,
+.rdrCalendarWrapper.disabled .rdrDay .rdrEndEdge {
+  background-color: transparent !important;
+}
+
+.rdrCalendarWrapper.disabled .rdrDay .rdrDayNumber span {
+  color: var(--color-gray-300);
+}
+.rdrCalendarWrapper.disabled .rdrDay .rdrSelected ~ .rdrDayNumber,
+.rdrCalendarWrapper.disabled .rdrDay .rdrStartEdge ~ .rdrDayNumber,
+.rdrCalendarWrapper.disabled .rdrDay .rdrEndEdge ~ .rdrDayNumber {
+  background-color: transparent !important;
+}

@@ -113,7 +113,7 @@ const Wishlist = () => {
 
       {/* 개수 표시 */}
       <div className="text-body2-med flex items-center justify-between px-4 py-3 text-gray-800">
-        <div className="flex gap-1">
+        <div className="flex items-center gap-1">
           <div>즐겨찾기 매물</div>
           <div>{sortedListings.length}개</div>
         </div>

@@ -53,7 +53,7 @@ const AvailableOptionsContent = ({
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-2">
       {Object.entries(options).map(([key, values]) => (
         <div key={key} className="flex flex-col gap-3 px-4 py-3">
           <div className="flex gap-2">
@@ -82,7 +82,7 @@ const AvailableOptionsContent = ({
           </ul>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 

@@ -14,7 +14,7 @@ const AgreementItem = ({ id, label, link }: AgreementItemProps) => {
       key={id}
       className="flex cursor-pointer items-center gap-1 text-left"
     >
-      <div className="flex gap-1">
+      <div className="flex items-center gap-1">
         <span className="text-cap1-med text-gray-500">{label}</span>
         {isRequired && link && (
           <Link href={link} className="text-cap1-med text-gray-500 underline">

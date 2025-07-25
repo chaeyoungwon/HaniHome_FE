@@ -25,74 +25,87 @@ const MovingConditionDropdownContent = ({
   const [isChecked, setIsChecked] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, string | string[]>
-  >((value as Record<string, string | string[]>) || {});
+  >(value as unknown as Record<string, string | string[]>);
 
   const question = COMMON_MOVING_CONDITIONS.find(q => q.id === id);
   if (!question) return null;
 
+  let content: React.ReactNode = null;
+
   switch (id) {
     case "genderPreference": {
       const options = question.options as string[];
-      return (
+      content = (
         <>
           <DropdownOptionsList
             options={options}
             value={value as string}
             onSelect={onSelect}
           />
-          <div
+          <button
             onClick={() => setIsChecked(prev => !prev)}
-            className="flex gap-1 px-4 pb-3"
+            className="flex cursor-pointer items-center gap-1 px-4 pb-3"
           >
             <CheckIcon checked={isChecked} />
             <div className="text-cap1-med text-gray-700">LGBTQIA +</div>
-          </div>
+          </button>
         </>
       );
+      break;
     }
 
     case "availableOptions": {
       const options = question.options as Record<string, string[]>;
-      return (
-        <>
-          <AvailableOptionsContent
-            options={options}
-            defaultValue={selectedOptions}
-            multiSelectKeys={["주차"]}
-            onSelect={updated => {
-              setSelectedOptions(updated);
-              onSelect(updated);
-            }}
-          />
-        </>
+      content = (
+        <AvailableOptionsContent
+          options={options}
+          defaultValue={selectedOptions}
+          multiSelectKeys={["주차"]}
+          onSelect={updated => {
+            setSelectedOptions(updated);
+            onSelect(updated);
+          }}
+        />
       );
+      break;
     }
 
     case "livingConditions": {
       const options = question.options as string[];
-      return (
+      content = (
         <LivingConditionsContent
           options={options}
           value={value as Record<string, string>}
           onSelect={onSelect}
         />
       );
+      break;
     }
 
     case "moveInInfo":
-      return <MoveInfoContent onSelect={value => onSelect(value)} />;
+      content = <MoveInfoContent onSelect={value => onSelect(value)} />;
+      break;
 
     default: {
       const options = question.options as string[];
-      return (
+      content = (
         <DropdownOptionsList
           options={options}
           value={value as string}
           onSelect={onSelect}
         />
       );
+      break;
     }
   }
+
+  const shouldApplyGap = id === "genderPreference"; // 복수 요소 있는 케이스만 gap-2 적용
+
+  return shouldApplyGap ? (
+    <div className="flex flex-col gap-2">{content}</div>
+  ) : (
+    <>{content}</>
+  );
 };
 
 export default MovingConditionDropdownContent;

@@ -43,4 +43,5 @@ export type AnswerValue =
   | string[]
   | CostDetailsOptions
   | MeetingTimeOptions
-  | AvailabilityOptions;
+  | AvailabilityOptions
+  | Record<string, string | string[]>;

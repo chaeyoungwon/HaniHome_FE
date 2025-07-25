@@ -43,8 +43,8 @@ const VerificationPage = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files ?? []);
+    if (!files) return;
 
     if (!verif) {
       setShowDeleteModal(true);
@@ -55,7 +55,7 @@ const VerificationPage = () => {
       VERIFICATION_OPTIONS.find(opt => opt.value === verif)?.label ?? "";
 
     uploadMultipleImages({
-      file,   
+      files,
       setPreviewUrls,
       setUploadedFiles,
       setField: (key, files) => {
