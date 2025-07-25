@@ -40,6 +40,7 @@ const Filter = () => {
     negotiable,
     minWeeklyCost,
     maxWeeklyCost,
+    suburb,
     radiusKm,
     setFilters,
     isHydrated,
@@ -84,6 +85,7 @@ const Filter = () => {
     radiusKm: debouncedRadiusKm,
     metroStopLatitude: tempFilters.selectedMetroStop?.latitude ?? null,
     metroStopLongitude: tempFilters.selectedMetroStop?.longitude ?? null,
+    suburb,
   });
 
   const { data } = usePropertySearch(params);
@@ -257,7 +259,7 @@ const Filter = () => {
           }
         />
       </div>
-      
+
       <Divider />
 
       <SubwayStationSelector
