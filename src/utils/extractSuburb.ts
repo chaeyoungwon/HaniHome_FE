@@ -1,7 +1,7 @@
 const STATES = ["NSW", "VIC", "QLD", "WA", "SA", "TAS", "NT", "ACT"];
 
-export const extractSuburb = (regionStr: string | undefined): string => {
-  if (!regionStr) return "chatswood";
+export const extractSuburb = (regionStr: string | undefined): string | null => {
+  if (!regionStr) return null;
 
   const [regionPart] = regionStr.split(",");
   const words = regionPart.trim().split(" ");

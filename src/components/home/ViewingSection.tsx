@@ -15,13 +15,15 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const ViewingSection = () => {
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
+  const { isLoggedIn, isAuthInitialized } = useAuthStore();
   const { data } = useMyViewingList<MyViewingDateProfile[]>({
     view: "DATE_PROFILE",
     enabled: isLoggedIn === true,
   });
 
   const today = dayjs().startOf("day");
+
+  if (!isAuthInitialized) return null;
 
   const getDisplayDate = (date: dayjs.Dayjs) => {
     const today = dayjs().startOf("day");

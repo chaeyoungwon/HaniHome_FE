@@ -19,6 +19,7 @@ interface ParamsInput {
   availableTo: string | null;
   metroStopLatitude: number | null;
   metroStopLongitude: number | null;
+  suburb: string;
 }
 
 export const buildQueryParams = (
@@ -37,6 +38,7 @@ export const buildQueryParams = (
     availableTo,
     metroStopLatitude,
     metroStopLongitude,
+    suburb,
   } = input;
 
   const kinds = selectedTypes
@@ -73,6 +75,7 @@ export const buildQueryParams = (
     billIncluded,
     immediate,
     negotiable,
+    suburb,
   };
 
   if (minWeeklyCost !== null) params.minWeeklyCost = minWeeklyCost;

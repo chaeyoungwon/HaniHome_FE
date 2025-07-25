@@ -46,7 +46,6 @@ const SearchField = ({
   useEffect(() => {
     setIsSelected(isSelectedProp ?? false);
     isSelectedRef.current = isSelectedProp ?? false;
-    // 전역값 받아올 때는 타이핑 상태 false 유지
     setIsTyping(false);
   }, [isSelectedProp]);
 
@@ -56,7 +55,7 @@ const SearchField = ({
     });
 
   const fetchPlaces = useCallback(async () => {
-    if (!value.trim() || !isTyping) {
+    if (!value.trim()) {
       setResults([]);
       return;
     }
@@ -95,12 +94,14 @@ const SearchField = ({
   }, [value, isTyping, type]);
 
   useEffect(() => {
+    if (!isTyping || !value.trim()) return;
+
     const debounce = setTimeout(() => {
       fetchPlaces();
     }, 300);
 
     return () => clearTimeout(debounce);
-  }, [fetchPlaces]);
+  }, [value, isTyping]);
 
   const handleSelect = (id: string, text: string) => {
     setIsTyping(false);
@@ -120,7 +121,12 @@ const SearchField = ({
     if (type === "subway") {
       onSearchClick?.("", value);
     } else {
-      fetchPlaces();
+      if (results.length > 0) {
+        setResults([]);
+      } else {
+        fetchPlaces();
+      }
+      onSearchClick?.("", value);
     }
   };
 

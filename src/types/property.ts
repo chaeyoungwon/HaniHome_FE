@@ -127,6 +127,7 @@ export interface FilteredPropertyParams {
   metroStopLatitude?: number;
   metroStopLongitude?: number;
   radiusKm?: number;
+  suburb: string;
 }
 
 // 매물 조회 뷰 타입
@@ -147,6 +148,10 @@ export interface SummaryProperty {
   tradeStatus: string;
   wishCount: number;
   nearestStation: NearestStation;
+  metaInfo: {
+    owner: boolean;
+    wished: boolean;
+  };
 }
 
 export interface NearestStation {

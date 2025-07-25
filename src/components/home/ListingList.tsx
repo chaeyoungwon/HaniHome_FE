@@ -16,10 +16,10 @@ import utc from "dayjs/plugin/utc";
 import { addWish, removeWish } from "@/apis/wishlist";
 
 import { usePropertySearch } from "@/hooks/filter/useFilter";
-import { usePropertyList } from "@/hooks/property/useProperty";
-import { useWishList } from "@/hooks/wishlist/useWishList";
 
 import { buildQueryParams } from "@/utils/buildQueryParams";
+
+import { FALLBACK_SUBURB } from "@/constants/default-region";
 
 import { SummaryProperty } from "@/types/property";
 
@@ -29,7 +29,7 @@ dayjs.extend(utc);
 dayjs.extend(relativeTime);
 dayjs.locale("ko");
 
-const ListingList = () => {
+const ListingList = ({ fallbackSuburb }: { fallbackSuburb: string | null }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -47,86 +47,100 @@ const ListingList = () => {
     maxWeeklyCost,
     radiusKm,
     selectedMetroStop,
+    suburb,
   } = useFilterStore();
 
-  const params = buildQueryParams({
-    selectedTypes,
-    selectedRoomTypes,
-    billIncluded,
-    availableFrom,
-    availableTo,
-    immediate,
-    negotiable,
-    minWeeklyCost,
-    maxWeeklyCost,
-    radiusKm,
-    metroStopLatitude: selectedMetroStop?.latitude ?? null,
-    metroStopLongitude: selectedMetroStop?.longitude ?? null,
-  });
+  const finalSuburb = suburb || fallbackSuburb || FALLBACK_SUBURB;
 
-  const { data: listData } = usePropertyList<"SUMMARY">({
-    view: "SUMMARY",
-    enabled: isAuthInitialized && !isLoggedIn,
-  });
+  const params = useMemo(
+    () =>
+      buildQueryParams({
+        selectedTypes,
+        selectedRoomTypes,
+        billIncluded,
+        availableFrom,
+        availableTo,
+        immediate,
+        negotiable,
+        minWeeklyCost,
+        maxWeeklyCost,
+        radiusKm,
+        suburb: finalSuburb,
+        metroStopLatitude: selectedMetroStop?.latitude ?? null,
+        metroStopLongitude: selectedMetroStop?.longitude ?? null,
+      }),
+    [
+      selectedTypes,
+      selectedRoomTypes,
+      billIncluded,
+      availableFrom,
+      availableTo,
+      immediate,
+      negotiable,
+      minWeeklyCost,
+      maxWeeklyCost,
+      radiusKm,
+      finalSuburb,
+      selectedMetroStop?.latitude,
+      selectedMetroStop?.longitude,
+    ],
+  );
 
   const { data: searchData } = usePropertySearch(params, {
-    enabled: isAuthInitialized && isLoggedIn,
+    enabled: isAuthInitialized && !!(finalSuburb && finalSuburb.trim()),
   });
 
-  const { data: wishList = [] } = useWishList();
-
   const properties: SummaryProperty[] = useMemo(() => {
-    return isLoggedIn ? (searchData?.list ?? []) : (listData ?? []);
-  }, [isLoggedIn, searchData, listData]);
-
-  const likedMap = useMemo(() => {
-    const map: Record<number, boolean> = {};
-    wishList.forEach(item => {
-      map[item.id] = true;
-    });
-    return map;
-  }, [wishList]);
+    return searchData?.list ?? [];
+  }, [searchData?.list]);
 
   const [likeCounts, setLikeCounts] = useState<Record<number, number>>({});
+  const [likedMap, setLikedMap] = useState<Record<number, boolean>>({});
 
   useMemo(() => {
     if (!properties.length) return;
 
-    const init: Record<number, number> = {};
+    const initCounts: Record<number, number> = {};
+    const initLiked: Record<number, boolean> = {};
+
     properties.forEach(p => {
-      init[p.id] = p.wishCount ?? 0;
+      initCounts[p.id] = p.wishCount ?? 0;
+      initLiked[p.id] = p.metaInfo?.wished ?? false;
     });
-    setLikeCounts(init);
+
+    setLikeCounts(initCounts);
+    setLikedMap(initLiked);
   }, [properties]);
 
   const mutation = useMutation({
-    mutationFn: async (id: number) => {
-      if (likedMap[id]) {
+    mutationFn: async ({ id, isLiked }: { id: number; isLiked: boolean }) => {
+      if (isLiked) {
         await removeWish(id);
       } else {
         await addWish(id);
       }
     },
-    onMutate: async id => {
+    onMutate: async ({ id, isLiked }) => {
       setLikeCounts(prev => ({
         ...prev,
-        [id]: prev[id] + (likedMap[id] ? -1 : 1),
+        [id]: prev[id] + (isLiked ? -1 : 1),
+      }));
+      setLikedMap(prev => ({
+        ...prev,
+        [id]: !isLiked,
       }));
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["wishList"] as const });
-    },
-    onError: () => {
-      queryClient.invalidateQueries({ queryKey: ["wishList"] as const });
+      queryClient.invalidateQueries({ queryKey: ["wishList"] });
     },
   });
 
-  const handleToggleLike = (id: number) => {
+  const handleToggleLike = (id: number, isLiked: boolean) => {
     if (!isLoggedIn) {
       openModal();
       return;
     }
-    mutation.mutate(id);
+    mutation.mutate({ id, isLiked });
   };
 
   const handleCardClick = (id: number) => {
@@ -155,7 +169,7 @@ const ListingList = () => {
           createdAt={p.createdAt}
           wishCount={likeCounts[p.id] ?? p.wishCount ?? 0}
           isLiked={likedMap[p.id] ?? false}
-          onToggleLike={() => handleToggleLike(p.id)}
+          onToggleLike={() => handleToggleLike(p.id, likedMap[p.id] ?? false)}
           onClick={() => handleCardClick(p.id)}
         />
       ))}

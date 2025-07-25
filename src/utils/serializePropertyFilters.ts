@@ -24,6 +24,7 @@ export const serializePropertyFilters = (params: FilteredPropertyParams) => {
     "metroStopLatitude",
     "metroStopLongitude",
     "radiusKm",
+    "suburb",
   ] as const;
 
   singleFields.forEach(key => {

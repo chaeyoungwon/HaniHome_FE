@@ -2263,6 +2263,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/event-source-polyfill@npm:^1":
+  version: 1.0.5
+  resolution: "@types/event-source-polyfill@npm:1.0.5"
+  checksum: 10c0/62f06c58312097c17f8489771057bb9e859269243a815ef27c8b50b48e084412fce4f90cb18252f807ed9016028321ce2713c90b77e77abc9e84a21bce5db724
+  languageName: node
+  linkType: hard
+
 "@types/google.maps@npm:^3.54.10":
   version: 3.58.1
   resolution: "@types/google.maps@npm:3.58.1"
@@ -4361,6 +4368,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"event-source-polyfill@npm:^1.0.31":
+  version: 1.0.31
+  resolution: "event-source-polyfill@npm:1.0.31"
+  checksum: 10c0/79966f5084796e14f9a9dec315a2ccc220dedc51ff5f2b198dc80e3cb2ae01428d39d9bf66ed679f1944be086b9f6e84ea3dc933b81b0411c07f99672135679b
+  languageName: node
+  linkType: hard
+
 "eventemitter3@npm:^5.0.1":
   version: 5.0.1
   resolution: "eventemitter3@npm:5.0.1"
@@ -4719,6 +4733,7 @@ __metadata:
     "@tanstack/react-query": "npm:^5.75.7"
     "@tanstack/react-query-devtools": "npm:^5.77.2"
     "@trivago/prettier-plugin-sort-imports": "npm:^5.2.2"
+    "@types/event-source-polyfill": "npm:^1"
     "@types/lodash": "npm:^4.17.20"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19.1.8"
@@ -4734,6 +4749,7 @@ __metadata:
     eslint-config-prettier: "npm:^10.1.5"
     eslint-plugin-prettier: "npm:^5.4.0"
     eslint-plugin-react-refresh: "npm:^0.4.20"
+    event-source-polyfill: "npm:^1.0.31"
     globals: "npm:^16.1.0"
     husky: "npm:^9.1.7"
     lint-staged: "npm:^16.0.0"

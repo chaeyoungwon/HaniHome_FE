@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useFilterStore } from "@/stores/useFilterStore";
 
 import { useMyInfo } from "@/hooks/member/useMember";
+import { useNotificationStream } from "@/hooks/notification/useNotification";
+
+import { extractSuburb } from "@/utils/extractSuburb";
 
 import AddListingFab from "@/components/home/AddListingFab";
 import CategoryHeader from "@/components/home/CategoryHeader";
@@ -14,14 +18,32 @@ import ViewingSection from "@/components/home/ViewingSection";
 import FilterBar from "@/components/home/filterBar/FilterBar";
 import ContentWrapper from "@/components/layout/ContentWrapper";
 import MainHeader from "@/components/layout/header/MainHeader";
+import NotificationToast from "@/components/notification/NotificationToast";
 
 const Home = () => {
   const { isLoggedIn, memberId, setMemberId } = useAuthStore();
-  const { data: myInfo } = useMyInfo();
+  const { data: myInfo, isLoading } = useMyInfo();
+  const { suburb, setFilters } = useFilterStore();
+
+  const [selectedSuburb, setSelectedSuburb] = useState<string | null>(null);
+
+  const messages = useNotificationStream();
+  const [latestMessage, setLatestMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      const latest = messages[messages.length - 1];
+      setLatestMessage(latest);
+    }
+  }, [messages]);
 
   useEffect(() => {
     if (isLoggedIn && myInfo && !memberId) {
       setMemberId(myInfo.id);
+    }
+    if (myInfo?.interestRegions) {
+      const extracted = extractSuburb(myInfo.interestRegions);
+      setSelectedSuburb(extracted);
     }
   }, [isLoggedIn, myInfo, memberId, setMemberId]);
 
@@ -36,11 +58,22 @@ const Home = () => {
         <ViewingSection />
       </div>
       <div className="flex flex-col bg-white py-5">
-        <LocationHeader />
+        <LocationHeader
+          interestRegions={myInfo?.interestRegions ?? ""}
+          isLoading={isLoading}
+          suburbFromFilter={suburb}
+          onSuburbChange={suburb => setFilters({ suburb })}
+        />
         <FilterBar />
-        <ListingList />
+        <ListingList fallbackSuburb={selectedSuburb} />
       </div>
       {isLoggedIn && <AddListingFab />}
+      {latestMessage && (
+        <NotificationToast
+          message={latestMessage}
+          onClose={() => setLatestMessage(null)}
+        />
+      )}
     </ContentWrapper>
   );
 };

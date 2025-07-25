@@ -5,13 +5,19 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useLoginModalStore } from "@/stores/useLoginModalStore";
 
+import { useUnreadNotificationCount } from "@/hooks/notification/useNotification";
+
 import MainLogo from "@/public/svgs/common/logo-wordmark.svg";
 import AlarmIcon from "@/public/svgs/header/alarm-icon.svg";
+import AlarmNewIcon from "@/public/svgs/header/alarm-new-icon.svg";
 
 const MainHeader = () => {
   const router = useRouter();
   const { isLoggedIn } = useAuthStore();
   const { openModal } = useLoginModalStore();
+
+  const { data: unreadCount } = useUnreadNotificationCount();
+  const hasUnread = (unreadCount ?? 0) > 0;
 
   const handleAlarmClick = () => {
     if (!isLoggedIn) {
@@ -28,7 +34,7 @@ const MainHeader = () => {
       </button>
 
       <button onClick={handleAlarmClick} className="cursor-pointer">
-        <AlarmIcon />
+        {hasUnread ? <AlarmNewIcon /> : <AlarmIcon />}
       </button>
     </header>
   );

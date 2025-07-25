@@ -30,6 +30,7 @@ interface FilterStore {
   billIncluded: boolean;
   availableFrom: string | null;
   availableTo: string | null;
+  suburb: string;
 
   selectedMetroStop: {
     id: number | null;
@@ -93,7 +94,7 @@ export const useFilterStore = create(
       billIncluded: false,
       availableFrom: null,
       availableTo: null,
-
+      suburb: "",
       selectedMetroStop: null,
 
       radiusKm: null,
@@ -119,6 +120,7 @@ export const useFilterStore = create(
           radiusKm: null,
           immediate: false,
           negotiable: false,
+          suburb: "",
         }),
     }),
     {
