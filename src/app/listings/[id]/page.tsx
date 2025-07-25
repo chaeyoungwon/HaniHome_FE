@@ -14,6 +14,7 @@ import AddressMap from "@/components/listings/AddressMap";
 import BottomSheet from "@/components/listings/BottomSheet";
 import DetailTabs from "@/components/listings/DetailTabs";
 import DropDownMenu from "@/components/listings/DropDownMenu";
+import ListingHideModal from "@/components/mypage/ListingHideModal";
 
 import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
@@ -31,7 +32,8 @@ const ListingDetailPage = () => {
   const router = useRouter();
 
   const [liked, setLiked] = useState(false);
-  const [isClicked, setIsClicked] = useState(false);
+  const [isClicked, setIsClicked] = useState(false); //바텀시트
+  const [isModalOpen, setIsModalOpen] = useState(false); //숨기기모달
 
   const { data, isLoading, isError } = usePropertyDetailList(listingId);
 
@@ -208,7 +210,15 @@ const ListingDetailPage = () => {
           onClick={() => router.push(`/viewing/reservation/${listingId}`)}
         />
       )}
-      {isClicked && <BottomSheet onClose={() => setIsClicked(false)} />}
+      {isClicked && (
+        <BottomSheet
+          onClose={() => setIsClicked(false)}
+          onHideClick={() => setIsModalOpen(true)}
+        />
+      )}
+      {isModalOpen && (
+        <ListingHideModal onClose={() => setIsModalOpen(false)} />
+      )}
     </>
   );
 };

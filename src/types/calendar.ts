@@ -15,4 +15,5 @@ export interface CalendarProps {
   onOpenWheel?: () => void;
   onCloseWheel?: () => void;
   setCurrentMonth: (date: Date) => void;
+  disabled: boolean;
 }

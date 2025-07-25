@@ -4,7 +4,7 @@ const MAX_SIZE_MB = 5;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
 
 interface UploadMultipleImageParams<T extends string = string> {
-  file: File;
+  files: FileList | File[];
   setPreviewUrls: Dispatch<SetStateAction<string[]>>;
   setUploadedFiles: Dispatch<SetStateAction<File[]>>;
   setField: (key: T, value: File[]) => void;
@@ -16,7 +16,7 @@ interface UploadMultipleImageParams<T extends string = string> {
 }
 
 export const uploadMultipleImages = <T extends string = string>({
-  file,
+  files,
   setPreviewUrls,
   setUploadedFiles,
   setField,
@@ -26,32 +26,38 @@ export const uploadMultipleImages = <T extends string = string>({
   maxFiles = 2,
   onLimitExceeded,
 }: UploadMultipleImageParams<T>) => {
-  const isValidType = ALLOWED_TYPES.includes(file.type);
-  const isValidSize = file.size / 1024 / 1024 <= MAX_SIZE_MB;
+  const validFiles: File[] = [];
+  const validUrls: string[] = [];
 
-  if (!isValidType || !isValidSize) {
-    setShowErrorModal(true);
-    return;
+  for (const file of Array.from(files)) {
+    const isValidType = ALLOWED_TYPES.includes(file.type);
+    const isValidSize = file.size / 1024 / 1024 <= MAX_SIZE_MB;
+
+    if (!isValidType || !isValidSize) {
+      setShowErrorModal(true);
+      continue;
+    }
+
+    validFiles.push(file);
+    validUrls.push(URL.createObjectURL(file));
   }
 
-
-  const url = URL.createObjectURL(file);
-
   setUploadedFiles(prevFiles => {
-    if (prevFiles.length >= maxFiles) {
+    if (prevFiles.length + validFiles.length > maxFiles) {
       onLimitExceeded?.();
       return prevFiles;
     }
 
-    const nextFiles = [...prevFiles, file];
+    const nextFiles = [...prevFiles, ...validFiles];
 
     setPreviewUrls(prevUrls => {
-      if (prevUrls.includes(url)) return prevUrls;
-      return [...prevUrls, url];
+      const newUrls = validUrls.filter(url => !prevUrls.includes(url));
+      return [...prevUrls, ...newUrls];
     });
 
     setField(fieldName, nextFiles);
-    onUpload?.(file);
+    validFiles.forEach(file => onUpload?.(file));
+
     return nextFiles;
   });
 };

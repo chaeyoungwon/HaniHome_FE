@@ -18,9 +18,10 @@ const Lottie = dynamic(
 interface CompletePageProps {
   message: string;
   description?: string[];
-  buttonLabel: string;
-  redirectUrl: string;
+  buttonLabel?: string;
+  redirectUrl?: string;
   showDivider?: boolean;
+  autoRedirect?: boolean;
 }
 
 const CompletePage = ({
@@ -69,11 +70,14 @@ const CompletePage = ({
         )}
       </div>
 
-      <BottomActionBar
-        label={buttonLabel}
-        onClick={() => router.push(redirectUrl)}
-        showDivider={showDivider}
-      />
+      {buttonLabel && redirectUrl && (
+        <BottomActionBar
+          label={buttonLabel}
+          onClick={() => router.push(redirectUrl)}
+          showDivider={showDivider}
+        />
+      )}
+      
     </div>
   );
 };

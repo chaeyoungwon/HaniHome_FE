@@ -7,10 +7,10 @@ import { useCancelViewing } from "@/hooks/viewing/useViewing";
 import { calculateDday } from "@/utils/dateFormatter";
 
 import AlertModal from "@/components/common/AlertModal";
+import ContentWrapper from "@/components/layout/ContentWrapper";
 
 import { ViewingCardItem } from "@/types/viewing";
 
-import ContentWrapper from "../layout/ContentWrapper";
 import CancelModal from "./CancelModal";
 import DdayBadge from "./DdayBadge";
 import ViewingEmptyMessage from "./ViewingEmptyMessage";

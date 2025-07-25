@@ -12,6 +12,9 @@ interface AlertModalProps {
   onActionClick?: () => void;
   actionDisabled?: boolean;
   loading?: boolean;
+
+  subActionLabel?: string;
+  onSubActionClick?: () => void;
 }
 
 const AlertModal = ({
@@ -22,6 +25,8 @@ const AlertModal = ({
   onActionClick,
   actionDisabled,
   loading,
+  subActionLabel,
+  onSubActionClick,
 }: AlertModalProps) => {
   if (loading) {
     return (
@@ -45,7 +50,8 @@ const AlertModal = ({
             : description}
         </div>
 
-        {actionLabel && (
+        {/* 버튼 1개만 있을 경우 */}
+        {actionLabel && !subActionLabel && (
           <button
             onClick={onActionClick}
             disabled={actionDisabled}
@@ -57,6 +63,29 @@ const AlertModal = ({
           >
             {actionLabel}
           </button>
+        )}
+
+        {/* 버튼 2개일 경우 */}
+        {actionLabel && subActionLabel && (
+          <div className="mt-6 flex justify-between gap-[5px]">
+            <button
+              onClick={onSubActionClick}
+              className="border-mint text-mint text-lab1-b h-9 flex-1 cursor-pointer rounded border"
+            >
+              {subActionLabel}
+            </button>
+            <button
+              onClick={onActionClick}
+              disabled={actionDisabled}
+              className={`text-lab1-b h-9 flex-1 cursor-pointer rounded ${
+                actionDisabled
+                  ? "cursor-not-allowed bg-gray-300 text-white"
+                  : "bg-mint text-white"
+              }`}
+            >
+              {actionLabel}
+            </button>
+          </div>
         )}
       </div>
     </ModalLayout>

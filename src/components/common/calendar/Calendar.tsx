@@ -22,6 +22,7 @@ const Calendar = ({
   onShownDateChange,
   onOpenWheel,
   onCloseWheel,
+  disabled,
 }: CalendarProps) => {
   const startDate = range[0].startDate;
   const endDate = range[0].endDate;
@@ -42,6 +43,7 @@ const Calendar = ({
     onShownDateChange,
     onOpenWheel,
     onCloseWheel,
+    disabled,
   });
 
   return (
@@ -50,46 +52,66 @@ const Calendar = ({
       <div className="rdrDateDisplay flex items-center justify-center gap-[24px] py-4">
         <button
           onMouseDown={e => e.preventDefault()}
-          onClick={() => handleDateClick(0)}
+          onClick={() => !disabled && handleDateClick(0)}
           className={clsx(
             "rdrDateDisplayItem",
-            focusedRange[1] === 0 && "rdrDateDisplayItemActive",
+            focusedRange[1] === 0 && !disabled && "rdrDateDisplayItemActive",
+            disabled && "bg-gray-0 !text-mint",
           )}
         >
-          {format(startDate, "yyyy. MM. dd")}
+          {disabled ? "0000.00.00" : format(startDate, "yyyy. MM. dd")}
         </button>
 
         <span className="text-body1-med text-gray-700">~</span>
 
         <button
           onMouseDown={e => e.preventDefault()}
-          onClick={() => handleDateClick(1)}
+          onClick={() => !disabled && handleDateClick(1)}
           className={clsx(
             "rdrDateDisplayItem",
-            focusedRange[1] === 1 && "rdrDateDisplayItemActive",
+            focusedRange[1] === 1 && !disabled && "rdrDateDisplayItemActive",
+            disabled && "bg-gray-0 !text-mint",
           )}
         >
-          {format(endDate, "yyyy. MM. dd")}
+          {disabled ? "0000.00.00" : format(endDate, "yyyy. MM. dd")}
         </button>
       </div>
 
-      {/* 상단 날짜 텍스트 (가운데 클릭 시 휠 toggle) */}
-      <div className="flex items-center justify-between gap-17 px-11 py-3 text-gray-900">
-        <button onClick={() => moveMonthBy(-1)}>
-          <RightArrow className="h-4.5 w-4.5 rotate-180 cursor-pointer" />
+      {/* 상단 월 선택 영역 */}
+      <div
+        className={clsx(
+          "flex items-center justify-between gap-17 px-11 py-3",
+          disabled ? "bg-gray-100 text-gray-300" : "text-gray-900",
+        )}
+      >
+        <button onClick={() => !disabled && moveMonthBy(-1)}>
+          <RightArrow
+            className={clsx(
+              "h-4.5 w-4.5 rotate-180",
+              disabled ? "text-gray-300" : "cursor-pointer",
+            )}
+          />
         </button>
 
-        <span onClick={toggleShowWheel} className="cursor-pointer">
-          {tempDate ? format(tempDate, "yyyy. MM. dd.") : ""}
+        <span
+          onClick={() => !disabled && toggleShowWheel()}
+          className={clsx("cursor-pointer", disabled && "pointer-events-none")}
+        >
+          {tempDate ? format(tempDate, "yyyy. MM.") : ""}
         </span>
 
-        <button onClick={() => moveMonthBy(1)}>
-          <RightArrow className="0 h-4.5 w-4.5 cursor-pointer" />
+        <button onClick={() => !disabled && moveMonthBy(1)}>
+          <RightArrow
+            className={clsx(
+              "h-4.5 w-4.5",
+              disabled ? "text-gray-300" : "cursor-pointer",
+            )}
+          />
         </button>
       </div>
 
-      {/* 날짜 휠 또는 캘린더 표시 */}
-      {showWheel && tempDate ? (
+      {/* 휠 또는 캘린더 영역 */}
+      {showWheel && tempDate && !disabled ? (
         <WheelSelector
           value={tempDate}
           onChange={handleWheelChange}
@@ -102,14 +124,17 @@ const Calendar = ({
           onShownDateChange={handleWheelChange}
           ranges={range}
           onChange={(item: { selection: Range }) =>
-            onRangeChange([item.selection])
+            !disabled && onRangeChange([item.selection])
           }
           showDateDisplay={false}
           focusedRange={focusedRange}
-          onRangeFocusChange={onFocusChange}
+          onRangeFocusChange={!disabled ? onFocusChange : () => {}}
           locale={enUS}
           rangeColors={["#2ED8A7"]}
-          className={clsx({ "single-selection": isSingleSelection })}
+          className={clsx(
+            isSingleSelection && "single-selection",
+            disabled && "pointer-events-none",
+          )}
         />
       )}
     </div>

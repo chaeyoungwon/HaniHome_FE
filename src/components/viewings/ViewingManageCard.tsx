@@ -4,8 +4,8 @@ import { usePropertyList } from "@/hooks/property/useProperty";
 
 import { formatViewingCardTime } from "@/utils/dateFormatter";
 
-import Divider from "../common/Divider";
-import ViewingPostCard from "../common/ViewingPostCard";
+import Divider from "@/components/common/Divider";
+import ViewingPostCard from "@/components/common/ViewingPostCard";
 
 interface ViewingManageCardProps {
   id: number;

@@ -7,7 +7,7 @@ interface WheelColumnProps {
   selected: number;
   onClick: (val: number) => void;
   debounceScroll: () => void;
-  type: "year" | "month";
+  type: "year" | "month" | "hour" | "minute";
 
   containerClassName?: string;
   scrollClassName?: string;
@@ -34,6 +34,7 @@ const WheelColumn = forwardRef<HTMLDivElement, WheelColumnProps>(
         containerClassName,
       )}
     >
+      {/* year 타입에만 '20' 접두어 표시 */}
       {type === "year" && (
         <span
           className={clsx(
@@ -57,7 +58,7 @@ const WheelColumn = forwardRef<HTMLDivElement, WheelColumnProps>(
           <div
             key={idx}
             className={clsx(
-              "text-heading4 flex h-[50px] items-center justify-center transition-colors duration-150",
+              "text-heading4 flex h-[50px] cursor-pointer items-center justify-center transition-colors duration-150",
               typeof item === "number"
                 ? item === selected
                   ? "text-mint-contrast"
@@ -69,11 +70,15 @@ const WheelColumn = forwardRef<HTMLDivElement, WheelColumnProps>(
             {typeof item === "number"
               ? type === "year"
                 ? `${item.toString().slice(2)}.`
-                : `${item.toString().padStart(2, "0")}.`
+                : type === "month"
+                  ? `${item.toString().padStart(2, "0")}.`
+                  : /* hour, minute는 그냥 2자리 숫자 출력 */
+                    item.toString().padStart(2, "0")
               : ""}
           </div>
         ))}
       </div>
+     
     </div>
   ),
 );

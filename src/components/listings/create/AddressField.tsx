@@ -165,7 +165,7 @@ const AddressField = ({ onNext }: AddressFieldProps) => {
                   >
                     <input
                       placeholder="입력해주세요"
-                      className={`text-body1-med min-w-0 grow outline-none placeholder:text-gray-500 ${
+                      className={`text-body1-med min-w-0 grow outline-none text-gray-500 ${
                         buildingName
                           ? "text-gray-900"
                           : shouldHighlightBuilding

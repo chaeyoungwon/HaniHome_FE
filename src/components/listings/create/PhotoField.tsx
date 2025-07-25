@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 
@@ -6,10 +6,10 @@ import { uploadMultipleImages } from "@/utils/uploadMultipleImages";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import Divider from "@/components/common/Divider";
+import ImageSlider from "@/components/listings/detailShow/ImageSlider";
 
 import QuestionMarkIcon from "@/public/svgs/listings/question-mark-icon.svg";
 
-import ImageSlider from "../detailShow/ImageSlider";
 import BottomSheet from "./BottomSheet";
 
 interface PhotoFieldProps {
@@ -39,12 +39,12 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
 
   const handleFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (!file) return;
+      const files = e.target.files;
+      if (!files || files.length === 0) return;
 
       try {
         await uploadMultipleImages({
-          file,
+          files,
           setPreviewUrls,
           setUploadedFiles,
           setField: (_key, value) => setUploadedFiles(value),
@@ -61,6 +61,10 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
     },
     [setPhotoData, setUploadedFiles],
   );
+
+  useEffect(() => {
+    setPhotoData(previewUrls);
+  }, [previewUrls, setPhotoData]);
 
   return (
     <div className="max-w-[375px]">
@@ -107,7 +111,11 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
       />
       <div className="px-4">
         {previewUrls.length > 0 && (
-          <ImageSlider images={previewUrls} onRemove={handleRemoveImage} className="py-6"/>
+          <ImageSlider
+            images={previewUrls}
+            onRemove={handleRemoveImage}
+            className="py-6"
+          />
         )}
 
         {showErrorModal && (

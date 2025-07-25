@@ -1,4 +1,4 @@
-import BackHeader from "../layout/header/BackHeader";
+import BackHeader from "@/components/layout/header/BackHeader";
 
 interface InfoRow {
   title: string;

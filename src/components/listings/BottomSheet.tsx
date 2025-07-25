@@ -2,13 +2,14 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-import Divider from "../common/Divider";
+import Divider from "@/components/common/Divider";
 
 interface BottomSheetProps {
   onClose: () => void;
+  onHideClick: () => void;
 }
 
-const BottomSheet = ({ onClose }: BottomSheetProps) => {
+const BottomSheet = ({ onClose, onHideClick }: BottomSheetProps) => {
   const { id } = useParams();
   const router = useRouter();
 
@@ -22,7 +23,15 @@ const BottomSheet = ({ onClose }: BottomSheetProps) => {
     setIsOpen(false);
     setTimeout(() => {
       onClose();
-    }, 300); 
+    }, 300);
+  };
+
+  const handleHideClick = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      onClose(); // 바텀시트 닫고
+      onHideClick(); // 모달 띄우기
+    }, 300);
   };
 
   return (
@@ -54,7 +63,7 @@ const BottomSheet = ({ onClose }: BottomSheetProps) => {
         <Divider className="my-1" />
         <div
           className="text-body1-sb w-full cursor-pointer py-2 text-center text-gray-900"
-          onClick={handleClose}
+          onClick={handleHideClick}
         >
           숨기기
         </div>

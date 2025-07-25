@@ -1,4 +1,5 @@
 import { create } from "zustand";
+
 import { PropertyRegion } from "@/types/listingDetail";
 
 interface ListingState {
@@ -12,9 +13,9 @@ interface ListingState {
   setPhotoData: (data: string[]) => void;
 }
 
-export const useListingStore = create<ListingState>((set) => ({
+export const useListingStore = create<ListingState>(set => ({
   listingType: null,
-  setListingType: (type) => set({ listingType: type }),
+  setListingType: type => set({ listingType: type }),
 
   addressData: {
     country: "",
@@ -28,8 +29,8 @@ export const useListingStore = create<ListingState>((set) => ({
     longitude: 0,
     latitude: 0,
   },
-  setAddressData: (data) => set({ addressData: data }),
+  setAddressData: data => set({ addressData: data }),
 
   photoData: [],
-  setPhotoData: (data) => set({ photoData: data }),
+  setPhotoData: data => set({ photoData: data }),
 }));

@@ -86,9 +86,7 @@ const AvailableDatePicker = ({
   if (!range || !currentMonth) return null;
 
   return (
-    <div className="flex flex-col py-4">
-      <span className="text-heading3 p-4 text-gray-900">입주 가능일</span>
-
+    <>
       <Calendar
         range={range}
         focusedRange={focusedRange}
@@ -119,7 +117,7 @@ const AvailableDatePicker = ({
           입주 일자 협의 가능
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

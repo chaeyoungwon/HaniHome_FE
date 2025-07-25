@@ -6,14 +6,21 @@ import useFunnel from "@/hooks/common/useFunnel";
 
 import Funnel from "@/components/common/Funnel/Funnel";
 import AddressPhoto from "@/components/listings/create/AddressPhoto";
+import CreateConfirm from "@/components/listings/create/CreateConfirm";
+import CreateSuccess from "@/components/listings/create/CreateSuccess";
+import ListingDescription from "@/components/listings/create/ListingDescription";
+import ListingDetails from "@/components/listings/create/ListingDetailsLayout";
 import ListingType from "@/components/listings/create/ListingType";
+import MovingCondition from "@/components/listings/create/MovingConditionLayout";
+import ContractTerms from "@/components/listings/create/ContractTermsLayout";
 
 const steps = [
   "ListingType",
   "AddressPhoto",
-  "ListingsDetails",
+  "ListingDetails",
   "MovingConditions",
   "ContractTerms",
+  "ListingDescription",
   "CreateConfirm",
   "CreateSuccess",
 ];
@@ -37,9 +44,8 @@ const ListingCreateClient = () => {
         <AddressPhoto onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
 
-      {/* 
-      <Funnel.Step name="ListingsDetails">
-        <ListingDetail onNext={onNextStep} onPrev={onPrevStep} />
+      <Funnel.Step name="ListingDetails">
+        <ListingDetails onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
       <Funnel.Step name="MovingConditions">
         <MovingCondition onNext={onNextStep} onPrev={onPrevStep} />
@@ -47,13 +53,15 @@ const ListingCreateClient = () => {
       <Funnel.Step name="ContractTerms">
         <ContractTerms onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
+      <Funnel.Step name="ListingDescription">
+        <ListingDescription onNext={onNextStep} onPrev={onPrevStep} />
+      </Funnel.Step>
       <Funnel.Step name="CreateConfirm">
         <CreateConfirm onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
       <Funnel.Step name="CreateSuccess">
         <CreateSuccess />
       </Funnel.Step>
-      */}
     </Funnel>
   );
 };
