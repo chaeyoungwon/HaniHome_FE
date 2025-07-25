@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { uploadMultipleImages } from "@/utils/uploadMultipleImages";
 
-import AlertMessage from "@/components/common/AlertMessage";
 import AlertModal from "@/components/common/AlertModal";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import CompleteModal from "@/components/common/CompleteModal";
@@ -12,6 +11,8 @@ import DropdownField from "@/components/common/DropdownField";
 import BackHeader from "@/components/layout/header/BackHeader";
 import VerifyImageUploader from "@/components/mypage/VerifyImageUploader";
 import ImageAlertModal from "@/components/signup/profile/ImageAlertModal";
+import MaxImageAlertModal from "@/components/signup/profile/MaxImageAlertModal";
+import VerfiyKindAlertModal from "@/components/signup/profile/VerifyKindAlertModal";
 
 import EmptyCheck from "@/public/svgs/common/empty-check.svg";
 import FilledCheck from "@/public/svgs/common/filled-check.svg";
@@ -27,12 +28,16 @@ const VerificationPage = () => {
   const [isAgree, setIsAgree] = useState(false);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [, setUploadedMap] = useState<Record<string, File[]>>({});
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [showAssignModal, setShowAssignModal] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [uploadedMap, setUploadedMap] = useState<Record<string, File[]>>({});
+  const [showErrorModal, setShowErrorModal] = useState(false); //이미지형식 에러
+  const [showAssignModal, setShowAssignModal] = useState(false); //승인완료
+  const [showMaxImageModal, setMaxImageModal] = useState(false); //최대 이미지 개수 에러
+  const [showVerifKindModal, setShowVerifKindModal] = useState(false); //인증수단 변경 에러
+  const [uploadedVerificationType, setUploadedVerificationType] = useState<
+    string | null
+  >(null);
+  const [showNoVerificatoinAlert, setShowNoVerificationAlert] = useState(false);
+  //Todo: API 조회 인증된 수단과 동일한 경우의 모달 추가
   useEffect(() => {
     if (showAssignModal) {
       const timer = setTimeout(() => setShowAssignModal(false), 3000);
@@ -47,12 +52,16 @@ const VerificationPage = () => {
     if (!files) return;
 
     if (!verif) {
-      setShowDeleteModal(true);
+      //업로드 버튼 disable처리하기
+      setShowNoVerificationAlert(true);
       e.target.value = "";
       return;
     }
-    const selectedLabel =
-      VERIFICATION_OPTIONS.find(opt => opt.value === verif)?.label ?? "";
+    if (uploadedVerificationType && uploadedVerificationType !== verif) {
+      setShowVerifKindModal(true);
+      e.target.value = "";
+      return;
+    }
 
     uploadMultipleImages({
       files,
@@ -60,24 +69,46 @@ const VerificationPage = () => {
       setUploadedFiles,
       setField: (key, files) => {
         setUploadedMap(prev => ({ ...prev, [key]: files }));
+        if (files.length > 0) {
+          setUploadedVerificationType(verif);
+        }
       },
-      fieldName: selectedLabel,
+      fieldName: verif,
       setShowErrorModal,
       maxFiles: 2,
       onLimitExceeded: () => {
-        setAlertMessage("최대 두 장까지만 업로드 가능합니다.");
-      },
-      onUpload: () => {
-        setVerif(""); // 업로드 후 인증수단 초기화
+        setMaxImageModal(true);
       },
     });
-
     e.target.value = "";
   };
 
   const handleDelete = (index: number) => {
+    const newFiles = uploadedFiles.filter((_, i) => i !== index);
     setPreviewUrls(prev => prev.filter((_, i) => i !== index));
-    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+    setUploadedFiles(newFiles);
+    if (newFiles.length === 0) {
+      setUploadedMap({});
+      setUploadedVerificationType(null);
+      setVerif("");
+    }
+  };
+
+  const handleVerifChange = (val: string) => {
+    const existingField = Object.keys(uploadedMap)[0];
+
+    // 이미지가 이미 있고, 다른 수단 선택하려는 경우 막기
+    if (
+      uploadedFiles.length > 0 &&
+      existingField &&
+      existingField !== val &&
+      uploadedMap[existingField]?.length > 0
+    ) {
+      setShowVerifKindModal(true);
+      return;
+    }
+
+    setVerif(val);
   };
 
   return (
@@ -96,7 +127,7 @@ const VerificationPage = () => {
           <DropdownField
             value={verif}
             placeholder="선택"
-            onChange={val => setVerif(val)}
+            onChange={handleVerifChange}
             options={VERIFICATION_OPTIONS}
           />
         </div>
@@ -112,7 +143,6 @@ const VerificationPage = () => {
           <button
             className="text-lab1-sb flex h-9 w-[343px] cursor-pointer items-center justify-center rounded-[4px] border border-gray-600 py-[10px] text-gray-800"
             onClick={() => fileInputRef.current?.click()}
-            // disabled={!verif}
           >
             + 사진 업로드
           </button>
@@ -162,6 +192,25 @@ const VerificationPage = () => {
       {showErrorModal && (
         <ImageAlertModal onClose={() => setShowErrorModal(false)} />
       )}
+
+      <div className="bottom-19">
+        {showNoVerificatoinAlert && (
+          <AlertModal
+            title="인증수단을 선택해주세요"
+            description="이미지를 업로드하기 전 인증수단을 선택해주세요"
+            onClose={() => setShowNoVerificationAlert(false)}
+          />
+        )}
+      </div>
+
+      {showVerifKindModal && (
+        <VerfiyKindAlertModal onClose={() => setShowVerifKindModal(false)} />
+      )}
+
+      {showMaxImageModal && (
+        <MaxImageAlertModal onClose={() => setMaxImageModal(false)} />
+      )}
+
       {showAssignModal && (
         <CompleteModal
           description={[
@@ -169,29 +218,6 @@ const VerificationPage = () => {
             "관리자가 곧 승인해드릴게요.",
           ]}
           onClose={() => setShowAssignModal(false)}
-        />
-      )}
-
-      {alertMessage && (
-        <AlertMessage
-          message={alertMessage}
-          className={
-            uploadedFiles.length > 0 && isAgree && !showAssignModal
-              ? "bottom-19"
-              : "bottom-3"
-          }
-          onDone={() => setAlertMessage("")}
-        />
-      )}
-
-      {showDeleteModal && (
-        <AlertModal
-          title="인증수단을 선택해주세요"
-          description={[
-            "기존 인증수단 이미지 외 다른 이미지를 업로드하려면",
-            "추가 인증수단 선택 후 인증 사진 업로드가 가능합니다",
-          ]}
-          onClose={() => setShowDeleteModal(false)}
         />
       )}
     </div>
