@@ -43,7 +43,9 @@ export const ViewingPostCard = ({
         <div className="flex flex-col gap-2">
           <div className="flex w-full items-center justify-between">
             <p className="text-body1-sb text-gray-900">주/ {weeklyCost}$</p>
-            <span className="text-cap1-med text-gray-500">{suburb}</span>
+            <span className="text-cap1-med text-gray-500">
+              {suburb.toLowerCase()}
+            </span>
           </div>
 
           <div className="flex flex-col gap-[2px]">

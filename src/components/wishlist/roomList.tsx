@@ -46,7 +46,7 @@ const RoomList = ({
       )}
     >
       <Image
-        src={thumbnailUrl ?? "/svgs/common/room-img.svg"}
+        src={thumbnailUrl ?? ""}
         alt="thumbnail"
         width={108}
         height={108}
@@ -60,7 +60,7 @@ const RoomList = ({
           {/* 가격 + 상태 */}
           <div className="flex flex-row gap-[6px] pb-2">
             <div className="text-body1-sb text-gray-900">
-              {weeklyCost.toLocaleString()}원
+              주/ {weeklyCost.toLocaleString()}$
             </div>
             <div
               className={clsx(
@@ -89,7 +89,9 @@ const RoomList = ({
             <div> {getDistanceInKm(nearestStation.distanceFromStation)}km</div>
           </div>
 
-          <div className="text-cap1-med text-gray-500">{suburb}</div>
+          <div className="text-cap1-med text-gray-500">
+            {suburb.toLowerCase()}
+          </div>
         </div>
 
         {/* 우측 하트 및 시간 */}
@@ -103,9 +105,9 @@ const RoomList = ({
               className="cursor-pointer"
             >
               {isLiked ? (
-                <FilledHeart className={heartColor} />
+                <FilledHeart className={`${heartColor} h-6 w-6`} />
               ) : (
-                <EmptyHeart className={heartColor} />
+                <EmptyHeart className={`${heartColor} h-6 w-6`} />
               )}
             </div>
             <div className="text-cap1-med text-center text-gray-400">

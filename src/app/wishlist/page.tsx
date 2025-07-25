@@ -7,15 +7,21 @@ import { useMemo, useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useLoginModalStore } from "@/stores/useLoginModalStore";
 
+import {
+  useToggleWish,
+  useWishedProperties,
+} from "@/hooks/wishlist/useWishList";
+
 import BottomActionBar from "@/components/common/BottomActionBar";
 import GuestLoginGuide from "@/components/common/GuestLoginGuide";
+import LoadingLottie from "@/components/common/LoadingLottie";
 import LoginAlertModal from "@/components/common/LoginAlertModal";
 import ContentWrapper from "@/components/layout/ContentWrapper";
 import TitleHeader from "@/components/layout/header/TitleHeader";
 import DropDownMenu from "@/components/wishlist/dropDownMenu";
 import RoomList from "@/components/wishlist/roomList";
 
-import { ListingDummies } from "@/constants/mock/listing-card-dummies";
+import { WishListSortType } from "@/types/wishlist";
 
 import ListIcon from "@/public/svgs/header/list-icon.svg";
 
@@ -26,57 +32,26 @@ const Wishlist = () => {
 
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [likedMap, setLikedMap] = useState<Record<number, boolean>>({});
-  const [sortOrder, setSortOrder] = useState<"latest" | "popular">("latest");
 
-  const extractTime = (createdAt: string): number => {
-    return new Date(createdAt).getTime();
-  };
+  const [sortOrder, setSortOrder] = useState<WishListSortType>("latest");
+  const { data: listings = [], isLoading } = useWishedProperties(sortOrder);
+  const { mutate: toggleWish } = useToggleWish([["wishList", sortOrder]]);
 
-  const sortedListings = useMemo(() => {
-    if (!isLoggedIn) return [];
-    const likedFiltered = ListingDummies.filter(
-      item => likedMap[item.id] !== false,
-    );
-
-    const available = likedFiltered.filter(
-      item => item.tradeStatus === "BEFORE",
-    );
-    const completed = likedFiltered.filter(
-      item => item.tradeStatus !== "BEFORE",
-    );
-
-    const sortedAvailable = [...available].sort((a, b) => {
-      if (sortOrder === "latest") {
-        return extractTime(b.createdAt) - extractTime(a.createdAt);
-      }
-      if (sortOrder === "popular") {
-        return b.wishCount - a.wishCount;
-      }
-      return 0;
-    });
-
-    return [...sortedAvailable, ...completed];
-  }, [isLoggedIn, sortOrder, likedMap]);
-
-  const ensureLogin = () => {
-    if (isLoggedIn) return true;
-    openModal();
-    return false;
-  };
+  const filteredListings = useMemo(() => {
+    const available = listings.filter(item => item.tradeStatus === "BEFORE");
+    const completed = listings.filter(item => item.tradeStatus !== "BEFORE");
+    return [...available, ...completed];
+  }, [listings]);
 
   const handleRoomClick = (id: number) => {
     if (!ensureLogin()) return;
     setSelectedId(prevId => (prevId === id ? null : id));
   };
 
-  const toggleLike = (id: number) => {
-    if (!ensureLogin()) return;
-    setLikedMap(prev => {
-      const current = prev[id] ?? true;
-      return { ...prev, [id]: !current };
-    });
-    if (selectedId === id) setSelectedId(null);
+  const ensureLogin = () => {
+    if (isLoggedIn) return true;
+    openModal();
+    return false;
   };
 
   const handleNavigate = (type: "overview" | "reservation") => {
@@ -93,6 +68,12 @@ const Wishlist = () => {
       className="relative flex min-h-screen w-full flex-col"
       bottomOffset={selectedId !== null ? 65 : 62}
     >
+      {isLoading && (
+        <div className="fixed inset-0 z-[99] flex items-center justify-center bg-white/80 backdrop-blur-xs">
+          <LoadingLottie />
+        </div>
+      )}
+
       <TitleHeader
         title="즐겨찾기"
         rightIcon={isLoggedIn ? "list" : undefined}
@@ -115,7 +96,7 @@ const Wishlist = () => {
       <div className="text-body2-med flex items-center justify-between px-4 py-3 text-gray-800">
         <div className="flex items-center gap-1">
           <div>즐겨찾기 매물</div>
-          <div>{sortedListings.length}개</div>
+          <div>{filteredListings.length}개</div>
         </div>
         {!isLoggedIn && (
           <button onClick={ensureLogin} className="cursor-pointer">
@@ -128,7 +109,7 @@ const Wishlist = () => {
       {isLoggedIn ? (
         <>
           {/* 매물 리스트 */}
-          {sortedListings.map(item => (
+          {filteredListings.map(item => (
             <div
               key={item.id}
               onClick={() => handleRoomClick(item.id)}
@@ -138,15 +119,14 @@ const Wishlist = () => {
             >
               <RoomList
                 {...item}
-                isLiked={
-                  likedMap[item.id] !== undefined ? likedMap[item.id] : true
+                isLiked={item.metaInfo?.wished ?? false}
+                wishCount={item.wishCount}
+                onToggleLike={() =>
+                  toggleWish({
+                    id: item.id,
+                    isLiked: item.metaInfo?.wished ?? false,
+                  })
                 }
-                wishCount={
-                  likedMap[item.id] !== undefined
-                    ? item.wishCount + (likedMap[item.id] ? 0 : -1)
-                    : item.wishCount
-                }
-                onToggleLike={() => toggleLike(item.id)}
               />
             </div>
           ))}
@@ -172,7 +152,7 @@ const Wishlist = () => {
               onClick: () => handleNavigate("reservation"),
               variant: "filled",
               disabled:
-                sortedListings.find(item => item.id === selectedId)
+                filteredListings.find(item => item.id === selectedId)
                   ?.tradeStatus !== "BEFORE",
             },
           ]}

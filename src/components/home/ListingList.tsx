@@ -7,15 +7,14 @@ import { useMemo, useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useFilterStore } from "@/stores/useFilterStore";
 import { useLoginModalStore } from "@/stores/useLoginModalStore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 
-import { addWish, removeWish } from "@/apis/wishlist";
-
 import { usePropertySearch } from "@/hooks/filter/useFilter";
+import { useToggleWish } from "@/hooks/wishlist/useWishList";
 
 import { buildQueryParams } from "@/utils/buildQueryParams";
 
@@ -112,35 +111,37 @@ const ListingList = ({ fallbackSuburb }: { fallbackSuburb: string | null }) => {
     setLikedMap(initLiked);
   }, [properties]);
 
-  const mutation = useMutation({
-    mutationFn: async ({ id, isLiked }: { id: number; isLiked: boolean }) => {
-      if (isLiked) {
-        await removeWish(id);
-      } else {
-        await addWish(id);
-      }
-    },
-    onMutate: async ({ id, isLiked }) => {
-      setLikeCounts(prev => ({
-        ...prev,
-        [id]: prev[id] + (isLiked ? -1 : 1),
-      }));
-      setLikedMap(prev => ({
-        ...prev,
-        [id]: !isLiked,
-      }));
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["wishList"] });
-    },
-  });
+  const { mutate: toggleWish } = useToggleWish();
 
   const handleToggleLike = (id: number, isLiked: boolean) => {
     if (!isLoggedIn) {
       openModal();
       return;
     }
-    mutation.mutate({ id, isLiked });
+
+    setLikeCounts(prev => ({
+      ...prev,
+      [id]: prev[id] + (isLiked ? -1 : 1),
+    }));
+    setLikedMap(prev => ({
+      ...prev,
+      [id]: !isLiked,
+    }));
+
+    toggleWish(
+      { id, isLiked },
+      {
+        onSettled: () => {
+          queryClient.invalidateQueries({
+            predicate: query => query.queryKey[0] === "propertySearch",
+          });
+          queryClient.refetchQueries({
+            queryKey: ["wishList", "latest"],
+            type: "all",
+          });
+        },
+      },
+    );
   };
 
   const handleCardClick = (id: number) => {

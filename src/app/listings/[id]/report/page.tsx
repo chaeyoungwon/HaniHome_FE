@@ -21,6 +21,7 @@ import BackHeader from "@/components/layout/header/BackHeader";
 
 const MAX_IMAGES = 5;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];
+
 const ListingReportPage = () => {
   const params = useParams();
   const propertyId = Number(params.id);

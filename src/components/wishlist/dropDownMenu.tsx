@@ -4,8 +4,10 @@ import { useClickOutside } from "@/hooks/common/useClickOutside";
 
 import Divider from "@/components/common/Divider";
 
+import { WishListSortType } from "@/types/wishlist";
+
 interface DropDownMenuProps {
-  onSelect: (order: "latest" | "popular") => void;
+  onSelect: (order: WishListSortType) => void;
   onClose: () => void;
 }
 const DropDownMenu = ({ onSelect, onClose }: DropDownMenuProps) => {

@@ -1,4 +1,5 @@
 import { SummaryProperty } from "@/types/property";
+import { WishListSortType } from "@/types/wishlist";
 
 import { axiosInstance } from "./axios";
 
@@ -16,6 +17,16 @@ export const removeWish = async (propertyId: number) => {
       targetId: propertyId,
     },
   });
+};
+
+export const getWishedProperties = async (
+  sort: WishListSortType = "latest",
+): Promise<SummaryProperty[]> => {
+  const res = await axiosInstance.get("/api/v1/wish-items/properties", {
+    params: { sort },
+  });
+
+  return res.data.data ?? [];
 };
 
 export const getMyWishList = async (): Promise<SummaryProperty[]> => {

@@ -91,7 +91,9 @@ const ListingCard = ({
           </p>
         </div>
 
-        <span className="text-cap1-med text-gray-500">{suburb}</span>
+        <span className="text-cap1-med text-gray-500">
+          {suburb.toLowerCase()}
+        </span>
       </div>
 
       <div className="text-cap1-med flex h-24 flex-col items-end justify-between text-gray-500">
