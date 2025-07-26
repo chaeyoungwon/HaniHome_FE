@@ -4764,6 +4764,7 @@ __metadata:
     react-hook-form: "npm:^7.60.0"
     react-lottie-player: "npm:^2.1.0"
     react-router-dom: "npm:^7.6.0"
+    swiper: "npm:^11.2.10"
     tailwind-merge: "npm:^3.2.0"
     tailwindcss: "npm:^4.1.6"
     typescript: "npm:^5.8.3"
@@ -7093,6 +7094,13 @@ __metadata:
   bin:
     svgo: ./bin/svgo
   checksum: 10c0/a6badbd3d1d6dbb177f872787699ab34320b990d12e20798ecae915f0008796a0f3c69164f1485c9def399e0ce0a5683eb4a8045e51a5e1c364bb13a0d9f79e1
+  languageName: node
+  linkType: hard
+
+"swiper@npm:^11.2.10":
+  version: 11.2.10
+  resolution: "swiper@npm:11.2.10"
+  checksum: 10c0/b7e3a7c79d92ccc62af77744edc376c9aefc771a0abd50c4adf07b5e3450b5da9ca7f84f5809e275ff65e1bc9d4500d930628e84a76fc7f2db403291c69b7fac
   languageName: node
   linkType: hard
 

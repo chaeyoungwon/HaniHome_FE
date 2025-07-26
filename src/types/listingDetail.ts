@@ -32,6 +32,7 @@ export interface AdditionalInfo {
   parking: string[]; // 주차 옵션 목록
   kitchenAccess: boolean | null;
 }
+
 // --- 공통 타입 ---
 export interface PropertyRegion {
   country: string;

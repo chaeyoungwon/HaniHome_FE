@@ -56,7 +56,7 @@ export const CATEGORY_OPTIONS = {
         { optionId: 35, label: "가능" },
         { optionId: 36, label: "불가능" },
       ],
-      외부인방문: [
+      "외부인 방문": [
         { optionId: 38, label: "가능" },
         { optionId: 39, label: "불가능" },
       ],

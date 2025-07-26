@@ -69,6 +69,18 @@ interface InternalDetailsForRent {
   propertyFloors: number;
 }
 
+interface HostSummary {
+  id: number;
+  profileImage: string;
+  nickname: string;
+  verified: boolean;
+}
+
+interface MetaInfo {
+  owner: boolean;
+  wished: boolean;
+}
+
 // 공통 매물 베이스 타입
 interface BaseProperty {
   id: number;
@@ -89,6 +101,8 @@ interface BaseProperty {
   parkingOption: string;
   description: string;
   wishCount: number;
+  metaInfo?: MetaInfo;
+  hostSummary?: HostSummary;
 }
 
 // 쉐어 매물 타입

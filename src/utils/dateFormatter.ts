@@ -127,3 +127,10 @@ export const formatViewingCardTime = (isoString: string) => {
 
   return { date, time };
 };
+
+export const formatToDateRange = (from: string, to: string): string => {
+  const format = (dateStr: string) =>
+    dayjs(dateStr).local().format("YY년 M월 D일");
+
+  return `${format(from)} - ${format(to)}`;
+};

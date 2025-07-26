@@ -1,51 +1,65 @@
 "use client";
 
-import { Fragment } from "react";
+import { useSearchParams } from "next/navigation";
+
+import { Fragment, useMemo } from "react";
 
 import Divider from "@/components/common/Divider";
 import BackHeader from "@/components/layout/header/BackHeader";
 
 import { furnitureIconMap } from "@/constants/furniture-lists";
+import { CATEGORY_OPTIONS } from "@/constants/propertyCategory";
 
-const dummyFurniture = {
-  침실: ["침대 프레임", "책상", "침구류", "옷장"],
-  주방: ["전자렌지", "냉장고", "가스렌지", "식기류", "조리도구"],
-  거실: ["TV", "소파", "커피테이블"],
-  기타: ["Wifi", "청소기"], //추후 API 연결 시 코드 변경 예정
-};
+const furnitureCategory = CATEGORY_OPTIONS[2].items;
 
 const ListingFurniturePage = () => {
+  const searchParams = useSearchParams();
+  const idsParam = searchParams.get("ids");
+
+  const selectedIds = useMemo(() => {
+    if (!idsParam) return [];
+    return idsParam.split(",").map(Number);
+  }, [idsParam]);
+
   const groupKeys = Object.keys(
-    dummyFurniture,
-  ) as (keyof typeof dummyFurniture)[];
+    furnitureCategory,
+  ) as (keyof typeof furnitureCategory)[];
 
   return (
     <div className="flex min-h-screen flex-col pb-16">
       <BackHeader />
 
-      {groupKeys.map((category, idx) => (
-        <Fragment key={category}>
-          <div className="flex flex-col gap-3 p-4">
-            <h2 className="text-body1-sb text-gray-900">{category}</h2>
-            <div className="flex flex-wrap gap-x-3">
-              {dummyFurniture[category].map(label => {
-                const Icon = furnitureIconMap[label];
-                return (
-                  <div
-                    key={label}
-                    className="text-cap1-med flex flex-col items-center text-gray-600"
-                  >
-                    {Icon && <Icon className="h-9 w-9" />}
-                    <span>{label}</span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
+      {groupKeys.map((category, idx) => {
+        const filteredItems = furnitureCategory[category].filter(item =>
+          selectedIds.includes(item.optionId),
+        );
 
-          {idx < groupKeys.length - 1 && <Divider className="my-4" />}
-        </Fragment>
-      ))}
+        if (filteredItems.length === 0) return null;
+
+        return (
+          <Fragment key={category}>
+            <div className="flex flex-col gap-3 p-4">
+              <h2 className="text-body1-sb text-gray-900">{category}</h2>
+              <div className="flex flex-wrap gap-x-1">
+                {filteredItems.map(item => {
+                  const Icon = furnitureIconMap[item.label];
+                  return (
+                    <div
+                      key={item.optionId}
+                      className="text-cap1-med flex w-14 flex-col items-center gap-1 text-gray-600"
+                    >
+                      {Icon && <Icon className="h-9 w-9 text-gray-700" />}
+                      <span>{item.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {idx < groupKeys.length - 1 && <Divider className="my-4" />}
+          </Fragment>
+        );
+      })}
     </div>
   );
 };

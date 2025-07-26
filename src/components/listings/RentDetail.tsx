@@ -2,6 +2,7 @@ import InfoCard from "@/components/listings/shared/InfoCard";
 import Label from "@/components/listings/shared/Label";
 import Section from "@/components/listings/shared/Section";
 
+import { CAPACITY_RENT_LABEL_MAP } from "@/constants/capacity-options";
 import { RENT_TYPE_MAP } from "@/constants/housing-options";
 
 import { RentPropertySubType } from "@/types/listingDetail";
@@ -14,13 +15,6 @@ import HostDescriptionSection from "./shared/HostDescriptionSection";
 import InfoRow from "./shared/InfoRow";
 import ParkingSection from "./shared/ParkingSection";
 
-const infoList = [
-  { label: "방 개수", value: "n개" },
-  { label: "욕실 개수", value: "n개" },
-  { label: "건물 전체 층", value: "n층" },
-  { label: "해당 층", value: "n층" },
-];
-
 const RentDetail = ({
   listingId,
   data,
@@ -28,14 +22,39 @@ const RentDetail = ({
   listingId: string;
   data: RentProperty;
 }) => {
+  const infoList = [
+    {
+      label: "방 개수",
+      value: `${data.internalDetails.numberOfRoom ?? "-"}개`,
+    },
+    {
+      label: "욕실 개수",
+      value: `${data.internalDetails.numberOfBath ?? "-"}개`,
+    },
+    {
+      label: "건물 전체 층",
+      value: `${data.internalDetails.totalFloors ?? "-"}층`,
+    },
+    {
+      label: "해당 층",
+      value: `${data.internalDetails.propertyFloors ?? "-"}층`,
+    },
+  ];
+
+  const rentTypeText = data.optionItems.find(item => item.optionItemId === 54)
+    ? "개인 임대"
+    : data.optionItems.find(item => item.optionItemId === 55)
+      ? "부동산 중개"
+      : "비공개";
+
+  const hasYard = data.optionItems.some(item => item.optionItemId === 102);
+  const hasVeranda = data.optionItems.some(item => item.optionItemId === 103);
+
   return (
     <div className="bg-gray-0 flex flex-col py-3">
       <InfoRow
         label="매물 유형"
-        value={
-          RENT_TYPE_MAP[data.rentPropertySubType as RentPropertySubType] ??
-          "쉐어"
-        }
+        value={`${RENT_TYPE_MAP[data.rentPropertySubType as RentPropertySubType]} 렌트`}
       />
 
       <Section>
@@ -47,7 +66,12 @@ const RentDetail = ({
               <div className="flex items-center gap-2" key="person">
                 <PersonIcon className="text-gray-600" />
                 <span className="text-body1-med text-gray-700">
-                  총 거주 {data.capacityRent}인
+                  총 거주{" "}
+                  {
+                    CAPACITY_RENT_LABEL_MAP[
+                      data.capacityRent as keyof typeof CAPACITY_RENT_LABEL_MAP
+                    ]
+                  }
                 </span>
               </div>,
             ]}
@@ -58,7 +82,9 @@ const RentDetail = ({
             items={[
               <div className="flex items-center gap-2" key="totalFloor">
                 <PersonIcon className="text-gray-600" />
-                <span className="text-body1-med text-gray-700">개인 임대</span>
+                <span className="text-body1-med text-gray-700">
+                  {rentTypeText}
+                </span>
               </div>,
             ]}
           />
@@ -77,23 +103,24 @@ const RentDetail = ({
           <div className="col-span-2 flex items-center gap-9 px-4 py-3">
             <Label>마당, 베란다</Label>
             <div className="text-body1-med flex flex-1 items-center justify-between gap-4 text-gray-700">
-              <div className="w-1/2 text-center">마당 없어요</div>
+              <div className="w-1/2 text-center">
+                {hasYard ? "마당 있어요" : "마당 없어요"}
+              </div>
               <div className="h-3 w-px bg-gray-500" />
-              <div className="w-1/2 text-center">베란다 없어요</div>
+              <div className="w-1/2 text-center">
+                {hasVeranda ? "베란다 있어요" : "베란다 없어요"}
+              </div>
             </div>
           </div>
         </div>
       </Section>
 
-      <ParkingSection
-        texts={["전용공간 있어요", "Street parking 가능해요"]}
-        textClassName="text-body1-med"
-      />
-      <InfoRow label="매물 방향" value="북향" />
-      <FurnitureSection listingId={listingId} />
+      <ParkingSection data={data.optionItems} textClassName="text-body1-med" />
+
+      <FurnitureSection listingId={listingId} data={data.optionItems} />
       <HostDescriptionSection
-        text="여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명
-     "
+        description={data.description}
+        badgeText={data.optionItems}
       />
     </div>
   );

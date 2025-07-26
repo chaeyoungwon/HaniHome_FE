@@ -5,8 +5,8 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useState } from "react";
 
-import { useMember } from "@/hooks/member/useMember";
 import { usePropertyDetailList } from "@/hooks/property/useProperty";
+import { useToggleWish } from "@/hooks/wishlist/useWishList";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import BackHeader from "@/components/layout/header/BackHeader";
@@ -14,6 +14,7 @@ import AddressMap from "@/components/listings/AddressMap";
 import BottomSheet from "@/components/listings/BottomSheet";
 import DetailTabs from "@/components/listings/DetailTabs";
 import DropDownMenu from "@/components/listings/DropDownMenu";
+import ImageSlider from "@/components/listings/ImageSlider";
 import ListingHideModal from "@/components/mypage/ListingHideModal";
 
 import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
@@ -31,14 +32,13 @@ const ListingDetailPage = () => {
 
   const router = useRouter();
 
-  const [liked, setLiked] = useState(false);
   const [isClicked, setIsClicked] = useState(false); //바텀시트
   const [isModalOpen, setIsModalOpen] = useState(false); //숨기기모달
 
-  const { data, isLoading, isError } = usePropertyDetailList(listingId);
+  const { data, isLoading, isError, refetch } =
+    usePropertyDetailList(listingId);
 
-  const memberId = data?.memberId;
-  const { data: member } = useMember(memberId ?? 0);
+  const { mutate: toggleWish } = useToggleWish();
 
   if (isLoading) return <></>; //추후 스켈레톤 UI
   if (isError || !data) return <></>;
@@ -60,25 +60,25 @@ const ListingDetailPage = () => {
 
         {/* 매물 이미지 */}
         <div className="relative flex">
-          <Image
-            src={
-              data.photoUrls?.[0]?.startsWith("http")
-                ? data.photoUrls[0]
-                : "/svgs/common/room-img.svg"
-            }
-            width={375}
-            height={375}
-            alt="매물 이미지"
-            className="h-[375px] w-[375px] border border-gray-200 object-cover"
-            priority
-          />
+          {data.photoUrls && data.photoUrls.length > 0 && (
+            <ImageSlider photoUrls={data.photoUrls} />
+          )}
           <button
             type="button"
-            onClick={() => setLiked(prev => !prev)}
-            className="absolute right-6 bottom-5 flex cursor-pointer rounded-full bg-white p-2.5"
-            aria-label={liked ? "즐겨찾기 취소" : "즐겨찾기"}
+            onClick={() => {
+              toggleWish(
+                { id: data.id, isLiked: data.metaInfo?.wished ?? false },
+                {
+                  onSuccess: () => {
+                    refetch();
+                  },
+                },
+              );
+            }}
+            className="absolute right-6 bottom-5 z-[10] flex cursor-pointer rounded-full bg-white p-2.5"
+            aria-label={data.metaInfo?.wished ? "즐겨찾기 취소" : "즐겨찾기"}
           >
-            {liked ? (
+            {data.metaInfo?.wished ? (
               <HeartFilledIcon className="text-mint h-6 w-6" />
             ) : (
               <HeartOutlineIcon className="text-mint h-6 w-6" />
@@ -90,9 +90,9 @@ const ListingDetailPage = () => {
         <div className="flex items-center justify-between border-b border-gray-200">
           <div className="flex items-center gap-[14px] px-4 py-3">
             {/* 프로필 이미지 */}
-            {member?.profileImage ? (
+            {data.hostSummary?.profileImage ? (
               <Image
-                src={member.profileImage}
+                src={data.hostSummary.profileImage}
                 alt="프로필 이미지"
                 width={48}
                 height={48}
@@ -104,9 +104,11 @@ const ListingDetailPage = () => {
 
             <div className="flex items-center gap-1">
               <span className="text-body1-sb font-bold text-black">
-                {member?.nickname ?? "사용자"}
+                {data.hostSummary?.nickname ?? "사용자"}
               </span>
-              {member?.verifiedUser && <CertificatedIcon className="h-6 w-6" />}
+              {data.hostSummary?.verified && (
+                <CertificatedIcon className="h-6 w-6" />
+              )}
             </div>
           </div>
 
@@ -146,14 +148,14 @@ const ListingDetailPage = () => {
             </div>
           </div>
 
-          <div className="text-cap1-med flex flex-col items-end gap-3 text-gray-700">
+          <div className="text-cap1-med flex flex-col items-end justify-end gap-3 text-gray-700">
             {data.costDetails.billIncluded ? (
               <div className="text-cap1-med flex items-center gap-1 text-gray-700">
                 <span>빌</span>
                 <span className="text-mint">주세에 포함</span>
               </div>
             ) : (
-              <div className="text-cap1-med flex gap-2 text-gray-700">
+              <div className="text-cap1-med flex items-center gap-2 text-gray-700">
                 <span>빌 미포함</span>
                 <div className="h-3 border-l border-gray-500" />
                 <div className="flex items-center gap-1">
@@ -180,7 +182,7 @@ const ListingDetailPage = () => {
         {/* 위치 영역 */}
         <div className="mt-6 mb-15">
           <div className="flex flex-col gap-3 px-4 py-8">
-            <span className="text-body1-sb text-gray-900">위치</span>
+            <span className="text-heading3 text-gray-900">위치</span>
             <AddressMap
               region={data.region}
               isReservationConfirmed={

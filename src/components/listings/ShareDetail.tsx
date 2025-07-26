@@ -10,6 +10,7 @@ import HomeIcon from "@/public/svgs/common/home-icon.svg";
 import PersonIcon from "@/public/svgs/common/mypage-icon.svg";
 import BathroomIcon from "@/public/svgs/listings/bathroom-icon.svg";
 import HomeFilledIcon from "@/public/svgs/listings/home-filled-icon.svg";
+import FilledPersonIcon from "@/public/svgs/listings/person-filled-icon.svg";
 
 import FurnitureSection from "./shared/FurnitureSection";
 import HostDescriptionSection from "./shared/HostDescriptionSection";
@@ -27,11 +28,7 @@ const ShareDetail = ({
     <div className="bg-gray-0 flex flex-col py-3">
       <InfoRow
         label="매물 유형"
-        value={
-          (Object.keys(SHARE_TYPE_MAP) as SharePropertySubType[]).find(
-            key => SHARE_TYPE_MAP[key] === data.sharePropertySubType,
-          ) ?? "쉐어"
-        }
+        value={`${SHARE_TYPE_MAP[data.sharePropertySubType as SharePropertySubType]} 쉐어`}
         textClassName="text-body2-med"
       />
 
@@ -53,7 +50,15 @@ const ShareDetail = ({
                   욕실 {data.internalDetails.totalBathUser}인 쉐어
                 </span>
               </div>,
-            ]}
+              data.optionItems.some(item => item.optionItemId === 101) && (
+                <div className="flex items-center gap-[6px]" key="ownerLive">
+                  <FilledPersonIcon />
+                  <span className="text-body2-med text-gray-700">
+                    집주인 함께 거주
+                  </span>
+                </div>
+              ),
+            ].filter(Boolean)}
           />
           <InfoCard
             className="gap-3"
@@ -80,14 +85,11 @@ const ShareDetail = ({
         </div>
       </Section>
 
-      <ParkingSection
-        texts={["전용공간 있어요", "Street parking 가능해요"]}
-        textClassName="text-body2-med"
-      />
-      <FurnitureSection listingId={listingId} />
+      <ParkingSection data={data.optionItems} textClassName="text-body2-med" />
+      <FurnitureSection data={data.optionItems} listingId={listingId} />
       <HostDescriptionSection
-        text="여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명여기는호스트설명
-     "
+        description={data.description}
+        badgeText={data.optionItems}
       />
     </div>
   );
