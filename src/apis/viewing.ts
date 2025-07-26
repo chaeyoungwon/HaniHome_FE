@@ -11,9 +11,10 @@ import {
 // 내 뷰잉 리스트 조회
 export const getMyViewingList = async <T>(
   view: ViewingViewType,
+  status?: ViewingStatus,
 ): Promise<T> => {
   const res = await axiosInstance.get(`/api/v1/viewings/my-viewings`, {
-    params: { view },
+    params: { view, status },
   });
 
   return res.data.data;

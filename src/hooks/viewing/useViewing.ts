@@ -16,16 +16,18 @@ import { ViewingStatus, ViewingViewType } from "@/types/viewing";
 
 interface UseMyViewingListOptions {
   view?: ViewingViewType;
+  status?: ViewingStatus;
   enabled?: boolean;
 }
 
 export const useMyViewingList = <T>({
   view = "DEFAULT",
+  status = undefined,
   enabled = true,
 }: UseMyViewingListOptions = {}) => {
   return useQuery<T>({
-    queryKey: ["myViewingList", view],
-    queryFn: () => getMyViewingList<T>(view),
+    queryKey: ["myViewingList", view, status],
+    queryFn: () => getMyViewingList<T>(view, status),
     enabled,
   });
 };

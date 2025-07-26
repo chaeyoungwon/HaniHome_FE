@@ -1,10 +1,10 @@
-import { ViewingCardItem } from "@/types/viewing";
+import { ViewingPropertyItem } from "@/types/viewing";
 
 import ViewingEmptyMessage from "./ViewingEmptyMessage";
 import ViewingManageCard from "./ViewingManageCard";
 
 interface ViewingCompletedSectionProps {
-  data: ViewingCardItem[];
+  data: ViewingPropertyItem[];
 }
 
 const ViewingCompletedSection = ({ data }: ViewingCompletedSectionProps) => {
@@ -19,11 +19,8 @@ const ViewingCompletedSection = ({ data }: ViewingCompletedSectionProps) => {
           <li key={item.id}>
             <ViewingManageCard
               id={item.id}
-              propertyId={item.propertyId}
+              viewingItem={item}
               status="COMPLETED"
-              roomImageUrl={item.photoUrls[0]}
-              nickname={item.nickname}
-              meetingDay={item.meetingDay}
             />
           </li>
         );

@@ -9,7 +9,7 @@ import { calculateDday } from "@/utils/dateFormatter";
 import AlertModal from "@/components/common/AlertModal";
 import ContentWrapper from "@/components/layout/ContentWrapper";
 
-import { ViewingCardItem } from "@/types/viewing";
+import { ViewingPropertyItem } from "@/types/viewing";
 
 import CancelModal from "./CancelModal";
 import DdayBadge from "./DdayBadge";
@@ -17,14 +17,10 @@ import ViewingEmptyMessage from "./ViewingEmptyMessage";
 import ViewingManageCard from "./ViewingManageCard";
 
 interface ViewingConfirmedSectionProps {
-  data: ViewingCardItem[];
-  memberId: number;
+  data: ViewingPropertyItem[];
 }
 
-const ViewingConfirmedSection = ({
-  data,
-  memberId,
-}: ViewingConfirmedSectionProps) => {
+const ViewingConfirmedSection = ({ data }: ViewingConfirmedSectionProps) => {
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [nextModal, setNextModal] = useState<"alert" | null>(null);
 
@@ -65,18 +61,15 @@ const ViewingConfirmedSection = ({
             <DdayBadge dday={Number(dday)} />
 
             {items.map(item => {
-              const isHost = memberId === item.hostId;
-              const userType: "host" | "guest" = isHost ? "host" : "guest";
+              const isGuest = item.canSeeViewingDetail;
+              const userType: "host" | "guest" = isGuest ? "guest" : "host";
 
               return (
-                <div key={item.id} className="flex flex-col gap-4">
+                <div key={item.property.id} className="flex flex-col gap-4">
                   <ViewingManageCard
                     id={item.id}
-                    propertyId={item.propertyId}
+                    viewingItem={item}
                     status="REQUESTED"
-                    roomImageUrl={item.photoUrls[0]}
-                    nickname={item.nickname}
-                    meetingDay={item.meetingDay}
                     onCancelClick={() => setOpenCancelId(item.id)}
                   />
                   {openCancelId === item.id && (
