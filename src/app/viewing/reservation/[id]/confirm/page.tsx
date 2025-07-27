@@ -2,6 +2,8 @@
 
 import { useParams, useRouter } from "next/navigation";
 
+import { useState } from "react";
+
 import { useViewingScheduleStore } from "@/stores/useViewingScheduleStore";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -21,6 +23,7 @@ const ViewingConfirmPage = () => {
   const { id } = useParams() as { id: string };
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { data: summaryList, isLoading } = usePropertyList({ view: "SUMMARY" });
   const { getSchedule, reset } = useViewingScheduleStore();
@@ -121,18 +124,27 @@ const ViewingConfirmPage = () => {
 
       <BottomActionBar
         label="뷰잉 예약 확정"
+        disabled={isSubmitting}
         onClick={async () => {
-          await submitViewingReservation({
-            propertyId: Number(id),
-            date: selectedSchedule.date!,
-            time: selectedSchedule.time,
-          });
-          reset(id);
+          if (isSubmitting) return;
+          setIsSubmitting(true);
 
-          await queryClient.invalidateQueries({
-            queryKey: ["myViewingList"],
-          });
-          router.push(`/viewing/reservation/${id}/complete`);
+          try {
+            await submitViewingReservation({
+              propertyId: Number(id),
+              date: selectedSchedule.date!,
+              time: selectedSchedule.time,
+            });
+            reset(id);
+            await queryClient.invalidateQueries({
+              queryKey: ["myViewingList"],
+            });
+            router.push(`/viewing/reservation/${id}/complete`);
+          } catch (err) {
+            console.error(err);
+          } finally {
+            setIsSubmitting(false);
+          }
         }}
       />
     </div>

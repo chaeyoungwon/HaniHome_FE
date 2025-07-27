@@ -163,7 +163,7 @@ const ListingList = ({ fallbackSuburb }: { fallbackSuburb: string | null }) => {
         </div>
       ) : (
         <div className="flex flex-1 flex-col">
-          {properties.map(p => (
+          {[...properties].reverse().map(p => (
             <ListingCard
               key={p.id}
               id={p.id}

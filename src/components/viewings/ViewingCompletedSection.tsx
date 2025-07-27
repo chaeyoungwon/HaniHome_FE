@@ -1,5 +1,6 @@
 import { ViewingPropertyItem } from "@/types/viewing";
 
+import ContentWrapper from "../layout/ContentWrapper";
 import ViewingEmptyMessage from "./ViewingEmptyMessage";
 import ViewingManageCard from "./ViewingManageCard";
 
@@ -13,7 +14,7 @@ const ViewingCompletedSection = ({ data }: ViewingCompletedSectionProps) => {
   }
 
   return (
-    <ul className="mt-4 flex flex-col gap-4">
+    <ContentWrapper className="mt-4 mb-6 flex flex-col gap-4" bottomOffset={62}>
       {data.map(item => {
         return (
           <li key={item.id}>
@@ -25,7 +26,7 @@ const ViewingCompletedSection = ({ data }: ViewingCompletedSectionProps) => {
           </li>
         );
       })}
-    </ul>
+    </ContentWrapper>
   );
 };
 

@@ -75,6 +75,14 @@ export const cancelViewing = async (
   });
 };
 
+// 뷰잉 일괄 취소
+export const cancelAllViewings = async (propertyId: number) => {
+  const res = await axiosInstance.patch(
+    `/api/v1/properties/${propertyId}/viewings/cancel-all`,
+  );
+  return res.data.data;
+};
+
 // 뷰잉 취소 사유 조회
 export const getViewingCancelReason = async (viewingId: number) => {
   const res = await axiosInstance.get(`/api/v1/viewings/${viewingId}/cancel`);
@@ -139,9 +147,13 @@ export const putViewingChecklists = async ({
 // 뷰잉 예약한 게스트 목록 조회
 export const fetchViewingGuests = async (
   propertyId: number,
+  status?: ViewingStatus[],
 ): Promise<ViewingGuest[]> => {
+  const searchParams = new URLSearchParams();
+  status?.forEach(s => searchParams.append("status", s));
+
   const res = await axiosInstance.get(
-    `/api/v1/properties/${propertyId}/viewings`,
+    `/api/v1/properties/${propertyId}/viewings?${searchParams.toString()}`,
   );
   return res.data.data;
 };

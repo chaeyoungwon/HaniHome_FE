@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
+  cancelAllViewings,
   cancelViewing,
   fetchViewingGuests,
   getMyViewingDates,
@@ -76,6 +77,12 @@ export const useCancelViewing = () => {
   });
 };
 
+export const useCancelAllViewings = () => {
+  return useMutation({
+    mutationFn: (propertyId: number) => cancelAllViewings(propertyId),
+  });
+};
+
 export const useCancelReason = (viewingId: number, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["cancelReason", viewingId],
@@ -104,10 +111,13 @@ export const usePutViewingPropertyNotes = () => {
   });
 };
 
-export const useViewingGuests = (propertyId: number) => {
+export const useViewingGuests = (
+  propertyId: number,
+  status?: ViewingStatus[],
+) => {
   return useQuery({
-    queryKey: ["viewingGuests", propertyId],
-    queryFn: () => fetchViewingGuests(propertyId),
+    queryKey: ["viewingGuests", propertyId, status],
+    queryFn: () => fetchViewingGuests(propertyId, status),
     enabled: !!propertyId,
     staleTime: 0,
   });

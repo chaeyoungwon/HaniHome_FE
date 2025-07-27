@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 
 import { usePatchDisplayStatus } from "@/hooks/property/useProperty";
-import { useCancelViewing } from "@/hooks/viewing/useViewing";
+import { useCancelAllViewings } from "@/hooks/viewing/useViewing";
 
 import AlertModal from "@/components/common/AlertModal";
 
@@ -9,30 +9,20 @@ interface ListingHideModalProps {
   onClose: () => void;
   listingId: number;
   kind: "SHARE" | "RENT";
-  viewingIds: number[];
 }
 
 const ListingHideModal = ({
   onClose,
   listingId,
   kind,
-  viewingIds,
 }: ListingHideModalProps) => {
   const { mutate: patchDisplayStatus } = usePatchDisplayStatus(listingId);
-  const { mutateAsync: cancelViewing } = useCancelViewing();
+  const { mutateAsync: cancelAllViewings } = useCancelAllViewings();
   const router = useRouter();
 
   const handleCancelAndHide = async () => {
     try {
-      await Promise.all(
-        viewingIds.map(viewingId =>
-          cancelViewing({
-            viewingId,
-            optionItemId: 100,
-            reason: "매물 숨김 처리로 인한 예약 취소",
-          }),
-        ),
-      );
+      await cancelAllViewings(listingId);
 
       patchDisplayStatus(
         { displayStatus: "INACTIVE", jsonDiscriminator: kind },
@@ -44,7 +34,7 @@ const ListingHideModal = ({
         },
       );
     } catch (err) {
-      console.error("예약 취소 실패", err);
+      console.error("일괄 예약 취소 실패", err);
     }
   };
 

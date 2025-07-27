@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useMyDeals } from "@/hooks/property/useProperty";
 
 import LoadingLottie from "@/components/common/LoadingLottie";
@@ -8,7 +10,7 @@ import BackHeader from "@/components/layout/header/BackHeader";
 
 const Purchases = () => {
   const { data: purchases, isLoading } = useMyDeals("DEAL_AS_GUEST");
-
+  const router = useRouter();
   return (
     <div className="flex min-h-screen flex-col">
       <BackHeader />
@@ -28,6 +30,7 @@ const Purchases = () => {
             isLiked={false}
             onToggleLike={() => {}}
             heartColor="text-gray-400"
+            onClick={() => router.push(`/listings/${item.id}`)}
           />
         ))
       )}

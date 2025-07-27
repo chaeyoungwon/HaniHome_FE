@@ -23,7 +23,10 @@ const ListingsGuests = () => {
     null,
   );
 
-  const { data: guests } = useViewingGuests(listingId);
+  const { data: guests } = useViewingGuests(listingId, [
+    "REQUESTED",
+    "COMPLETED",
+  ]);
   const { mutate: completeTrade } = useCompleteTrade();
 
   const showBottomBar = checked || selectedGuestIndex !== null;

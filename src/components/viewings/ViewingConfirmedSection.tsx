@@ -65,7 +65,10 @@ const ViewingConfirmedSection = ({ data }: ViewingConfirmedSectionProps) => {
               const userType: "host" | "guest" = isGuest ? "guest" : "host";
 
               return (
-                <div key={item.property.id} className="flex flex-col gap-4">
+                <div
+                  key={`item-${dday}-${item.id}`}
+                  className="flex flex-col gap-4"
+                >
                   <ViewingManageCard
                     id={item.id}
                     viewingItem={item}

@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { ViewingPropertyItem } from "@/types/viewing";
 
+import ContentWrapper from "../layout/ContentWrapper";
 import CancelReasonModal from "./CancelReasonModal";
 import ViewingEmptyMessage from "./ViewingEmptyMessage";
 import ViewingManageCard from "./ViewingManageCard";
@@ -19,7 +20,7 @@ const ViewingCanceledSection = ({ data }: ViewingCanceledSectionProps) => {
   }
 
   return (
-    <>
+    <ContentWrapper className="mb-6 flex flex-col" bottomOffset={62}>
       <ul className="mt-4 flex flex-col gap-4">
         {data.map(item => (
           <li key={item.id}>
@@ -41,7 +42,7 @@ const ViewingCanceledSection = ({ data }: ViewingCanceledSectionProps) => {
           viewingId={selectedItem.id}
         />
       )}
-    </>
+    </ContentWrapper>
   );
 };
 

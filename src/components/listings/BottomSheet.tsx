@@ -2,6 +2,8 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
+import { useDeleteProperty } from "@/hooks/property/useProperty";
+
 import Divider from "@/components/common/Divider";
 
 interface BottomSheetProps {
@@ -19,24 +21,36 @@ const BottomSheet = ({
   const router = useRouter();
 
   const [isOpen, setIsOpen] = useState(false);
+  const { mutate: deleteProperty } = useDeleteProperty(Number(id));
 
   useEffect(() => {
     setIsOpen(true);
   }, []);
 
-  const handleClose = () => {
+  const closeSheet = (callback?: () => void) => {
     setIsOpen(false);
     setTimeout(() => {
       onClose();
+      callback?.();
     }, 300);
   };
 
+  const handleEditClick = () => {
+    router.push(`/listings/${id}/edit`);
+  };
+
   const handleHideClick = () => {
-    setIsOpen(false);
-    setTimeout(() => {
-      onClose(); // 바텀시트 닫고
-      onHideClick(); // 모달 띄우기
-    }, 300);
+    closeSheet(onHideClick);
+  };
+
+  const handleDeleteClick = () => {
+    closeSheet(() => {
+      deleteProperty(undefined, {
+        onSuccess: () => {
+          router.replace("/mypage/listings");
+        },
+      });
+    });
   };
 
   return (
@@ -44,7 +58,7 @@ const BottomSheet = ({
       {/* 오버레이 */}
       <div
         className="fixed inset-0 z-[100] bg-gray-800 opacity-60"
-        onClick={handleClose}
+        onClick={() => closeSheet()}
       />
 
       {/* 바텀시트 */}
@@ -61,7 +75,7 @@ const BottomSheet = ({
         <Divider className="my-1" />
         <div
           className="text-body1-sb w-full cursor-pointer py-2 text-center text-gray-900"
-          onClick={() => router.push(`/listings/${id}/edit`)}
+          onClick={handleEditClick}
         >
           매물정보 수정
         </div>
@@ -75,7 +89,7 @@ const BottomSheet = ({
         <Divider className="my-1" />
         <div
           className="text-body1-sb text-red w-full cursor-pointer py-2 text-center"
-          onClick={handleClose}
+          onClick={handleDeleteClick}
         >
           삭제
         </div>

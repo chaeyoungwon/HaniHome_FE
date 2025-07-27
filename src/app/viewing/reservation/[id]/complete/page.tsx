@@ -14,6 +14,7 @@ const ViewingCompletePage = () => {
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey: ["myViewingList"] });
+    sessionStorage.setItem("showViewingTooltip", "true");
   }, [queryClient]);
 
   return (
