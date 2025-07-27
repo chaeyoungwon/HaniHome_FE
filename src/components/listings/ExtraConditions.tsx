@@ -16,6 +16,7 @@ const ExtraConditions = ({ data }: { data: OptionItem[] }) => {
   const tags: string[] = [];
 
   Object.entries(ADDITIONAL_ITEMS).forEach(([category, items]) => {
+    if (category === "주차") return;
     const matched = data.find(option =>
       items.some(i => i.optionId === option.optionItemId),
     );

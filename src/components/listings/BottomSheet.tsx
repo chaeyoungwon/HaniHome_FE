@@ -38,7 +38,7 @@ const BottomSheet = ({ onClose, onHideClick }: BottomSheetProps) => {
     <>
       {/* 오버레이 */}
       <div
-        className="bg-gradient-bottom-overlay fixed inset-0 z-[100]"
+        className="fixed inset-0 z-[100] bg-gray-800 opacity-60"
         onClick={handleClose}
       />
 

@@ -4,6 +4,9 @@ import { useParams } from "next/navigation";
 
 import { useState } from "react";
 
+import { useCompleteTrade } from "@/hooks/property/useProperty";
+import { useViewingGuests } from "@/hooks/viewing/useViewing";
+
 import { formatMeetingDay } from "@/utils/dateFormatter";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -11,23 +14,38 @@ import CheckIcon from "@/components/common/CheckIcon";
 import UserRoomPreview from "@/components/common/UserRoomPreview";
 import BackHeader from "@/components/layout/header/BackHeader";
 
-import { listingGuests } from "@/constants/mock/listing-guests-dummies";
-
 const ListingsGuests = () => {
-  const [checked, setChecked] = useState(false);
   const { id } = useParams();
   const listingId = Number(id);
+
+  const [checked, setChecked] = useState(false);
   const [selectedGuestIndex, setSelectedGuestIndex] = useState<number | null>(
     null,
   );
-  const selectedListing = listingGuests.find(
-    listing => listing.listingsId === listingId,
-  );
+
+  const { data: guests } = useViewingGuests(listingId);
+  const { mutate: completeTrade } = useCompleteTrade();
+
+  const showBottomBar = checked || selectedGuestIndex !== null;
+
   const handleCheckToggle = () => {
     setChecked(prev => !prev);
     setSelectedGuestIndex(null);
   };
-  const showBottomBar = checked || selectedGuestIndex !== null;
+
+  const handleSave = () => {
+    if (checked) {
+      return;
+    }
+
+    const guest = guests?.[selectedGuestIndex ?? -1];
+    if (!guest) return;
+
+    completeTrade({
+      propertyId: listingId,
+      viewingId: guest.viewingId,
+    });
+  };
 
   return (
     <>
@@ -54,8 +72,10 @@ const ListingsGuests = () => {
           </span>
         </div>
 
-        {selectedListing?.guests.map((guest, index) => {
-          const { date, time } = formatMeetingDay(guest.meetingDay);
+        {guests?.map((guest, index) => {
+          const { date, time } = formatMeetingDay(
+            `${guest.meetingDate}T${guest.meetingTime}`,
+          );
 
           return (
             <div
@@ -69,8 +89,8 @@ const ListingsGuests = () => {
               }}
             >
               <UserRoomPreview
-                userImg="/svgs/common/profile-img.svg"
-                roomImg="/svgs/common/room-img.svg"
+                userImg={guest.guestThumbnailUrl ?? ""}
+                roomImg={guest.propertyThumbnailUrl ?? ""}
                 variant="md"
               />
               <div className="flex flex-col gap-2">
@@ -81,7 +101,7 @@ const ListingsGuests = () => {
                       : "text-gray-800"
                   }`}
                 >
-                  {guest.nickname}
+                  {guest.guestNickName ?? "게스트"}
                 </span>
                 <div
                   className={`text-cap1-med flex flex-col gap-1 ${
@@ -118,7 +138,7 @@ const ListingsGuests = () => {
           );
         })}
 
-        {showBottomBar && <BottomActionBar label="저장" onClick={() => {}} />}
+        {showBottomBar && <BottomActionBar label="저장" onClick={handleSave} />}
       </div>
     </>
   );

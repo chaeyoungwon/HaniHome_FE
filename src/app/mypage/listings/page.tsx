@@ -2,13 +2,16 @@
 
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
+import { useMyProperties } from "@/hooks/property/useProperty";
+
+import LoadingLottie from "@/components/common/LoadingLottie";
 import SelectTab from "@/components/common/SelectTab";
 import ListingCard from "@/components/home/ListingCard";
 import BackHeader from "@/components/layout/header/BackHeader";
 
-import { ListingDummies } from "@/constants/mock/listing-card-dummies";
+import { SummaryProperty } from "@/types/property";
 
 const TABS = [
   { label: "거래중", key: "active" },
@@ -18,38 +21,66 @@ const TABS = [
 
 const Listings = () => {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("active");
+  const [activeTab, setActiveTab] = useState<"active" | "completed" | "hidden">(
+    "active",
+  );
 
-  const filteredListings = ListingDummies.filter(item => {
-    if (activeTab === "active") return item.tradeStatus === "BEFORE";
-    if (activeTab === "completed") return item.tradeStatus !== "BEFORE";
-    if (activeTab === "hidden") return false;
-    return true;
-  });
+  const params = useMemo(() => {
+    switch (activeTab) {
+      case "active":
+        return {
+          view: "SUMMARY",
+          tradeStatus: "BEFORE",
+        } as const;
+      case "completed":
+        return {
+          view: "SUMMARY",
+          tradeStatus: "COMPLETED",
+        } as const;
+      case "hidden":
+        return {
+          view: "SUMMARY",
+          displayStatus: "INACTIVE",
+        } as const;
+    }
+  }, [activeTab]);
+
+  const { data, isLoading } = useMyProperties(params);
 
   return (
     <div>
       <BackHeader />
-      <SelectTab tabs={TABS} activeTab={activeTab} onChange={setActiveTab} />
+      <SelectTab
+        tabs={TABS}
+        activeTab={activeTab}
+        onChange={tab => setActiveTab(tab as "active" | "completed" | "hidden")}
+      />
 
-      {filteredListings.map(item => (
-        <div
-          key={item.id}
-          onClick={() => {
-            if (item.tradeStatus === "BEFORE") {
-              router.push(`/listings/${item.id}?mode=edit`);
-            }
-          }}
-        >
-          <ListingCard
-            {...item}
-            isLiked={false}
-            onToggleLike={() => {}}
-            heartColor="text-gray"
-          />
+      {isLoading ? (
+        <div className="flex h-screen items-center justify-center">
+          <LoadingLottie />
         </div>
-      ))}
+      ) : (
+        data?.map((item: SummaryProperty) => (
+          <div
+            key={item.id}
+            onClick={() => {
+              if (item.tradeStatus === "BEFORE") {
+                router.push(`/listings/${item.id}?mode=edit`);
+              }
+            }}
+          >
+            <ListingCard
+              {...item}
+              isLiked={false}
+              onToggleLike={() => {}}
+              heartColor="text-gray"
+            />
+          </div>
+        ))
+      )}
     </div>
   );
 };
+
 export default Listings;

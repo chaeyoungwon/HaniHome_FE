@@ -1,23 +1,36 @@
 "use client";
 
+import { useMyDeals } from "@/hooks/property/useProperty";
+
+import LoadingLottie from "@/components/common/LoadingLottie";
 import ListingCard from "@/components/home/ListingCard";
 import BackHeader from "@/components/layout/header/BackHeader";
 
-import { myPurchases } from "@/constants/mock/my-purchases";
-
 const Purchases = () => {
+  const { data: purchases, isLoading } = useMyDeals("DEAL_AS_GUEST");
+
   return (
-    <div>
+    <div className="flex min-h-screen flex-col">
       <BackHeader />
-      {myPurchases.map(item => (
-        <ListingCard
-          key={item.id}
-          {...item}
-          isLiked={false}
-          onToggleLike={() => {}}
-          heartColor="text-gray-400"
-        />
-      ))}
+      {isLoading ? (
+        <div className="flex flex-1 items-center justify-center">
+          <LoadingLottie />
+        </div>
+      ) : purchases?.length === 0 ? (
+        <div className="text-body1-med flex flex-1 items-center justify-center text-gray-400">
+          거래 내역이 없어요
+        </div>
+      ) : (
+        purchases?.map(item => (
+          <ListingCard
+            key={item.id}
+            {...item}
+            isLiked={false}
+            onToggleLike={() => {}}
+            heartColor="text-gray-400"
+          />
+        ))
+      )}
     </div>
   );
 };

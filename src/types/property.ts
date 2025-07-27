@@ -176,3 +176,10 @@ export interface NearestStation {
 
 // 상세 매물 타입
 export type FullProperty = ShareProperty | RentProperty;
+
+// 내놓은 매물 쿼리 파라미터 타입
+export interface MyPropertiesParams {
+  view: "SUMMARY" | "DEFAULT";
+  tradeStatus?: "BEFORE" | "IN_PROGRESS" | "COMPLETED";
+  displayStatus?: "ACTIVE" | "INACTIVE";
+}

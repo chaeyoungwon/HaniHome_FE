@@ -1,7 +1,5 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
-import axios from "axios";
-
 import { getPropertyNotePresignedUrl } from "@/apis/s3Upload";
 import { putViewingPropertyNotes } from "@/apis/viewing";
 
@@ -45,8 +43,12 @@ const ViewingNoteSection = forwardRef(
 
         await Promise.all(
           presignedUrls.map((item, idx) =>
-            axios.put(item.presignedUrl, newFiles[idx], {
-              headers: { "Content-Type": newFiles[idx].type },
+            fetch(item.presignedUrl, {
+              method: "PUT",
+              headers: {
+                "Content-Type": newFiles[idx].type,
+              },
+              body: newFiles[idx],
             }),
           ),
         );

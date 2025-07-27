@@ -55,3 +55,14 @@ export interface ViewingPropertyItem {
   counterpartNickname: string | null;
   canSeeViewingDetail: boolean;
 }
+
+// 거래한 게스트 선택 -> 조회 시 응답 타입
+export interface ViewingGuest {
+  viewingId: number;
+  guestId: number;
+  guestNickName: string | null;
+  guestThumbnailUrl: string | null;
+  propertyThumbnailUrl: string;
+  meetingDate: string; // e.g. "2025-08-01"
+  meetingTime: string; // e.g. "09:00:00"
+}

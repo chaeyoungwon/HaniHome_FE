@@ -37,13 +37,12 @@ const ListingDetailPage = () => {
 
   const { data, isLoading, isError, refetch } =
     usePropertyDetailList(listingId);
+  const [tradeStatus, setTradeStatus] = useState(data?.tradeStatus);
 
   const { mutate: toggleWish } = useToggleWish();
 
   if (isLoading) return <></>; //추후 스켈레톤 UI
   if (isError || !data) return <></>;
-
-  const isCompleted = data.tradeStatus === "COMPLETED";
 
   return (
     <>
@@ -116,13 +115,16 @@ const ListingDetailPage = () => {
           {isEditMode && (
             <DropDownMenu
               selectedKey={
-                data.tradeStatus === "COMPLETED"
+                tradeStatus === "COMPLETED"
                   ? "completed"
-                  : data.tradeStatus === "BEFORE"
+                  : tradeStatus === "BEFORE"
                     ? "active"
                     : "active"
               }
-              onSelect={() => {}}
+              onSelect={key => {
+                if (key === "completed") setTradeStatus("COMPLETED");
+                else if (key === "active") setTradeStatus("BEFORE");
+              }}
             />
           )}
         </div>
@@ -200,24 +202,27 @@ const ListingDetailPage = () => {
           onClick={() => router.push("/home")}
         />
       )}
-      {isEditMode && isCompleted && (
+      {isEditMode && tradeStatus === "COMPLETED" && (
         <BottomActionBar
           label="거래한 게스트 입력하기"
           onClick={() => router.push(`/listings/${id}/guests`)}
         />
       )}
+
       {!isConfirmMode && !isViewingMode && !isEditMode && (
         <BottomActionBar
           label="뷰잉 예약하기"
           onClick={() => router.push(`/viewing/reservation/${listingId}`)}
         />
       )}
+
       {isClicked && (
         <BottomSheet
           onClose={() => setIsClicked(false)}
           onHideClick={() => setIsModalOpen(true)}
         />
       )}
+
       {isModalOpen && (
         <ListingHideModal onClose={() => setIsModalOpen(false)} />
       )}

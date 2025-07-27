@@ -2,6 +2,7 @@ import { axiosInstance } from "@/apis/axios";
 
 import {
   MyViewingDates,
+  ViewingGuest,
   ViewingItem,
   ViewingStatus,
   ViewingTime,
@@ -132,5 +133,15 @@ export const putViewingChecklists = async ({
     allOptionItemIds,
   });
 
+  return res.data.data;
+};
+
+// 뷰잉 예약한 게스트 목록 조회
+export const fetchViewingGuests = async (
+  propertyId: number,
+): Promise<ViewingGuest[]> => {
+  const res = await axiosInstance.get(
+    `/api/v1/properties/${propertyId}/viewings`,
+  );
   return res.data.data;
 };
