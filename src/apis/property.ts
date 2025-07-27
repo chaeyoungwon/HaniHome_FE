@@ -10,6 +10,7 @@ import { FilteredPropertyParams } from "@/types/property";
 
 import { axiosInstance } from "./axios";
 
+// 매물 목록 조회
 export const fetchPropertyList = async <T extends PropertyViewType>(
   view: T,
 ): Promise<T extends "SUMMARY" ? SummaryProperty[] : Property[]> => {
@@ -17,6 +18,7 @@ export const fetchPropertyList = async <T extends PropertyViewType>(
   return res.data.data;
 };
 
+// 매물 상세 조회
 export const fetchPropertyDetailList = async (
   propertyId: string,
 ): Promise<Property> => {
@@ -24,6 +26,32 @@ export const fetchPropertyDetailList = async (
   return res.data.data;
 };
 
+// 매물 수정
+export const patchProperty = async (propertyId: number, payload: Property) => {
+  const res = await axiosInstance.patch(
+    `/api/v1/properties/${propertyId}`,
+    payload,
+  );
+  return res.data.data;
+};
+
+export const patchDisplayStatus = (
+  propertyId: number,
+  payload: {
+    jsonDiscriminator: "SHARE" | "RENT";
+    displayStatus: "ACTIVE" | "INACTIVE";
+  },
+) => {
+  return axiosInstance.patch(`/api/v1/properties/${propertyId}`, payload);
+};
+
+// 매물 삭제
+export const deleteProperty = async (propertyId: number) => {
+  const res = await axiosInstance.delete(`/api/v1/properties/${propertyId}`);
+  return res.data.data;
+};
+
+// 매물 검색 필터링
 export const fetchPropertySearch = async (params: FilteredPropertyParams) => {
   const searchParams = serializePropertyFilters(params);
   const queryString = searchParams.toString();
@@ -63,12 +91,14 @@ export const getMyPropertiesWithFilter = async (params: MyPropertiesParams) => {
 export const completeTrade = async ({
   propertyId,
   viewingId,
+  dealWithOutsider,
 }: {
   propertyId: number;
-  viewingId: number;
+  viewingId?: number;
+  dealWithOutsider: boolean;
 }) => {
   const res = await axiosInstance.post(
-    `/api/v1/properties/${propertyId}/complete?viewingId=${viewingId}`,
+    `/api/v1/properties/${propertyId}/complete?viewingId=${viewingId}?dealWithOutsider=${dealWithOutsider}`,
   );
   return res.data.data;
 };

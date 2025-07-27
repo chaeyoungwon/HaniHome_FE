@@ -77,16 +77,14 @@ const ViewingManageCard = ({
                   <span className="text-cap1-b text-gray-700">노트에 기록</span>
                 </button>
                 <div className="h-3 w-px bg-gray-500" />
-                <button
-                  onClick={onArrowClick}
-                  className="flex w-1/2 cursor-pointer flex-col items-center justify-center"
-                >
-                  <span className="text-cap1-b text-gray-700">
-                    취소 사유 확인
-                  </span>
-                </button>
               </>
             )}
+            <button
+              onClick={onArrowClick}
+              className="flex w-1/2 cursor-pointer flex-col items-center justify-center"
+            >
+              <span className="text-cap1-b text-gray-700">취소 사유 확인</span>
+            </button>
           </div>
         ) : (
           <div className="flex w-full items-center justify-center overflow-hidden rounded border border-gray-300 py-2">

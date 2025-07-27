@@ -109,5 +109,6 @@ export const useViewingGuests = (propertyId: number) => {
     queryKey: ["viewingGuests", propertyId],
     queryFn: () => fetchViewingGuests(propertyId),
     enabled: !!propertyId,
+    staleTime: 0,
   });
 };

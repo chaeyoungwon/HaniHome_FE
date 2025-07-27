@@ -22,17 +22,25 @@ const CancelReasonModal = ({
   if (!isOpen) return null;
   if (isLoading || !cancelDetail || !options) return <></>;
 
-  const label = cancelDetail.cancelReasonOptionItemIds
-    .map(id => {
-      const found = options.find(opt => opt.optionItemId === id);
-      return found ? found.itemName : "알 수 없음";
-    })
-    .join(", ");
+  const hasOptionIds = cancelDetail.cancelReasonOptionItemIds?.length > 0;
 
-  const isEtcSelected = cancelDetail.cancelReasonOptionItemIds.some(id => {
-    const found = options.find(opt => opt.optionItemId === id);
-    return found?.itemName === "기타";
-  });
+  const isEtcSelected =
+    cancelDetail.cancelReasonOptionItemIds?.some(id => {
+      const found = options.find(opt => opt.optionItemId === id);
+      return found?.itemName === "기타";
+    }) ||
+    (!hasOptionIds && !!cancelDetail.reason); // 사유만 있을 때도 기타로 간주
+
+  const label = hasOptionIds
+    ? cancelDetail.cancelReasonOptionItemIds
+        .map(id => {
+          const found = options.find(opt => opt.optionItemId === id);
+          return found ? found.itemName : "알 수 없음";
+        })
+        .join(", ")
+    : cancelDetail.reason
+      ? "기타"
+      : undefined;
 
   return (
     <ModalLayout
@@ -46,9 +54,11 @@ const CancelReasonModal = ({
         </h1>
 
         <div className="flex flex-col gap-9">
-          <span className="text-body1-med bg-gray-0 rounded p-3 text-gray-700">
-            {label}
-          </span>
+          {label && (
+            <span className="text-body1-med bg-gray-0 rounded p-3 text-gray-700">
+              {label}
+            </span>
+          )}
 
           {isEtcSelected && (
             <div className="flex flex-col gap-3">

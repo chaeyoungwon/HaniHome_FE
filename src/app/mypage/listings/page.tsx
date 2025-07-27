@@ -31,6 +31,7 @@ const Listings = () => {
         return {
           view: "SUMMARY",
           tradeStatus: "BEFORE",
+          displayStatus: "ACTIVE",
         } as const;
       case "completed":
         return {
@@ -45,7 +46,10 @@ const Listings = () => {
     }
   }, [activeTab]);
 
-  const { data, isLoading } = useMyProperties(params);
+  const { data, isLoading } = useMyProperties(params, {
+    staleTime: 0,
+    refetchOnMount: true,
+  });
 
   return (
     <div>

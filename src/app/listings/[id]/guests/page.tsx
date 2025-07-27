@@ -34,7 +34,13 @@ const ListingsGuests = () => {
   };
 
   const handleSave = () => {
-    if (checked) {
+    const isDealWithOutsider = checked;
+
+    if (isDealWithOutsider) {
+      completeTrade({
+        propertyId: listingId,
+        dealWithOutsider: true,
+      });
       return;
     }
 
@@ -44,6 +50,7 @@ const ListingsGuests = () => {
     completeTrade({
       propertyId: listingId,
       viewingId: guest.viewingId,
+      dealWithOutsider: false,
     });
   };
 

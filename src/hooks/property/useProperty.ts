@@ -1,13 +1,22 @@
 import { useRouter } from "next/navigation";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import {
+  UseQueryOptions,
+  UseQueryResult,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 import {
   completeTrade,
+  deleteProperty,
   fetchPropertyDetailList,
   fetchPropertyList,
   getMyDeals,
   getMyPropertiesWithFilter,
+  patchDisplayStatus,
+  patchProperty,
 } from "@/apis/property";
 
 import {
@@ -33,17 +42,78 @@ export const usePropertyDetailList = (propertyId: string) => {
     queryKey: ["propertyDetailList", propertyId],
     queryFn: () => fetchPropertyDetailList(propertyId),
     enabled: !!propertyId,
-    staleTime: 1000 * 60 * 5,
+    staleTime: 0,
+    refetchOnMount: true,
   });
 };
 
-export const useMyProperties = (params: MyPropertiesParams) => {
+// 매물 수정
+export const usePatchProperty = (propertyId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: Property) => patchProperty(propertyId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["propertyDetailList", propertyId],
+      });
+    },
+  });
+};
+
+// 매물 숨기기
+export const usePatchDisplayStatus = (propertyId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      displayStatus,
+      jsonDiscriminator,
+    }: {
+      displayStatus: "ACTIVE" | "INACTIVE";
+      jsonDiscriminator: "SHARE" | "RENT";
+    }) => {
+      return patchDisplayStatus(propertyId, {
+        jsonDiscriminator,
+        displayStatus,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["propertyDetailList", propertyId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["my-properties"] });
+    },
+  });
+};
+
+// 매물 삭제
+export const useDeleteProperty = (propertyId: number) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () => deleteProperty(propertyId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["my-properties"] });
+    },
+  });
+};
+
+export const useMyProperties = (
+  params: MyPropertiesParams,
+  options?: Omit<
+    UseQueryOptions<SummaryProperty[], Error>,
+    "queryKey" | "queryFn"
+  >,
+): UseQueryResult<SummaryProperty[], Error> => {
   const { view, tradeStatus, displayStatus } = params;
 
   return useQuery({
     queryKey: ["my-properties", view, tradeStatus, displayStatus],
     queryFn: () => getMyPropertiesWithFilter(params),
     enabled: !!view,
+    staleTime: 0,
+    ...options,
   });
 };
 
@@ -54,10 +124,12 @@ export const useCompleteTrade = () => {
     mutationFn: ({
       propertyId,
       viewingId,
+      dealWithOutsider,
     }: {
       propertyId: number;
-      viewingId: number;
-    }) => completeTrade({ propertyId, viewingId }),
+      viewingId?: number;
+      dealWithOutsider: boolean;
+    }) => completeTrade({ propertyId, viewingId, dealWithOutsider }),
 
     onSuccess: () => {
       router.push("/mypage/listings");

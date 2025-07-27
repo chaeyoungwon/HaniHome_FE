@@ -5,7 +5,11 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useState } from "react";
 
-import { usePropertyDetailList } from "@/hooks/property/useProperty";
+import {
+  usePatchDisplayStatus,
+  usePropertyDetailList,
+} from "@/hooks/property/useProperty";
+import { useViewingGuests } from "@/hooks/viewing/useViewing";
 import { useToggleWish } from "@/hooks/wishlist/useWishList";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -39,7 +43,40 @@ const ListingDetailPage = () => {
     usePropertyDetailList(listingId);
   const [tradeStatus, setTradeStatus] = useState(data?.tradeStatus);
 
+  const { data: viewingGuests } = useViewingGuests(Number(listingId));
   const { mutate: toggleWish } = useToggleWish();
+  const { mutate: patchDisplayStatus } = usePatchDisplayStatus(
+    Number(listingId),
+  );
+
+  const handleHideClick = () => {
+    setIsClicked(false);
+
+    if (!data?.kind || (data.kind !== "SHARE" && data.kind !== "RENT")) return;
+
+    if (
+      data.displayStatus === "ACTIVE" &&
+      viewingGuests &&
+      viewingGuests.length > 0
+    ) {
+      setIsModalOpen(true);
+      return;
+    }
+
+    const nextStatus = data.displayStatus === "ACTIVE" ? "INACTIVE" : "ACTIVE";
+
+    patchDisplayStatus(
+      {
+        displayStatus: nextStatus,
+        jsonDiscriminator: data.kind,
+      },
+      {
+        onSuccess: () => {
+          router.push("/mypage/listings");
+        },
+      },
+    );
+  };
 
   if (isLoading) return <></>; //추후 스켈레톤 UI
   if (isError || !data) return <></>;
@@ -219,12 +256,18 @@ const ListingDetailPage = () => {
       {isClicked && (
         <BottomSheet
           onClose={() => setIsClicked(false)}
-          onHideClick={() => setIsModalOpen(true)}
+          onHideClick={handleHideClick}
+          displayStatus={data.displayStatus as "ACTIVE" | "INACTIVE"}
         />
       )}
 
-      {isModalOpen && (
-        <ListingHideModal onClose={() => setIsModalOpen(false)} />
+      {isModalOpen && viewingGuests && (
+        <ListingHideModal
+          listingId={data.id}
+          kind={data.kind}
+          viewingIds={viewingGuests.map(v => v.viewingId)}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );

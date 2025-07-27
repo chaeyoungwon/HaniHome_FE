@@ -7,9 +7,14 @@ import Divider from "@/components/common/Divider";
 interface BottomSheetProps {
   onClose: () => void;
   onHideClick: () => void;
+  displayStatus?: "ACTIVE" | "INACTIVE";
 }
 
-const BottomSheet = ({ onClose, onHideClick }: BottomSheetProps) => {
+const BottomSheet = ({
+  onClose,
+  onHideClick,
+  displayStatus,
+}: BottomSheetProps) => {
   const { id } = useParams();
   const router = useRouter();
 
@@ -65,7 +70,7 @@ const BottomSheet = ({ onClose, onHideClick }: BottomSheetProps) => {
           className="text-body1-sb w-full cursor-pointer py-2 text-center text-gray-900"
           onClick={handleHideClick}
         >
-          숨기기
+          {displayStatus === "ACTIVE" ? "숨기기" : "숨기기 취소"}
         </div>
         <Divider className="my-1" />
         <div
