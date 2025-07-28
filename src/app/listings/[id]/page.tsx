@@ -22,6 +22,7 @@ import DetailTabs from "@/components/listings/DetailTabs";
 import DropDownMenu from "@/components/listings/DropDownMenu";
 import ImageSlider from "@/components/listings/ImageSlider";
 import ListingHideModal from "@/components/mypage/ListingHideModal";
+import ListingDetailLoadingSkeleton from "@/components/skeleton/listingsDetail/ListingDetailLoadingSkeleton";
 
 import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
@@ -103,8 +104,11 @@ const ListingDetailPage = () => {
       },
     );
   };
+  if (isLoading) {
+    return <ListingDetailLoadingSkeleton mode={mode} />;
+  }
+  if (isError || !data) return null;
 
-  if (isLoading || isError || !data) return null;
   return (
     <>
       <div className="flex min-h-screen flex-col pb-16">

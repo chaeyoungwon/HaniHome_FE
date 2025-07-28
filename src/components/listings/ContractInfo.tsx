@@ -7,7 +7,10 @@ import { CATEGORY_OPTIONS } from "@/constants/propertyCategory";
 
 import { Property } from "@/types/property";
 
-const ContractInfo = ({ data }: { data: Property }) => {
+import ContractInfoSkeleton from "../skeleton/listingsDetail/ContractInfoSkeleton";
+
+const ContractInfo = ({ data }: { data?: Property }) => {
+  if (!data) return <ContractInfoSkeleton />;
   const includedOptionIds =
     data.optionItems?.map(item => item.optionItemId) ?? [];
 

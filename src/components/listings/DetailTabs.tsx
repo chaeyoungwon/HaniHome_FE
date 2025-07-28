@@ -8,7 +8,7 @@ import { Property } from "@/types/property";
 
 interface DetailTabsProps {
   listingId: string;
-  data: Property;
+  data?: Property;
 }
 
 const DetailTabs = ({ listingId, data }: DetailTabsProps) => {
@@ -16,7 +16,6 @@ const DetailTabs = ({ listingId, data }: DetailTabsProps) => {
     useState<(typeof listingDetailTabs)[number]["key"]>("detail");
 
   const activeTab = listingDetailTabs.find(tab => tab.key === activeKey);
-  const ActiveComponent = activeTab?.Component;
 
   return (
     <>
@@ -37,11 +36,11 @@ const DetailTabs = ({ listingId, data }: DetailTabsProps) => {
         ))}
       </div>
 
-      <div>
-        {ActiveComponent && (
-          <ActiveComponent listingId={listingId} data={data} />
-        )}
-      </div>
+      {activeTab && (
+        <div key={activeKey}>
+          <activeTab.Component listingId={listingId} data={data} />
+        </div>
+      )}
     </>
   );
 };

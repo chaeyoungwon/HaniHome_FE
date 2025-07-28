@@ -14,9 +14,11 @@ import { GENDER_PREFERENCE_LABEL_MAP } from "@/constants/gender-options";
 
 import { Property } from "@/types/property";
 
+import MoveInConditionSkeleton from "../skeleton/listingsDetail/MoveInConditionSkeleton";
 import ExtraConditions from "./ExtraConditions";
 
-const MoveInCondition = ({ data }: { data: Property }) => {
+const MoveInCondition = ({ data }: { data?: Property }) => {
+  if (!data) return <MoveInConditionSkeleton />;
   const moveInTexts = [
     data.moveInInfo.immediate && "즉시 입주 가능",
     data.moveInInfo.negotiable && "입주일자 협의 가능",

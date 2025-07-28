@@ -7,7 +7,7 @@ import { Property } from "@/types/property";
 type TabItem = {
   key: string;
   label: string;
-  Component: React.ComponentType<{ listingId: string; data: Property }>;
+  Component: React.ComponentType<{ listingId: string; data?: Property }>;
 };
 
 export const listingDetailTabs: readonly TabItem[] = [

@@ -1,14 +1,17 @@
 import { Property } from "@/types/property";
 
+import ListingDetailSkeleton from "../skeleton/listingsDetail/ListingDetailSkeleton";
 import RentDetail from "./RentDetail";
 import ShareDetail from "./ShareDetail";
 
 interface ListingDetailProps {
   listingId: string;
-  data: Property;
+  data?: Property;
 }
 
 const ListingDetail = ({ listingId, data }: ListingDetailProps) => {
+  if (!data) return <ListingDetailSkeleton />;
+
   if (data?.kind === "RENT") {
     return <RentDetail listingId={listingId} data={data} />;
   }
