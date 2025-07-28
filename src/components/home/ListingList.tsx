@@ -22,6 +22,7 @@ import { FALLBACK_SUBURB } from "@/constants/default-region";
 
 import { SummaryProperty } from "@/types/property";
 
+import ListingListSkeleton from "../skeleton/home/ListingListSkeleton";
 import ListingCard from "./ListingCard";
 
 dayjs.extend(utc);
@@ -85,7 +86,7 @@ const ListingList = ({ fallbackSuburb }: { fallbackSuburb: string | null }) => {
     ],
   );
 
-  const { data: searchData } = usePropertySearch(params, {
+  const { data: searchData, isLoading } = usePropertySearch(params, {
     enabled: isAuthInitialized && !!(finalSuburb && finalSuburb.trim()),
   });
 
@@ -152,42 +153,42 @@ const ListingList = ({ fallbackSuburb }: { fallbackSuburb: string | null }) => {
     router.push(`/listings/${id}`);
   };
 
+  if (isLoading || !isAuthInitialized) return <ListingListSkeleton />;
+
+  if (!properties || properties.length === 0) {
+    return (
+      <div className="flex flex-1 flex-col items-center justify-center py-[50px]">
+        <div className="text-cap1-med text-center text-gray-500">
+          <p>매물이 없어요</p>
+          <p>관심 지역을 변경해주세요</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <>
-      {properties.length === 0 ? (
-        <div className="flex flex-1 flex-col items-center justify-center py-[50px]">
-          <div className="text-cap1-med text-center text-gray-500">
-            <p>매물이 없어요</p>
-            <p>관심 지역을 변경해주세요</p>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-1 flex-col">
-          {[...properties].reverse().map(p => (
-            <ListingCard
-              key={p.id}
-              id={p.id}
-              thumbnailUrl={p.thumbnailUrl}
-              weeklyCost={p.weeklyCost}
-              tradeStatus={p.tradeStatus}
-              internalArea={p.internalArea}
-              totalFloors={p.totalFloors}
-              nearestStation={p.nearestStation}
-              kind={p.kind}
-              billIncluded={p.billIncluded}
-              suburb={p.suburb}
-              createdAt={p.createdAt}
-              wishCount={likeCounts[p.id] ?? p.wishCount ?? 0}
-              isLiked={likedMap[p.id] ?? false}
-              onToggleLike={() =>
-                handleToggleLike(p.id, likedMap[p.id] ?? false)
-              }
-              onClick={() => handleCardClick(p.id)}
-            />
-          ))}
-        </div>
-      )}
-    </>
+    <div className="flex flex-1 flex-col">
+      {[...properties].reverse().map(p => (
+        <ListingCard
+          key={p.id}
+          id={p.id}
+          thumbnailUrl={p.thumbnailUrl}
+          weeklyCost={p.weeklyCost}
+          tradeStatus={p.tradeStatus}
+          internalArea={p.internalArea}
+          totalFloors={p.totalFloors}
+          nearestStation={p.nearestStation}
+          kind={p.kind}
+          billIncluded={p.billIncluded}
+          suburb={p.suburb}
+          createdAt={p.createdAt}
+          wishCount={likeCounts[p.id] ?? p.wishCount ?? 0}
+          isLiked={likedMap[p.id] ?? false}
+          onToggleLike={() => handleToggleLike(p.id, likedMap[p.id] ?? false)}
+          onClick={() => handleCardClick(p.id)}
+        />
+      ))}
+    </div>
   );
 };
 

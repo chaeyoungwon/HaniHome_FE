@@ -52,7 +52,13 @@ const LocationHeader = ({
         className="mb-1 flex w-full cursor-pointer items-center justify-between px-4 py-2"
         onClick={handleOpenModal}
       >
-        <p className="text-heading2 text-gray-900">{displayedSuburb}</p>
+        <p className="text-heading2 text-gray-900">
+          {isLoading ? (
+            <span className="inline-block h-5 w-24 animate-pulse rounded bg-gray-200" />
+          ) : (
+            displayedSuburb
+          )}
+        </p>
         <Arrow className="h-6 w-6 rotate-180 text-gray-600" />
       </div>
       {isModalOpen && (
