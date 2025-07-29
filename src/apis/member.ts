@@ -15,13 +15,10 @@ export const getUserInfo = async (memberId: number): Promise<Member> => {
   return res.data.data;
 };
 
-// 사용자 정보 수정
-export const updateUser = async (
-  memberId: string,
-  payload: UpdateUserPayload,
-) => {
-  const res = await axiosInstance.patch(`/api/v1/members/${memberId}`, payload);
-  return res.data;
+// 내 정보 수정
+export const updateUser = async (payload: UpdateUserPayload) => {
+  const res = await axiosInstance.patch("/api/v1/members/me", payload);
+  return res.data.data;
 };
 
 // 회원 탈퇴

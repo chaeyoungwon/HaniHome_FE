@@ -1,3 +1,5 @@
+export type Gender = "MALE" | "FEMALE";
+
 export interface Member {
   id: number;
   email: string;
@@ -6,7 +8,7 @@ export interface Member {
   profileImage: string | null;
   birthDate: string | null;
   phoneNumber: string | null;
-  gender: "MALE" | "FEMALE" | null;
+  gender: Gender | null;
   createdAt: string;
   verifications: Verification[];
   verifiedUser: boolean;

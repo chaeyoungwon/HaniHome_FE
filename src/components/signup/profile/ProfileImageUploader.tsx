@@ -2,42 +2,70 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { useSignupStore } from "@/stores/useSignupStore";
 import clsx from "clsx";
 
 import { getProfilePresignedUrl } from "@/apis/s3Upload";
+
+import {
+  ALLOWED_IMAGE_TYPES,
+  IMAGE_MIME_TO_EXT,
+  MAX_IMAGE_SIZE_MB,
+  PROFILE_IMAGE_SIZE_CLASS,
+} from "@/constants/profile-uploader";
 
 import PlusIcon from "@/public/svgs/common/plus-icon.svg";
 
 import ImageAlertModal from "./ImageAlertModal";
 
-const MAX_SIZE_MB = 5;
-const ALLOWED_TYPES = ["image/jpeg", "image/png"];
+interface ProfileImageUploaderProps {
+  size?: number;
+  value?: string | null;
+  onChange?: (uploadedUrl: string) => void;
+}
 
-// MIME → 확장자 매핑
-const mimeToExt: Record<string, string> = {
-  "image/jpeg": "jpg",
-  "image/png": "png",
-};
-
-const ProfileImageUploader = () => {
+const ProfileImageUploader = ({
+  size = 114,
+  value = null,
+  onChange,
+}: ProfileImageUploaderProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
-  const { profileImagePreview, setField } = useSignupStore();
-  const [previewUrl, setPreviewUrl] = useState<string>("");
+  const [previewUrl, setPreviewUrl] = useState<string | null>(value);
 
-  // 프리뷰 표시용 로컬 URL 처리
-  const previewFile = (file: File) => {
-    const objectUrl = URL.createObjectURL(file);
-    setPreviewUrl(objectUrl);
-  };
+  useEffect(() => {
+    setPreviewUrl(value);
+  }, [value]);
 
-  // presignedUrl 요청 후, fileUrl 상태에 저장
-  const saveS3FileUrlToStore = async (file: File) => {
-    const ext = mimeToExt[file.type] || "jpg";
+  useEffect(() => {
+    return () => {
+      if (previewUrl?.startsWith("blob:")) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const isValidType = ALLOWED_IMAGE_TYPES.includes(file.type);
+    const isValidSize = file.size / 1024 / 1024 <= MAX_IMAGE_SIZE_MB;
+
+    if (!isValidType || !isValidSize) {
+      setShowErrorModal(true);
+      return;
+    }
+
+    // 프리뷰 표시용 blob URL
+    const preview = URL.createObjectURL(file);
+    setPreviewUrl(preview);
+
     try {
+      // S3 presigned URL 받아오기
+      const ext = IMAGE_MIME_TO_EXT[file.type] || "jpg";
       const { presignedUrl, fileUrl } = await getProfilePresignedUrl(ext);
 
+      // 실제 업로드
       await fetch(presignedUrl, {
         method: "PUT",
         headers: {
@@ -46,51 +74,19 @@ const ProfileImageUploader = () => {
         body: file,
       });
 
-      setField("profileImage", fileUrl);
-      setField("profileImagePreview", fileUrl);
       setPreviewUrl(fileUrl);
+      onChange?.(fileUrl);
     } catch (err) {
-      console.error("S3 presigned URL 요청 또는 업로드 실패:", err);
+      console.error("S3 업로드 실패", err);
     }
   };
-
-  // 파일 변경 시 처리
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const isValidType = ALLOWED_TYPES.includes(file.type);
-    const isValidSize = file.size / 1024 / 1024 <= MAX_SIZE_MB;
-
-    if (!isValidType || !isValidSize) {
-      setShowErrorModal(true);
-      return;
-    }
-
-    previewFile(file);
-    await saveS3FileUrlToStore(file);
-  };
-
-  //  뒤로가기 시 프리뷰 복구
-  useEffect(() => {
-    if (profileImagePreview) {
-      setPreviewUrl(profileImagePreview);
-    }
-  }, [profileImagePreview]);
-
-  useEffect(() => {
-    return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
-    };
-  }, [previewUrl]);
 
   return (
-    <div className="flex flex-col items-center pt-10 pb-12">
+    <div className="flex flex-col items-center">
       <div
         className={clsx(
-          "h-[114px] w-[114px] cursor-pointer overflow-hidden rounded-full bg-white",
+          PROFILE_IMAGE_SIZE_CLASS[size],
+          "cursor-pointer overflow-hidden rounded-full bg-white",
           previewUrl ? "border border-gray-600" : "border border-gray-300",
         )}
         onClick={() => inputRef.current?.click()}

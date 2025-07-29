@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { deleteUser, getMyInfo, getUserInfo, updateUser } from "@/apis/member";
 
-import { UserUpdateData } from "@/types/user";
+import { UpdateUserPayload } from "@/types/auth";
 
 // 내 정보 조회
 export const useMyInfo = () => {
@@ -31,16 +31,12 @@ export const useUpdateUser = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({
-      memberId,
-      payload,
-    }: {
-      memberId: string;
-      payload: UserUpdateData;
-    }) => updateUser(memberId, payload),
-    onSuccess: data => {
+    mutationFn: (payload: UpdateUserPayload) => updateUser(payload),
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["myInfo"] });
-      queryClient.invalidateQueries({ queryKey: ["member", data.id] });
+      queryClient.invalidateQueries({
+        queryKey: ["member", variables.nickname],
+      });
     },
   });
 };

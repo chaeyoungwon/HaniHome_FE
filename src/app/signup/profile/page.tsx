@@ -18,12 +18,9 @@ import InputField from "@/components/common/InputField";
 import SearchField from "@/components/common/SearchField";
 import ProfileImageUploader from "@/components/signup/profile/ProfileImageUploader";
 
-import { SignupPayload } from "@/types/auth";
+import { GENDER_OPTIONS } from "@/constants/dropdown-options";
 
-const GENDER_OPTIONS = [
-  { label: "남성", value: "MALE" },
-  { label: "여성", value: "FEMALE" },
-];
+import { SignupPayload } from "@/types/auth";
 
 const SignupProfilePage = () => {
   const {
@@ -43,6 +40,7 @@ const SignupProfilePage = () => {
     gender,
     interestRegion,
     profileImage,
+    profileImagePreview,
     agreed,
     setField,
   } = useSignupStore();
@@ -98,7 +96,15 @@ const SignupProfilePage = () => {
         프로필을 만들어주세요
       </h1>
 
-      <ProfileImageUploader />
+      <div className="p-6">
+        <ProfileImageUploader
+          value={profileImagePreview ?? null}
+          onChange={uploadedUrl => {
+            setField("profileImage", uploadedUrl);
+            setField("profileImagePreview", uploadedUrl); // 프리뷰 저장도 같이
+          }}
+        />
+      </div>
 
       {/* 닉네임 */}
       <InputField

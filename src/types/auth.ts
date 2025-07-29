@@ -1,4 +1,5 @@
 // 회원가입 시 전달할 데이터
+import { Gender } from "./member";
 
 export interface Consent {
   type: string;
@@ -25,4 +26,11 @@ export interface LoginResponse {
 }
 
 // 유저 정보 수정
-export interface UpdateUserPayload {}
+export interface UpdateUserPayload {
+  name: string;
+  nickname: string;
+  birthDate: string;
+  phoneNumber: string;
+  gender: Gender;
+  profileImage: string | null;
+}
