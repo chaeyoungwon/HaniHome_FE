@@ -81,8 +81,8 @@ const ViewingSection = () => {
                 <ViewingBox
                   date={getDisplayDate(day)}
                   time={day.format("A h:mm")}
-                  profileImg={viewing.propertyThumbnailUrl || ""}
-                  roomImg={"/svgs/common/room-img.svg"}
+                  profileImg={viewing.counterpartImageUrl || ""}
+                  roomImg={viewing.propertyThumbnailUrl || ""}
                 />
               </div>
             );

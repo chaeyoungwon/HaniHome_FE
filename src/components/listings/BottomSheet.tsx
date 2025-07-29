@@ -10,12 +10,16 @@ interface BottomSheetProps {
   onClose: () => void;
   onHideClick: () => void;
   displayStatus?: "ACTIVE" | "INACTIVE";
+  viewingCount: number;
+  onShowDeleteModal: () => void;
 }
 
 const BottomSheet = ({
   onClose,
   onHideClick,
   displayStatus,
+  viewingCount,
+  onShowDeleteModal,
 }: BottomSheetProps) => {
   const { id } = useParams();
   const router = useRouter();
@@ -44,12 +48,19 @@ const BottomSheet = ({
   };
 
   const handleDeleteClick = () => {
-    closeSheet(() => {
-      deleteProperty(undefined, {
-        onSuccess: () => {
-          router.replace("/mypage/listings");
-        },
+    if (displayStatus === "ACTIVE" && viewingCount > 0) {
+      closeSheet(() => {
+        onShowDeleteModal();
       });
+      return;
+    }
+
+    deleteProperty(undefined, {
+      onSuccess: () => {
+        closeSheet(() => {
+          router.replace("/mypage/listings");
+        });
+      },
     });
   };
 
@@ -68,27 +79,27 @@ const BottomSheet = ({
         }`}
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex justify-center pb-2">
+        <div className="flex justify-center pb-4">
           <div className="h-1 w-[53px] rounded-[50px] bg-gray-500" />
         </div>
 
         <Divider className="my-1" />
         <div
-          className="text-body1-sb w-full cursor-pointer py-2 text-center text-gray-900"
+          className="text-body1-sb w-full cursor-pointer py-4 text-center text-gray-900"
           onClick={handleEditClick}
         >
           매물정보 수정
         </div>
         <Divider className="my-1" />
         <div
-          className="text-body1-sb w-full cursor-pointer py-2 text-center text-gray-900"
+          className="text-body1-sb w-full cursor-pointer py-4 text-center text-gray-900"
           onClick={handleHideClick}
         >
           {displayStatus === "ACTIVE" ? "숨기기" : "숨기기 취소"}
         </div>
         <Divider className="my-1" />
         <div
-          className="text-body1-sb text-red w-full cursor-pointer py-2 text-center"
+          className="text-body1-sb text-red w-full cursor-pointer py-4 text-center"
           onClick={handleDeleteClick}
         >
           삭제

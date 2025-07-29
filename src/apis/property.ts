@@ -97,9 +97,23 @@ export const completeTrade = async ({
   viewingId?: number;
   dealWithOutsider: boolean;
 }) => {
+  const params: {
+    dealWithOutsider: boolean;
+    viewingId?: number;
+  } = {
+    dealWithOutsider,
+  };
+
+  if (viewingId !== undefined) {
+    params.viewingId = viewingId;
+  }
+
   const res = await axiosInstance.post(
-    `/api/v1/properties/${propertyId}/complete?viewingId=${viewingId}?dealWithOutsider=${dealWithOutsider}`,
+    `/api/v1/properties/${propertyId}/complete`,
+    null,
+    { params },
   );
+
   return res.data.data;
 };
 

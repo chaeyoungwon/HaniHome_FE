@@ -21,6 +21,7 @@ import BottomSheet from "@/components/listings/BottomSheet";
 import DetailTabs from "@/components/listings/DetailTabs";
 import DropDownMenu from "@/components/listings/DropDownMenu";
 import ImageSlider from "@/components/listings/ImageSlider";
+import ListingDeleteModal from "@/components/mypage/ListingDeleteModal";
 import ListingHideModal from "@/components/mypage/ListingHideModal";
 import ListingDetailLoadingSkeleton from "@/components/skeleton/listingsDetail/ListingDetailLoadingSkeleton";
 
@@ -41,7 +42,8 @@ const ListingDetailPage = () => {
   const isEditMode = mode === "edit";
 
   const [isClicked, setIsClicked] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showHideModal, setShowHideModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const { data, isLoading, isError, refetch } =
     usePropertyDetailList(listingId);
@@ -90,7 +92,7 @@ const ListingDetailPage = () => {
     const isActive = data.displayStatus === "ACTIVE";
 
     if (isActive && hasGuests) {
-      setIsModalOpen(true);
+      setShowHideModal(true);
       return;
     }
 
@@ -285,15 +287,21 @@ const ListingDetailPage = () => {
           onClose={() => setIsClicked(false)}
           onHideClick={handleHideClick}
           displayStatus={data.displayStatus as "ACTIVE" | "INACTIVE"}
+          viewingCount={viewingGuests?.length ?? 0}
+          onShowDeleteModal={() => setShowDeleteModal(true)}
         />
       )}
 
-      {isModalOpen && viewingGuests && (
+      {showHideModal && viewingGuests && (
         <ListingHideModal
           listingId={data.id}
           kind={data.kind}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => setShowHideModal(false)}
         />
+      )}
+
+      {showDeleteModal && (
+        <ListingDeleteModal onClose={() => setShowDeleteModal(false)} />
       )}
     </>
   );
