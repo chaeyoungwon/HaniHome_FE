@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
+// @ts-expect-error: next-pwa has no valid type declarations
+import withPWA from "next-pwa";
 
+import { withSentryConfig } from "@sentry/nextjs";
 import type { RuleSetRule } from "webpack";
 
-const nextConfig: NextConfig = {
+const baseConfig: NextConfig = {
   turbopack: {
     rules: {
       "*.svg": {
@@ -27,7 +30,7 @@ const nextConfig: NextConfig = {
         {
           ...fileLoaderRule,
           test: /\.svg$/i,
-          resourceQuery: /url/,
+          resourceQuery: /url/, // ?url
         },
         {
           test: /\.svg$/i,
@@ -55,4 +58,19 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// PWA 래핑
+const withPWAConfig = withPWA({
+  dest: "public",
+  register: true,
+  skipWaiting: true,
+  disable: process.env.NODE_ENV === "development",
+});
+
+const sentryWebpackPluginOptions = {
+  silent: true,
+};
+
+export default withSentryConfig(
+  withPWAConfig(baseConfig),
+  sentryWebpackPluginOptions,
+);
