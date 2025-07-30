@@ -6,7 +6,6 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useFilterStore } from "@/stores/useFilterStore";
 
 import { useMyInfo } from "@/hooks/member/useMember";
-import { useNotificationStream } from "@/hooks/notification/useNotification";
 
 import { extractSuburb } from "@/utils/extractSuburb";
 
@@ -18,7 +17,6 @@ import ViewingSection from "@/components/home/ViewingSection";
 import FilterBar from "@/components/home/filterBar/FilterBar";
 import ContentWrapper from "@/components/layout/ContentWrapper";
 import MainHeader from "@/components/layout/header/MainHeader";
-import NotificationToast from "@/components/notification/NotificationToast";
 
 const Home = () => {
   const { isLoggedIn, memberId, setMemberId } = useAuthStore();
@@ -26,16 +24,6 @@ const Home = () => {
   const { suburb, setFilters } = useFilterStore();
 
   const [selectedSuburb, setSelectedSuburb] = useState<string | null>(null);
-
-  const messages = useNotificationStream();
-  const [latestMessage, setLatestMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (messages.length > 0) {
-      const latest = messages[messages.length - 1];
-      setLatestMessage(latest);
-    }
-  }, [messages]);
 
   useEffect(() => {
     if (isLoggedIn && myInfo && !memberId) {
@@ -68,12 +56,6 @@ const Home = () => {
         <ListingList fallbackSuburb={selectedSuburb} />
       </div>
       {isLoggedIn && <AddListingFab />}
-      {latestMessage && (
-        <NotificationToast
-          message={latestMessage}
-          onClose={() => setLatestMessage(null)}
-        />
-      )}
     </ContentWrapper>
   );
 };

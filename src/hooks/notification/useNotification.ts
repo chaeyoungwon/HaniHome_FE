@@ -10,7 +10,7 @@ import {
   patchNotificationRead,
 } from "@/apis/notification";
 
-import { NotificationItem } from "@/types/notification";
+import { NOTIFICATION_TYPES, NotificationItem } from "@/types/notification";
 
 export const useMyNotifications = (read?: boolean) => {
   return useQuery<NotificationItem[]>({
@@ -46,39 +46,51 @@ export const useDeleteAllNotifications = (notificationIds: number[]) => {
 };
 
 export const useNotificationStream = () => {
-  const [messages, setMessages] = useState<string[]>([]);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const accessToken = useAuthStore(state => state.accessToken);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (!accessToken) return;
 
-    const eventSource = new EventSourcePolyfill(
+    const es = new EventSourcePolyfill(
       `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/notifications/stream`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          Accept: "text/event-stream",
         },
         withCredentials: true,
       },
     );
 
-    eventSource.onmessage = event => {
-      const newMessage = event.data;
-      console.log("[SSE 수신됨]", newMessage);
-      setMessages(prev => [...prev, newMessage]);
-    };
+    NOTIFICATION_TYPES.forEach(type => {
+      es.addEventListener(type, event => {
+        try {
+          const data = JSON.parse((event as MessageEvent).data);
+          setNotifications(prev => [data, ...prev]);
 
-    eventSource.onerror = err => {
+          queryClient.invalidateQueries({ queryKey: ["myNotifications"] });
+          queryClient.invalidateQueries({
+            queryKey: ["unreadNotificationCount"],
+          });
+        } catch (e) {
+          console.error(`${type} 파싱 오류:`, e);
+        }
+      });
+    });
+
+    es.onerror = err => {
       console.error("SSE 연결 오류:", err);
-      eventSource.close();
+      es.close();
     };
 
     return () => {
-      eventSource.close();
+      es.close();
     };
-  }, [accessToken]);
+  }, [accessToken, queryClient]);
 
-  return messages;
+  return notifications;
 };
 
 export const useUnreadNotificationCount = () => {

@@ -70,7 +70,7 @@ export const cancelViewing = async (
 ) => {
   return axiosInstance.put(`/api/v1/viewings/${viewingId}/cancel`, {
     viewingId,
-    allOptionItemIds: [payload.optionItemId],
+    cancelOptionItemIds: [payload.optionItemId],
     reason: payload.reason,
   });
 };
