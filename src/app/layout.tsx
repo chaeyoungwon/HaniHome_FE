@@ -17,6 +17,7 @@ const suit = localFont({
 export const metadata: Metadata = {
   title: "하니홈",
   description: "해외 거주 한인을 위한 숙소 매칭 플랫폼",
+  manifest: "/manifest.json",
   keywords: [
     "호주",
     "한인",
