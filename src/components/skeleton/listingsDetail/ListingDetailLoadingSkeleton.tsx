@@ -1,12 +1,44 @@
-import BottomActionBar from "@/components/common/BottomActionBar";
+import { useEffect } from "react";
+
+import { AxiosError } from "axios";
+
+import AlertMessage from "@/components/common/AlertMessage";
 import BackHeader from "@/components/layout/header/BackHeader";
 import DetailTabs from "@/components/listings/DetailTabs";
 
+import { PropertyErrorResponse } from "@/types/property";
+
 import ListingContentSkeleton from "./ListingContentSkeleton";
 
-const ListingDetailLoadingSkeleton = ({ mode }: { mode?: string | null }) => {
+type Props = {
+  mode?: string | null;
+  isError?: boolean;
+  error?: unknown;
+  onHiddenProperty?: () => void;
+};
+
+const ListingDetailLoadingSkeleton = ({
+  mode,
+  isError,
+  error,
+  onHiddenProperty,
+}: Props) => {
   const isConfirmMode = mode === "confirm";
   const isEditMode = mode === "edit";
+
+  const isHidden =
+    isError &&
+    (error as AxiosError<PropertyErrorResponse>)?.response?.data
+      ?.serviceCode === "PROPERTY_IS_HIDDEN";
+
+  useEffect(() => {
+    if (isHidden) {
+      const timeout = setTimeout(() => {
+        onHiddenProperty?.();
+      }, 1500);
+      return () => clearTimeout(timeout);
+    }
+  }, [isHidden, onHiddenProperty]);
 
   return (
     <>
@@ -28,15 +60,14 @@ const ListingDetailLoadingSkeleton = ({ mode }: { mode?: string | null }) => {
           </div>
         </div>
       </div>
-      <BottomActionBar
-        label={
-          isConfirmMode
-            ? "홈으로 이동"
-            : isEditMode
-              ? "거래한 게스트 입력하기"
-              : "뷰잉 예약하기"
-        }
-      />
+
+      {isHidden && (
+        <AlertMessage
+          message="숨김 처리된 매물입니다"
+          className="bottom-3"
+          onDone={onHiddenProperty ?? (() => {})}
+        />
+      )}
     </>
   );
 };

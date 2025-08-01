@@ -6,6 +6,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
+import { AxiosError } from "axios";
 
 import {
   usePatchDisplayStatus,
@@ -24,6 +25,8 @@ import ImageSlider from "@/components/listings/ImageSlider";
 import ListingDeleteModal from "@/components/mypage/ListingDeleteModal";
 import ListingHideModal from "@/components/mypage/ListingHideModal";
 import ListingDetailLoadingSkeleton from "@/components/skeleton/listingsDetail/ListingDetailLoadingSkeleton";
+
+import { PropertyErrorResponse } from "@/types/property";
 
 import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
@@ -45,12 +48,20 @@ const ListingDetailPage = () => {
   const [showHideModal, setShowHideModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const { data, isLoading, isError, refetch } =
+  const { data, isLoading, error, isError, refetch } =
     usePropertyDetailList(listingId);
-  const { data: viewingGuests } = useViewingGuests(Number(listingId), [
-    "REQUESTED",
-    "COMPLETED",
-  ]);
+
+  const isMyListing = useMemo(
+    () => data?.hostSummary?.id === Number(memberId),
+    [data, memberId],
+  );
+
+  const { data: viewingGuests } = useViewingGuests(
+    Number(listingId),
+    ["REQUESTED", "COMPLETED"],
+    !!data && isMyListing,
+  );
+
   const { mutate: toggleWish } = useToggleWish();
   const { mutate: patchDisplayStatus } = usePatchDisplayStatus(
     Number(listingId),
@@ -58,10 +69,6 @@ const ListingDetailPage = () => {
 
   const [tradeStatus, setTradeStatus] = useState(data?.tradeStatus);
 
-  const isMyListing = useMemo(
-    () => data?.hostSummary?.id === Number(memberId),
-    [data, memberId],
-  );
   const isMyReservedListing = useMemo(
     () =>
       viewingGuests?.some(guest => guest.guestId === Number(memberId)) ?? false,
@@ -106,8 +113,21 @@ const ListingDetailPage = () => {
       },
     );
   };
-  if (isLoading) {
-    return <ListingDetailLoadingSkeleton mode={mode} />;
+
+  if (
+    isLoading ||
+    (isError &&
+      (error as AxiosError<PropertyErrorResponse>)?.response?.data
+        ?.serviceCode === "PROPERTY_IS_HIDDEN")
+  ) {
+    return (
+      <ListingDetailLoadingSkeleton
+        mode={mode}
+        isError={isError}
+        error={error}
+        onHiddenProperty={() => router.back()}
+      />
+    );
   }
   if (isError || !data) return null;
 

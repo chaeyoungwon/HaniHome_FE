@@ -7,6 +7,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 
 import {
   completeTrade,
@@ -22,6 +23,7 @@ import {
 import {
   MyPropertiesParams,
   Property,
+  PropertyErrorResponse,
   PropertyViewType,
   SummaryProperty,
 } from "@/types/property";
@@ -38,11 +40,12 @@ export const usePropertyList = <T extends PropertyViewType>(params: {
 };
 
 export const usePropertyDetailList = (propertyId: string) => {
-  return useQuery({
+  return useQuery<Property, AxiosError<PropertyErrorResponse>>({
     queryKey: ["propertyDetailList", propertyId],
     queryFn: () => fetchPropertyDetailList(propertyId),
     enabled: !!propertyId,
     staleTime: 0,
+    retry: false,
     refetchOnMount: true,
   });
 };

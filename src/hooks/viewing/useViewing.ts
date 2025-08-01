@@ -114,11 +114,12 @@ export const usePutViewingPropertyNotes = () => {
 export const useViewingGuests = (
   propertyId: number,
   status?: ViewingStatus[],
+  enabled = true,
 ) => {
   return useQuery({
     queryKey: ["viewingGuests", propertyId, status],
     queryFn: () => fetchViewingGuests(propertyId, status),
-    enabled: !!propertyId,
+    enabled: enabled && !!propertyId,
     staleTime: 0,
   });
 };

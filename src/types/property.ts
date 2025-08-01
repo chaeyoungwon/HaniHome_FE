@@ -183,3 +183,15 @@ export interface MyPropertiesParams {
   tradeStatus?: "BEFORE" | "IN_PROGRESS" | "COMPLETED";
   displayStatus?: "ACTIVE" | "INACTIVE";
 }
+
+// 매물 상세 에러 처리
+export interface PropertyErrorResponse {
+  serviceCode: string;
+  message: string;
+  data: {
+    statusCode: number;
+    message: string;
+    codeName: string;
+  };
+  success: boolean;
+}
