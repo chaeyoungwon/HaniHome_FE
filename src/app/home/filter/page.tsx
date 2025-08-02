@@ -12,7 +12,7 @@ import { useDebouncedValue } from "@/hooks/filter/useDebouncedValue";
 import { usePropertySearch } from "@/hooks/filter/useFilter";
 import { useMetroStops } from "@/hooks/filter/useMetro";
 
-import { buildQueryParams } from "@/utils/buildQueryParams";
+import { buildQueryParams } from "@/utils/filter/buildQueryParams";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";

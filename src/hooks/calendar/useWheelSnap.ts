@@ -3,7 +3,7 @@ const CENTER_OFFSET = 100;
 
 interface UseWheelSnapParams {
   ref: React.RefObject<HTMLDivElement>;
-  items: (number | string)[];
+  items: (string | number | null)[];
   selectedYear?: number;
   selectedMonth?: number;
   type: "year" | "month" | "hour" | "minute";
@@ -59,7 +59,7 @@ export const useWheelSnap = ({
   };
 
   const scrollToIndex = (target: number) => {
-    const index = items.findIndex(i => i === target);
+    const index = items.findIndex(i => typeof i === "number" && i === target);
     if (index === -1) return;
     ref.current?.scrollTo({
       top: index * ITEM_HEIGHT - CENTER_OFFSET,

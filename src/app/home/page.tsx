@@ -7,7 +7,7 @@ import { useFilterStore } from "@/stores/useFilterStore";
 
 import { useMyInfo } from "@/hooks/member/useMember";
 
-import { extractSuburb } from "@/utils/extractSuburb";
+import { extractSuburb } from "@/utils/address/extractSuburb";
 
 import AddListingFab from "@/components/home/AddListingFab";
 import CategoryHeader from "@/components/home/CategoryHeader";

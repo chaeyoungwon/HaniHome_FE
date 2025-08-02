@@ -41,7 +41,7 @@ const BottomActionBar = ({
             disabled
               ? "cursor-not-allowed bg-gray-300 text-white"
               : variant === "outline"
-                ? "border-mint text-mint cursor-pointer border bg-white"
+                ? "border-mint text-mint hover:bg-mint-light cursor-pointer border bg-white"
                 : "bg-mint cursor-pointer text-white"
           }`}
         >

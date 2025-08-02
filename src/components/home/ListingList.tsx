@@ -16,7 +16,7 @@ import utc from "dayjs/plugin/utc";
 import { usePropertySearch } from "@/hooks/filter/useFilter";
 import { useToggleWish } from "@/hooks/wishlist/useWishList";
 
-import { buildQueryParams } from "@/utils/buildQueryParams";
+import { buildQueryParams } from "@/utils/filter/buildQueryParams";
 
 import { FALLBACK_SUBURB } from "@/constants/default-region";
 

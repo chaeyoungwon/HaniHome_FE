@@ -17,6 +17,7 @@ interface TimeSpinnerProps {
   maxHour?: number;
   minMinute?: number;
   maxMinute?: number;
+  scrollTarget?: { hour: number; minute: number } | null;
 }
 
 const TimeSpinner = ({
@@ -27,6 +28,7 @@ const TimeSpinner = ({
   maxHour = 24,
   minMinute = 0,
   maxMinute = 30,
+  scrollTarget,
 }: TimeSpinnerProps) => {
   const [hour, setHour] = useState(initialHour);
   const [minute, setMinute] = useState(initialMinute);
@@ -38,16 +40,16 @@ const TimeSpinner = ({
   const hourTimer = useRef<NodeJS.Timeout | null>(null);
   const minuteTimer = useRef<NodeJS.Timeout | null>(null);
 
-  const PADDED = ["", ""];
-
   // 시간 필터링
   const filteredHours = BASE_HOURS.filter(h => h >= minHour && h <= maxHour);
-  const HOURS = [...PADDED, ...filteredHours, ...PADDED];
 
   // 분 필터링
   const filteredMinutes = BASE_MINUTES.filter(
     m => m >= minMinute && m <= maxMinute,
   );
+
+  const PADDED: (number | null)[] = [null, null];
+  const HOURS = [...PADDED, ...filteredHours, ...PADDED];
   const MINUTES = [...PADDED, ...filteredMinutes, ...PADDED];
 
   const hourSnap = useWheelSnap({
@@ -65,16 +67,19 @@ const TimeSpinner = ({
   });
 
   const handleHourChange = (val: number) => {
+    const index = HOURS.findIndex(v => v === val);
+    if (index !== -1) hourSnap.scrollToIndex(index);
     setHour(val);
-    setTouched(true); // ✅ 휠 조작 감지
+    setTouched(true);
   };
 
   const handleMinuteChange = (val: number) => {
+    const index = MINUTES.findIndex(v => v === val);
+    if (index !== -1) minuteSnap.scrollToIndex(index);
     setMinute(val);
-    setTouched(true); // ✅ 휠 조작 감지
+    setTouched(true);
   };
 
-  // 초기 스크롤 위치 설정 (initialHour, initialMinute 기준)
   useEffect(() => {
     const h = initialHour === 0 ? 24 : initialHour;
     const hourIndex = HOURS.findIndex(val => val === h);
@@ -84,14 +89,25 @@ const TimeSpinner = ({
     if (minuteIndex !== -1) minuteSnap.scrollToIndex(minuteIndex);
   }, []);
 
-  // 휠 조작 시 onChange 호출 (처음 열릴 때는 호출 안 함)
   useEffect(() => {
     if (!touched) return;
-    const h = hour === 24 ? 0 : hour;
     onChange(
-      `${String(h).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
+      `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`,
     );
   }, [hour, minute]);
+
+  useEffect(() => {
+    hourSnap.scrollToIndex(hour);
+    minuteSnap.scrollToIndex(minute);
+  }, [hour, minute]);
+
+  useEffect(() => {
+    if (!scrollTarget) return;
+    const hIndex = HOURS.findIndex(val => val === scrollTarget.hour);
+    const mIndex = MINUTES.findIndex(val => val === scrollTarget.minute);
+    if (hIndex !== -1) hourSnap.scrollToIndex(hIndex);
+    if (mIndex !== -1) minuteSnap.scrollToIndex(mIndex);
+  }, [scrollTarget]);
 
   const debounceScroll = (
     timerRef: React.MutableRefObject<NodeJS.Timeout | null>,

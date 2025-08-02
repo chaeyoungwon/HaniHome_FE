@@ -13,7 +13,7 @@ const AddListingFab = () => {
   return (
     <button
       type="button"
-      onClick={() => router.push("/listings/create")}
+      onClick={() => router.push("/listings/create/redirect")}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={`bg-mint shadow-fab active:bg-mint-contrast fixed bottom-23.5 left-1/2 z-10 flex h-13.5 cursor-pointer items-center rounded-full text-white transition-all duration-500 ${

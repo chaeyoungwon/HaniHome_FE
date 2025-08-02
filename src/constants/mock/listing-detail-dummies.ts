@@ -42,7 +42,6 @@ export const propertyInfo: PropertyDetail[] = [
       isImmediate: false,
       isNegotiable: false,
     },
-    parkingOption: "STREET_PARKING",
     meetingDateFrom: "2025-10-25",
     meetingDateTo: "2025-10-30",
     timeSlots: [
@@ -59,6 +58,7 @@ export const propertyInfo: PropertyDetail[] = [
       totalBathUser: 2,
       totalFloors: 7,
       propertyFloor: 4,
+      withPropertyOwner: false,
     },
     capacityShare: "TRIPLE",
   },
@@ -91,7 +91,8 @@ export const propertyInfo: PropertyDetail[] = [
       billIncluded: false,
     },
     optionItemIds: [
-      1, 2, 3, 12, 13, 14, 25, 26, 33, 35, 38, 41, 42, 45, 47, 48, 49, 51, 53, 55, 94, 95,
+      1, 2, 3, 12, 13, 14, 25, 26, 33, 35, 38, 41, 42, 45, 47, 48, 49, 51, 53,
+      55, 94, 95,
     ],
     livingConditions: {
       noticePeriodWeeks: 2,
@@ -102,10 +103,9 @@ export const propertyInfo: PropertyDetail[] = [
     moveInInfo: {
       availableFrom: "2025-10-01T00:00:00",
       availableTo: "2026-09-30T23:59:59",
-      isImmediate: false, //즉시 입주 가능, 즉시 입주 불가능
-      isNegotiable: false, //입주 일자 협의 가능, 입주 일자 협의 불가능
+      isImmediate: true, //즉시 입주 가능 여부
+      isNegotiable: false, //입주 일자 협의 가능 여부
     },
-    parkingOption: "NONE",
     meetingDateFrom: "2025-09-25",
     meetingDateTo: "2025-09-30",
     timeSlots: [
@@ -122,6 +122,8 @@ export const propertyInfo: PropertyDetail[] = [
       numberOfBath: 2,
       totalFloors: 10,
       propertyFloor: 5,
+      yardIncluded: true,
+      verandaIncluded: true,
     },
     capacityRent: "TWO",
   },

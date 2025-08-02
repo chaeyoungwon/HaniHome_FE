@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useLoginModalStore } from "@/stores/useLoginModalStore";
 
-import { extractSuburb } from "@/utils/extractSuburb";
+import { extractSuburb } from "@/utils/address/extractSuburb";
 
 import LoginAlertModal from "@/components/common/LoginAlertModal";
 

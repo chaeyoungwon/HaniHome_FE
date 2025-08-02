@@ -8,7 +8,7 @@ import Divider from "@/components/common/Divider";
 import BackHeader from "@/components/layout/header/BackHeader";
 
 import { furnitureIconMap } from "@/constants/furniture-lists";
-import { CATEGORY_OPTIONS } from "@/constants/propertyCategory";
+import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
 const furnitureCategory = CATEGORY_OPTIONS[2].items;
 

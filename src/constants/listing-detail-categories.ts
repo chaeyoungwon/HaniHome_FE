@@ -24,5 +24,5 @@ export const shareDetailCategories: CategoryItem[] = [
 
 export const rentDetailCategories: CategoryItem[] = [
   { key: "rentPropertySubType", label: "매물 유형" },
-  { key: "isRealEstateIntervention", label: "부동산 중개 여부" },
+  { key: "isBrokered", label: "부동산 중개 여부" },
 ];

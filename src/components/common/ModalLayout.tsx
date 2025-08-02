@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 
-import { useOutsideClick } from "@/hooks/common/useOutsideClick";
+import { useClickOutside } from "@/hooks/common/useClickOutside";
 import { useScrollLock } from "@/hooks/common/useScrollLock";
 
 import CloseIcon from "@/public/svgs/common/close-icon.svg";
@@ -26,7 +26,7 @@ const ModalLayout = ({
 }: ModalLayoutProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useOutsideClick(modalRef, onClose);
+  useClickOutside(modalRef, onClose);
   useScrollLock();
 
   return (

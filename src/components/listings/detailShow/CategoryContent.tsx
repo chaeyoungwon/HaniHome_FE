@@ -16,13 +16,11 @@ import {
   formatLivingConditions,
   formatMoveInDates,
   formatPropertySubType,
-} from "@/utils/formatDetails";
+} from "@/utils/formatter/detailFormatter";
 
 import {
-  AdditionalInfo,
   CapacityRent,
   CapacityShare,
-  Furniture,
   MoveInInfo,
   PropertyDetail,
   PropertyRegion,
@@ -93,19 +91,19 @@ const CategoryContent = ({
     case "highlights":
       return (
         <div className={baseClass}>
-          {formatHighlights(value as string[] | null) || "N/A"}
+          {formatHighlights(value as number[]) || "N/A"}
         </div>
       );
     case "furniture":
       return (
         <div className={baseClass}>
-          {formatFurniture(value as Furniture | null) || "N/A"}
+          {formatFurniture(value as number[]) || "N/A"}
         </div>
       );
-    case "isRealEstateIntervention":
+    case "isBrokered":
       return (
         <div className={baseClass}>
-          {formatIsBrokered(value as boolean | null) || "N/A"}
+          {formatIsBrokered(value as number[]) || "N/A"}
         </div>
       );
     case "genderPreference":
@@ -120,7 +118,7 @@ const CategoryContent = ({
     case "additionalInfo":
       return (
         <div className={baseClass}>
-          {formatAdditionalInfo(value as AdditionalInfo)}
+          {formatAdditionalInfo(value as number[])}
         </div>
       );
     case "moveInInfo":
@@ -133,7 +131,7 @@ const CategoryContent = ({
     case "costDetails": {
       const { costDetails, includedItems } = value as {
         costDetails: PropertyDetail["costDetails"];
-        includedItems: string[];
+        includedItems: number[];
       };
 
       return (

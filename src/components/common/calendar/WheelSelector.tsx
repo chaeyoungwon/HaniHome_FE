@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useWheelSnap } from "@/hooks/calendar/useWheelSnap";
 
-import { getSafeDate } from "@/utils/getSafeDate";
+import { getSafeDate } from "@/utils/calendar/getSafeDate";
 
 import WheelColumn from "./WheelColumn";
 

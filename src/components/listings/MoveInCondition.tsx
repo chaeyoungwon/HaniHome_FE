@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-import { formatToDateRange } from "@/utils/dateFormatter";
+import { formatToDateRange } from "@/utils/formatter/dateFormatter";
 
 import InfoCard from "@/components/listings/shared/InfoCard";
 import Label from "@/components/listings/shared/Label";

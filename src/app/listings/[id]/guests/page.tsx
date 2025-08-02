@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useCompleteTrade } from "@/hooks/property/useProperty";
 import { useViewingGuests } from "@/hooks/viewing/useViewing";
 
-import { formatMeetingDay } from "@/utils/dateFormatter";
+import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import CheckIcon from "@/components/common/CheckIcon";

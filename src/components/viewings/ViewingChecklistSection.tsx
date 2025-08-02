@@ -6,7 +6,7 @@ import {
   useViewingChecklists,
 } from "@/hooks/viewing/useViewing";
 
-import { groupOptionItemsByParent } from "@/utils/groupOptionItemsByParent";
+import { groupOptionItemsByParent } from "@/utils/listing/groupOptionItemsByParent";
 
 import Accordion from "@/components/common/Accordion";
 

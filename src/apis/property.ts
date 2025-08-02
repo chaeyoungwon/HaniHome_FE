@@ -1,4 +1,4 @@
-import { serializePropertyFilters } from "@/utils/serializePropertyFilters";
+import { serializePropertyFilters } from "@/utils/filter/serializePropertyFilters";
 
 import {
   MyPropertiesParams,

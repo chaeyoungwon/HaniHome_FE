@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import { formatViewingCardTime } from "@/utils/dateFormatter";
+import { formatViewingCardTime } from "@/utils/formatter/dateFormatter";
 
 import Divider from "@/components/common/Divider";
 import ViewingPostCard from "@/components/common/ViewingPostCard";

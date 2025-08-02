@@ -1,6 +1,6 @@
 "use client";
 
-import { formatAddress } from "@/utils/formatAddress";
+import { formatAddress } from "@/utils/formatter/addressFormatter";
 
 import GoogleMap from "@/components/common/GoogleMap";
 

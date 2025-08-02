@@ -120,7 +120,6 @@ export interface RentProperty extends BaseProperty {
   internalDetails: InternalDetailsForRent;
   capacityRent: string;
   isRealEstateIntervention: string;
-  exposure: string;
 }
 
 // 전체 매물 유니언 타입

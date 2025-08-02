@@ -1,0 +1,48 @@
+import AvailableDatePicker from "@/components/home/filter/AvailableDatePicker";
+
+import { MoveInInfo } from "@/types/listingDetail";
+
+interface MoveInfoContentProps {
+  value: MoveInInfo;
+  onSelect: (value: MoveInInfo) => void;
+}
+
+const MoveInfoContent = ({ value, onSelect }: MoveInfoContentProps) => {
+  const handleDateChange = (from: string, to: string) => {
+    // from과 to 날짜를 비교하여 더 빠른 날짜와 늦은 날짜를 교환
+    if (new Date(from) > new Date(to)) {
+      [from, to] = [to, from]; // 교환
+    }
+
+    onSelect({
+      ...value,
+      availableFrom: from,
+      availableTo: to,
+    });
+  };
+
+  const toggleImmediate = () =>
+    onSelect({
+      ...value,
+      isImmediate: !value.isImmediate,
+    });
+
+  const toggleNegotiable = () =>
+    onSelect({
+      ...value,
+      isNegotiable: !value.isNegotiable,
+    });
+
+  return (
+    <AvailableDatePicker
+      availableFrom={value.availableFrom}
+      availableTo={value.availableTo}
+      immediate={value.isImmediate}
+      negotiable={value.isNegotiable}
+      onDateChange={handleDateChange}
+      onImmediateToggle={toggleImmediate}
+      onNegotiableToggle={toggleNegotiable}
+    />
+  );
+};
+export default MoveInfoContent;

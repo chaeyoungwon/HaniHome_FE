@@ -11,7 +11,7 @@ import { createViewing } from "@/apis/viewing";
 
 import { usePropertyList } from "@/hooks/property/useProperty";
 
-import { formatDateTime, getTimeLabel } from "@/utils/dateFormatter";
+import { formatDateTime, getTimeLabel } from "@/utils/formatter/dateFormatter";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import ViewingPostCard from "@/components/common/ViewingPostCard";

@@ -3,7 +3,7 @@ import { forwardRef } from "react";
 import clsx from "clsx";
 
 interface WheelColumnProps {
-  items: (number | string)[];
+  items: (string | number | null)[];
   selected: number;
   onClick: (val: number) => void;
   debounceScroll: () => void;
@@ -54,31 +54,34 @@ const WheelColumn = forwardRef<HTMLDivElement, WheelColumnProps>(
         )}
         onScroll={debounceScroll}
       >
-        {items.map((item, idx) => (
-          <div
-            key={idx}
-            className={clsx(
-              "text-heading4 flex h-[50px] cursor-pointer items-center justify-center transition-colors duration-150",
-              typeof item === "number"
-                ? item === selected
-                  ? "text-mint-contrast"
-                  : "text-gray-400"
-                : "pointer-events-none",
-            )}
-            onClick={() => typeof item === "number" && onClick(item)}
-          >
-            {typeof item === "number"
-              ? type === "year"
-                ? `${item.toString().slice(2)}.`
-                : type === "month"
-                  ? `${item.toString().padStart(2, "0")}.`
-                  : /* hour, minute는 그냥 2자리 숫자 출력 */
-                    item.toString().padStart(2, "0")
-              : ""}
-          </div>
-        ))}
+        {items.map((item, idx) => {
+          const isValidNumber = typeof item === "number" && !isNaN(item);
+
+          return (
+            <div
+              key={idx}
+              className={clsx(
+                "text-heading4 flex h-[50px] items-center justify-center transition-colors duration-150",
+                isValidNumber ? "cursor-pointer" : "pointer-events-none",
+                isValidNumber
+                  ? item === selected
+                    ? "text-mint-contrast"
+                    : "text-gray-400"
+                  : "",
+              )}
+              onClick={() => isValidNumber && onClick(item)}
+            >
+              {isValidNumber
+                ? type === "year"
+                  ? `${item.toString().slice(2)}.`
+                  : type === "month"
+                    ? `${item.toString().padStart(2, "0")}.`
+                    : item.toString().padStart(2, "0")
+                : ""}
+            </div>
+          );
+        })}
       </div>
-     
     </div>
   ),
 );

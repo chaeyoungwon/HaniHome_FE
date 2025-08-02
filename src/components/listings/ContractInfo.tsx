@@ -3,7 +3,7 @@ import React from "react";
 import Label from "@/components/listings/shared/Label";
 import Section from "@/components/listings/shared/Section";
 
-import { CATEGORY_OPTIONS } from "@/constants/propertyCategory";
+import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
 import { Property } from "@/types/property";
 

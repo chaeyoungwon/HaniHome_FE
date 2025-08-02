@@ -1,4 +1,13 @@
+import { TimeSlot } from "@/types/listingDetail";
+
 export type TimeLabel = "아침" | "점심" | "저녁";
+
+export const DEFAULT_SLOT: TimeSlot = { timeFrom: "00:00", timeTo: "00:00" };
+export const DEFAULT_SLOTS: TimeSlot[] = [
+  DEFAULT_SLOT,
+  DEFAULT_SLOT,
+  DEFAULT_SLOT,
+];
 
 export const TIME_OPTIONS: Record<TimeLabel, string[]> = {
   아침: [
@@ -43,4 +52,15 @@ export const TIME_OPTIONS: Record<TimeLabel, string[]> = {
     "23:00",
     "23:30",
   ],
+};
+
+export const PERIODS = ["아침", "점심", "저녁"] as const;
+
+export const PERIOD_LIMITS: Record<
+  (typeof PERIODS)[number],
+  { minTime: string; maxTime: string }
+> = {
+  아침: { minTime: "06:00", maxTime: "11:30" },
+  점심: { minTime: "12:00", maxTime: "18:00" },
+  저녁: { minTime: "18:30", maxTime: "24:00" },
 };

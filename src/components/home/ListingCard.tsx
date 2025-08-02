@@ -4,12 +4,12 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 
-import { formatRelativeTime } from "@/utils/dateFormatter";
+import { formatRelativeTime } from "@/utils/formatter/dateFormatter";
 import {
   getDisplayStatus,
   getDisplayType,
   getDistanceInKm,
-} from "@/utils/propertyFormatter";
+} from "@/utils/formatter/propertyFormatter";
 
 import Dot from "@/components/common/Dot";
 

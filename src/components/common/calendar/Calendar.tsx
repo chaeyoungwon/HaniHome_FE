@@ -24,8 +24,8 @@ const Calendar = ({
   onCloseWheel,
   disabled,
 }: CalendarProps) => {
-  const startDate = range[0].startDate;
-  const endDate = range[0].endDate;
+  const startDate = range && range.length > 0 ? range[0].startDate : null;
+  const endDate = range && range.length > 0 ? range[0].endDate : null;
 
   const {
     tempDate,
@@ -59,7 +59,9 @@ const Calendar = ({
             disabled && "bg-gray-0 !text-mint-contrast",
           )}
         >
-          {disabled ? "0000.00.00" : format(startDate, "yyyy. MM. dd")}
+          {disabled || !startDate
+            ? "0000.00.00"
+            : format(startDate, "yyyy. MM. dd")}
         </button>
 
         <span className="text-body1-med text-gray-700">~</span>
@@ -73,7 +75,9 @@ const Calendar = ({
             disabled && "bg-gray-0 !text-mint-contrast",
           )}
         >
-          {disabled ? "0000.00.00" : format(endDate, "yyyy. MM. dd")}
+          {disabled || !endDate
+            ? "0000.00.00"
+            : format(endDate, "yyyy. MM. dd")}
         </button>
       </div>
 

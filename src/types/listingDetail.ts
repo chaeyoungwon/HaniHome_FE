@@ -2,8 +2,6 @@ export type PropertySuperType = "RENT" | "SHARE";
 
 export type GenderPreference = "ANY" | "MALE_ONLY" | "FEMALE_ONLY" | "COUPLE";
 
-export type ParkingOption = "NONE" | "STREET_PARKING" | "RESERVED_SPACE";
-
 export type SharePropertySubType =
   | "SECOND_ROOM"
   | "MASTER_ROOM"
@@ -20,18 +18,6 @@ export type RentPropertySubType =
 export type CapacityShare = "SINGLE" | "DOUBLE" | "TRIPLE" | "OTHER";
 
 export type CapacityRent = "ONE" | "TWO" | "THREE" | "FOUR" | "OTHER";
-
-export interface Furniture {
-  [subCategory: string]: string[];
-}
-
-export interface AdditionalInfo {
-  smokingAllowed: boolean | null;
-  petsAllowed: boolean | null;
-  visitorsAllowed: boolean | null;
-  parking: string[]; // 주차 옵션 목록
-  kitchenAccess: boolean | null;
-}
 
 // --- 공통 타입 ---
 export interface PropertyRegion {
@@ -76,10 +62,10 @@ export interface TimeSlot {
 }
 
 export interface InternalDetailsBase {
-  internalArea: number;
-  totalArea: number;
-  totalFloors: number;
-  propertyFloor: number;
+  internalArea: number | null;
+  totalArea: number | null;
+  totalFloors: number | null;
+  propertyFloor: number | null;
 }
 
 // --- 공통 베이스 ---
@@ -96,7 +82,6 @@ interface PropertyBase {
   optionItemIds: number[];
   livingConditions: LivingConditions;
   moveInInfo: MoveInInfo;
-  parkingOption: ParkingOption;
   meetingDateFrom: string;
   meetingDateTo: string;
   timeSlots: TimeSlot[];
@@ -106,8 +91,9 @@ interface PropertyBase {
 
 // --- SHARE 전용 ---
 export interface ShareInternalDetails extends InternalDetailsBase {
-  totalResidents: number; //총거주
-  totalBathUser: number; //욕실쉐어자수
+  totalResidents: number | null;
+  totalBathUser: number | null;
+  withPropertyOwner: boolean;
 }
 
 export interface SharePropertyDetail extends PropertyBase {
@@ -119,8 +105,10 @@ export interface SharePropertyDetail extends PropertyBase {
 
 // --- RENT 전용 ---
 export interface RentInternalDetails extends InternalDetailsBase {
-  numberOfRoom: number;
-  numberOfBath: number;
+  numberOfRoom: number | null;
+  numberOfBath: number | null;
+  yardIncluded: boolean;
+  verandaIncluded: boolean;
 }
 
 export interface RentPropertyDetail extends PropertyBase {

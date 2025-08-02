@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { uploadMultipleImages } from "@/utils/uploadMultipleImages";
+import { uploadMultipleImages } from "@/utils/images/uploadMultipleImages";
 
 import AlertModal from "@/components/common/AlertModal";
 import BottomActionBar from "@/components/common/BottomActionBar";

@@ -1,47 +1,49 @@
-export interface CostDetailsOptions {
-  weeklyCost: {
-    label: string;
-    value: string;
-  };
-  includedItems: {
-    label: string;
-    value: string[];
-  };
-  billDescription: {
-    label: string;
-    value: string;
-  };
-  deposit: {
-    label: string;
-    value: string;
-  };
-  keyDeposit: {
-    label: string;
-    value: string;
-  };
-}
+import {
+  CapacityRent,
+  CapacityShare,
+  CostDetails,
+  GenderPreference,
+  LivingConditions,
+  MoveInInfo,
+  RentInternalDetails,
+  RentPropertySubType,
+  ShareInternalDetails,
+  SharePropertySubType,
+  TimeSlot,
+} from "./listingDetail";
 
-export interface MeetingTimeOptions {
-  meetingDateFrom: {
-    label: string;
-    value: string | null;
-  };
-  meetingDateTo: {
-    label: string;
-    value: string | null;
-  };
-}
+export type MovingConditionsOption =
+  | { type: "genderPreference"; value: GenderPreference | null }
+  | { type: "optionItemIds"; value: number[] }
+  | { type: "moveInInfo"; value: MoveInInfo | null }
+  | { type: "livingConditions"; value: LivingConditions | null };
 
-export interface AvailabilityOptions {
-  availableFrom: string | null;
-  availableTo: string | null;
-  immediate: boolean;
-  negotiable: boolean;
-}
-export type AnswerValue =
-  | string
-  | string[]
-  | CostDetailsOptions
-  | MeetingTimeOptions
-  | AvailabilityOptions
-  | Record<string, string | string[]>;
+export type ContractTermsOption =
+  | {
+      type: "costDetails";
+      value: CostDetails;
+    }
+  | {
+      type: "meetingTime";
+      value: {
+        meetingDateFrom: string | null;
+        meetingDateTo: string | null;
+        viewingAlwaysAvailable: boolean | null;
+      };
+    }
+  | {
+      type: "timeSlots";
+      value: TimeSlot[];
+    }
+  | { type: "optionItemIds"; value: number[] };
+
+export type ListingDetailsOption =
+  | { type: "propertyType"; value: RentPropertySubType | SharePropertySubType }
+  | { type: "capacityPeople"; value: CapacityRent | CapacityShare }
+  | { type: "highlights"; value: number[] }
+  | { type: "furniture"; value: number[] }
+  | { type: "isBrokered"; value: number }
+  | {
+      type: "internalDetails";
+      value: ShareInternalDetails | RentInternalDetails;
+    };

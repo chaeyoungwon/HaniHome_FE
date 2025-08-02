@@ -1,6 +1,9 @@
 import Image from "next/image";
 
-import { getDisplayType, getDistanceInKm } from "@/utils/propertyFormatter";
+import {
+  getDisplayType,
+  getDistanceInKm,
+} from "@/utils/formatter/propertyFormatter";
 
 import Dot from "@/components/common/Dot";
 

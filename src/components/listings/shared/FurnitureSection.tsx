@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import { CATEGORY_OPTIONS } from "@/constants/propertyCategory";
+import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
 import { OptionItem } from "@/types/property";
 

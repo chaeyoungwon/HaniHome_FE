@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-import { convertOptionIdsToStructuredData } from "@/utils/convertOptionIdToStructureData";
-
 import Divider from "@/components/common/Divider";
 
 import {
@@ -29,9 +27,6 @@ interface DropDownSectionProps {
 
 const DropDownSection = ({ listingData }: DropDownSectionProps) => {
   const [openCategoryKeys, setOpenCategoryKeys] = useState<Set<string>>(new Set());
-  const structuredData = convertOptionIdsToStructuredData(
-    listingData.optionItemIds,
-  );
 
   const handleToggle = (key: string) => {
     setOpenCategoryKeys(prev => {
@@ -77,18 +72,18 @@ const DropDownSection = ({ listingData }: DropDownSectionProps) => {
         const itemKeyStr = String(item.key);
         let value;
         if (itemKeyStr === "highlights") {
-          value = structuredData.highlights;
+          value = listingData.optionItemIds;
         } else if (itemKeyStr === "furniture") {
-          value = structuredData.furniture;
+          value = listingData.optionItemIds;
         } else if (itemKeyStr === "isBrokered") {
-          value = structuredData.isBrokered;
+          value = listingData.optionItemIds;
         } else if (itemKeyStr === "costDetails") {
           value = {
             costDetails: listingData.costDetails,
-            includedItems: structuredData.includedItems,
+            includedItems: listingData.optionItemIds,
           };
         } else if (itemKeyStr === "additionalInfo") {
-          value = structuredData.additionalInfo;
+          value = listingData.optionItemIds;
         } else if (itemKeyStr === "capacityPeople") {
           if (listingData.kind === "RENT") {
             value = (listingData as RentPropertyDetail).capacityRent;

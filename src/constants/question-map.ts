@@ -1,3 +1,6 @@
+// 공통 ContractTerms
+import { ContractTermsOption } from "@/types/createPropertyAnswer";
+
 export const COMMON_MOVING_CONDITIONS = [
   {
     id: "genderPreference",
@@ -27,40 +30,23 @@ export const COMMON_MOVING_CONDITIONS = [
   },
 ];
 
-// 공통 ContractTerms
-
-export const COMMON_CONTRACT_TERMS = [
+export const COMMON_CONTRACT_TERMS: {
+  id: string;
+  label: string;
+  options: ContractTermsOption;
+}[] = [
   {
     id: "costDetails",
     label: "거래 비용을 입력해주세요",
     options: {
-      weeklyCost: {
-        label: "빌",
-        value: "",
-      },
-      includedItems: {
-        label: "빌에 포함된 항목",
-        value: [
-          "수도세",
-          "전기세",
-          "인터넷비",
-          "가스비",
-          "청소비",
-          "주차비",
-          "직접입력",
-        ],
-      },
-      billDescription: {
-        label: "빌 설명",
-        value: "",
-      },
-      deposit: {
-        label: "디파짓",
-        value: "",
-      },
-      keyDeposit: {
-        label: "Key 디파짓 (선택)",
-        value: "",
+      type: "costDetails",
+      value: {
+        weeklyCost: 0,
+        costDescription: "",
+        deposit: 0,
+        keyDeposit: 0,
+        depositAdjustable: false,
+        billIncluded: false,
       },
     },
   },
@@ -68,14 +54,25 @@ export const COMMON_CONTRACT_TERMS = [
     id: "meetingTime",
     label: "뷰잉 가능 기간을 설정해주세요",
     options: {
-      meetingDateFrom: { label: "시작일", value: null },
-      meetingDateTo: { label: "종료일", value: null },
+      type: "meetingTime",
+      value: {
+        meetingDateFrom: null,
+        meetingDateTo: null,
+        viewingAlwaysAvailable: null,
+      },
     },
   },
   {
     id: "timeSlots",
     label: "뷰잉 가능 시간대를 설정해주세요",
-    options: ["startTime", "endTime"]
+    options: {
+      type: "timeSlots",
+      value: [
+        { timeFrom: "", timeTo: "" },
+        { timeFrom: "", timeTo: "" },
+        { timeFrom: "", timeTo: "" },
+      ],
+    },
   },
 ];
 
@@ -85,12 +82,12 @@ export const QUESTION_MAP = {
       {
         id: "propertyType",
         label: "매물 유형을 선택해주세요",
-        options: ["마스터 룸", "거실 쉐어", "세컨드 룸"],
+        options: ["MASTER_ROOM", "LIVING_SHARE", "SECOND_ROOM"],
       },
       {
         id: "capacityPeople",
         label: "최대 몇 명이 쓸 수 있나요?",
-        options: ["독방", "2인 1실", "3인 1실", "n인 1실"],
+        options: ["SINGLE", "DOUBLE", "TRIPLE", "OTHER"],
       },
       {
         id: "internalDetails",
@@ -141,18 +138,18 @@ export const QUESTION_MAP = {
         id: "propertyType",
         label: "매물 유형을 선택해주세요",
         options: [
-          "하우스",
-          "아파트",
-          "유닛",
-          "스튜디오",
-          "그래니 플랫",
-          "타운하우스",
+          "HOUSE",
+          "APARTMENT",
+          "UNIT",
+          "STUDIO",
+          "GRANNY_FLAT",
+          "TOWN_HOUSE",
         ],
       },
       {
         id: "capacityPeople",
         label: "최대 몇 명이 쓸 수 있나요?",
-        options: ["1명", "2명", "3명", "4명", "기타 (5명 이상)"],
+        options: ["ONE", "TWO", "THREE", "FOUR", "OTHER"],
       },
       {
         id: "internalDetails",

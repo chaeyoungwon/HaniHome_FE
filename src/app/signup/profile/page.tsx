@@ -7,9 +7,9 @@ import { useSignupStore } from "@/stores/useSignupStore";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useNickname } from "@/hooks/signup/useNickname";
 
-import { formatConsents } from "@/utils/formatConsentType";
-import { formatPhoneNumber } from "@/utils/formatPhoneNumber";
-import { getRandomDefaultProfile } from "@/utils/getRandomDefaultProfile";
+import { formatConsents } from "@/utils/formatter/consentTypeFormatter";
+import { formatPhoneNumber } from "@/utils/formatter/phoneFormatter";
+import { getRandomDefaultProfile } from "@/utils/images/getRandomDefaultProfile";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";

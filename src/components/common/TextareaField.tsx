@@ -1,11 +1,12 @@
 import { useAutosize } from "@/hooks/common/useAutoSize";
 
 interface TextareaFieldProps {
-  title: string;
+  title?: string;
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
   maxLength?: number;
+  gap?: string; // gap prop 추가
 }
 
 const TextareaField = ({
@@ -14,12 +15,14 @@ const TextareaField = ({
   value,
   onChange,
   maxLength = 500,
+  gap = "gap-4", // 기본값은 gap-4
 }: TextareaFieldProps) => {
   const { textareaRef, mirrorRef } = useAutosize(value, 400);
 
   return (
-    <section className="flex flex-col gap-4 px-4 py-3">
-      <p className="text-heading3 text-gray-800">{title}</p>
+    <section className={`flex flex-col ${gap} px-4 py-3`}>
+      {title && <p className="text-heading3 text-gray-800">{title}</p>}
+      {/* title이 있을 때만 표시 */}
       <div className="relative w-full">
         <textarea
           ref={textareaRef}

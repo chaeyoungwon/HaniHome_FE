@@ -4,7 +4,7 @@ import { groupBy } from "lodash";
 
 import { useCancelViewing } from "@/hooks/viewing/useViewing";
 
-import { calculateDday } from "@/utils/dateFormatter";
+import { calculateDday } from "@/utils/formatter/dateFormatter";
 
 import AlertModal from "@/components/common/AlertModal";
 import ContentWrapper from "@/components/layout/ContentWrapper";
