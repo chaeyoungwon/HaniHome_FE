@@ -8,7 +8,7 @@ import {
   PERIOD_LIMITS,
 } from "@/constants/time-options";
 
-import { TimeSlot } from "@/types/listingDetail";
+import { TimeSlot } from "@/types/listingDetailPost";
 
 type Period = (typeof PERIODS)[number];
 
