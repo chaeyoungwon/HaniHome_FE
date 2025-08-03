@@ -35,8 +35,9 @@ const ListingCreateClient = () => {
 
   return (
     <Funnel step={step}>
-      <Funnel.Step name="ListingType">
+      <Funnel.Step name="listingType">
         <ListingType
+          variant="create"
           onSelectType={type => {
             setListingType(type);
             onNextStep();
@@ -44,7 +45,7 @@ const ListingCreateClient = () => {
         />
       </Funnel.Step>
 
-      <Funnel.Step name="AddressPhoto">
+      <Funnel.Step name="addressPhoto">
         <AddressPhoto
           subStep={subStep === "address" ? "address" : "photo"}
           onNext={onNextStep}
@@ -52,26 +53,26 @@ const ListingCreateClient = () => {
         />
       </Funnel.Step>
 
-      <Funnel.Step name="ListingDetails">
+      <Funnel.Step name="listingDetails">
         <ListingDetails onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
 
-      <Funnel.Step name="MovingConditions">
+      <Funnel.Step name="movingConditions">
         <MovingCondition onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
-      <Funnel.Step name="ContractTerms">
+      <Funnel.Step name="contractTerms">
         <ContractTerms onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
 
-      <Funnel.Step name="ListingDescription">
+      <Funnel.Step name="listingDescription">
         <ListingDescription onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
 
-      <Funnel.Step name="CreateConfirm">
+      <Funnel.Step name="createConfirm">
         <CreateConfirm onNext={onNextStep} onPrev={onPrevStep} />
       </Funnel.Step>
 
-      <Funnel.Step name="CreateSuccess">
+      <Funnel.Step name="createSuccess">
         <CreateSuccess />
       </Funnel.Step>
     </Funnel>

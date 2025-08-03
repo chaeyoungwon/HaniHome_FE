@@ -5,7 +5,7 @@ import Section from "@/components/listings/shared/Section";
 import { CAPACITY_RENT_LABEL_MAP } from "@/constants/capacity-options";
 import { RENT_TYPE_MAP } from "@/constants/housing-options";
 
-import { RentPropertySubType } from "@/types/listingDetail";
+import { RentPropertySubType } from "@/types/listingDetailPost";
 import { RentProperty } from "@/types/property";
 
 import PersonIcon from "@/public/svgs/common/mypage-icon.svg";

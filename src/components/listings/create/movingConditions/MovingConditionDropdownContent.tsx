@@ -5,7 +5,7 @@ import { COMMON_MOVING_CONDITIONS } from "@/constants/question-map";
 
 import { MovingConditionsOption } from "@/types/createPropertyAnswer";
 
-import AvailableOptionsContent from "./AvailableOptionsContent";
+import AdditionalInfoContent from "./AdditionalInfoContent";
 import GenderPreferenceContent from "./GenderPreferenceContent";
 import LivingConditionsContent from "./LivingConditionsContent";
 import MoveInfoContent from "./MoveInfoContent";
@@ -50,9 +50,9 @@ const MovingConditionDropdownContent = ({
         />
       );
 
-    case "availableOptions":
+    case "additionalInfo":
       return (
-        <AvailableOptionsContent
+        <AdditionalInfoContent
           options={additionalInfoOptions}
           defaultValue={optionItemIds}
           onSelect={selectedIds => {

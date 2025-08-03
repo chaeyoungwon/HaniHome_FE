@@ -12,14 +12,18 @@ import { AxiosError } from "axios";
 import {
   completeTrade,
   deleteProperty,
+  fetchPropertyDetaiEditlList,
   fetchPropertyDetailList,
   fetchPropertyList,
   getMyDeals,
   getMyPropertiesWithFilter,
   patchDisplayStatus,
   patchProperty,
+  postProperty,
 } from "@/apis/property";
 
+import { PropertyDetail } from "@/types/listingDetailGet";
+import { PropertyDetail as PropertyDetailPost } from "@/types/listingDetailPost";
 import {
   MyPropertiesParams,
   Property,
@@ -43,6 +47,17 @@ export const usePropertyDetailList = (propertyId: string) => {
   return useQuery<Property, AxiosError<PropertyErrorResponse>>({
     queryKey: ["propertyDetailList", propertyId],
     queryFn: () => fetchPropertyDetailList(propertyId),
+    enabled: !!propertyId,
+    staleTime: 0,
+    retry: false,
+    refetchOnMount: true,
+  });
+};
+
+export const usePropertyDetailEditList = (propertyId: string) => {
+  return useQuery<PropertyDetail, AxiosError<PropertyErrorResponse>>({
+    queryKey: ["propertyDetailList", propertyId],
+    queryFn: () => fetchPropertyDetaiEditlList(propertyId),
     enabled: !!propertyId,
     staleTime: 0,
     retry: false,
@@ -144,5 +159,18 @@ export const useMyDeals = (dealerType: "DEAL_AS_GUEST") => {
   return useQuery<SummaryProperty[]>({
     queryKey: ["myDeals", dealerType],
     queryFn: () => getMyDeals(dealerType),
+  });
+};
+
+export const usePostProperty = () => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (payload: PropertyDetailPost) => postProperty(payload),
+    onSuccess: data => {
+      queryClient.invalidateQueries({ queryKey: ["my-properties"] });
+      router.push(`/listings/${data.id}`);
+    },
   });
 };

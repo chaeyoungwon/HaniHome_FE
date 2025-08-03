@@ -22,7 +22,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetail";
+} from "@/types/listingDetailPost";
 
 // Props 정의
 type ValueOf<T extends ListingDetailsOption["type"]> = Extract<

@@ -29,7 +29,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetail";
+} from "@/types/listingDetailPost";
 
 interface CategoryContentProps {
   keyName: string;

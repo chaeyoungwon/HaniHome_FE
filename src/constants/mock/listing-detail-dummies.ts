@@ -1,4 +1,4 @@
-import { PropertyDetail } from "@/types/listingDetail";
+import { PropertyDetail } from "@/types/listingDetailPost";
 
 export const propertyInfo: PropertyDetail[] = [
   {
@@ -39,8 +39,8 @@ export const propertyInfo: PropertyDetail[] = [
     moveInInfo: {
       availableFrom: "2025-11-01T00:00:00",
       availableTo: "2026-10-31T23:59:59",
-      isImmediate: false,
-      isNegotiable: false,
+      immediate: false,
+      negotiable: false,
     },
     meetingDateFrom: "2025-10-25",
     meetingDateTo: "2025-10-30",
@@ -103,8 +103,8 @@ export const propertyInfo: PropertyDetail[] = [
     moveInInfo: {
       availableFrom: "2025-10-01T00:00:00",
       availableTo: "2026-09-30T23:59:59",
-      isImmediate: true, //즉시 입주 가능 여부
-      isNegotiable: false, //입주 일자 협의 가능 여부
+      immediate: true, //즉시 입주 가능 여부
+      negotiable: false, //입주 일자 협의 가능 여부
     },
     meetingDateFrom: "2025-09-25",
     meetingDateTo: "2025-09-30",

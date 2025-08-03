@@ -3,7 +3,7 @@ import { RENT_TYPE_MAP, SHARE_TYPE_MAP } from "@/constants/housing-options";
 import {
   RentPropertySubType,
   SharePropertySubType,
-} from "@/types/listingDetail";
+} from "@/types/listingDetailPost";
 import { FilteredPropertyParams } from "@/types/property";
 
 interface ParamsInput {

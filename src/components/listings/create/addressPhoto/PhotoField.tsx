@@ -1,3 +1,5 @@
+import { useParams, useRouter } from "next/navigation";
+
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
@@ -19,11 +21,15 @@ import BottomSheet from "./BottomSheet";
 const MAX_IMAGE_COUNT = 10;
 
 interface PhotoFieldProps {
-  onNext: () => void;
-  onPrev: () => void;
+  onNext?: () => void;
+  onPrev?: () => void;
+  edit?: boolean;
 }
 
-const PhotoField = ({ onNext }: PhotoFieldProps) => {
+const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
+  const router = useRouter();
+  const { id } = useParams();
+
   const { photoUrls, setPhotoUrls } = useListingStore();
   const [previewUrls, setPreviewUrls] = useState<string[]>(photoUrls); // 이미지 URL 미리보기
   const [, setUploadedFiles] = useState<File[]>([]); // 실제 파일 객체
@@ -119,25 +125,34 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
       </div>
 
       {isOpen && <BottomSheet onClose={() => setIsOpen(false)} />}
+      {!edit ? (
+        <BottomActionBar
+          buttons={[
+            {
+              label: "저장",
+              onClick: () => {
+                //Todo: 저장 로직 추가
+                console.log("저장");
+              },
+              variant: "outline",
 
-      <BottomActionBar
-        buttons={[
-          {
-            label: "저장",
-            onClick: () => {
-              // Save logic or transition
-              console.log("저장");
             },
-            variant: "outline",
-          },
-          {
-            label: "다음",
-            onClick: onNext,
-            variant: "filled",
-            disabled: previewUrls.length < 3,
-          },
-        ]}
-      />
+            {
+              label: "다음",
+              onClick: () => {
+                if (onNext) onNext();
+              },
+              variant: "filled",
+              disabled: previewUrls.length < 3,
+            },
+          ]}
+        />
+      ) : (
+        <BottomActionBar
+          label="저장"
+          onClick={() => router.push(`/listings/${id}/edit`)}
+        />
+      )}
 
       {showErrorModal && (
         <ImageAlertModal onClose={() => setShowErrorModal(false)} />

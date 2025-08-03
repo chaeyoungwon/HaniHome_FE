@@ -15,7 +15,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetail";
+} from "@/types/listingDetailPost";
 
 type GetAnswerValueReturn =
   | RentInternalDetails

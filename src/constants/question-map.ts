@@ -18,7 +18,7 @@ export const COMMON_MOVING_CONDITIONS = [
     options: ["availableFrom", "availableTo", "isImmediate", "isNegotiable"],
   },
   {
-    id: "availableOptions",
+    id: "additionalInfo",
     label: "다음 항목이 가능한지 알려주세요",
     options: {
       흡연자: ["가능", "불가능"],

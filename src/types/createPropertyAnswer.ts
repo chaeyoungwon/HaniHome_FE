@@ -10,7 +10,7 @@ import {
   ShareInternalDetails,
   SharePropertySubType,
   TimeSlot,
-} from "./listingDetail";
+} from "./listingDetailPost";
 
 export type MovingConditionsOption =
   | { type: "genderPreference"; value: GenderPreference | null }

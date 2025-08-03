@@ -7,7 +7,7 @@ import TimeSpinner from "@/components/common/calendar/TimeSpinner";
 
 import { PERIODS, PERIOD_LIMITS } from "@/constants/time-options";
 
-import { TimeSlot } from "@/types/listingDetail";
+import { TimeSlot } from "@/types/listingDetailPost";
 
 interface TimeSlotFieldProps {
   value: TimeSlot[];

@@ -1,6 +1,6 @@
 import CheckIcon from "@/components/common/CheckIcon";
 
-import { LivingConditions } from "@/types/listingDetail";
+import { LivingConditions } from "@/types/listingDetailPost";
 
 interface LivingConditionsContentProps {
   value?: LivingConditions | null;
@@ -78,9 +78,9 @@ const LivingConditionsContent = ({
           }`}
         />
         <button
-        onClick={() =>
-          handleChange("contractExtendable", !value?.contractExtendable)
-        }
+          onClick={() =>
+            handleChange("contractExtendable", !value?.contractExtendable)
+          }
           className="flex cursor-pointer items-center gap-1"
         >
           <CheckIcon checked={!!value?.contractExtendable} />

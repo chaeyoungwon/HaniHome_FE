@@ -1,28 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+
+import { useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 import clsx from "clsx";
 
+import { fetchPlaceDetails, fetchPlaceSuggestions } from "@/apis/googlePlaces";
+
 import BottomActionBar from "@/components/common/BottomActionBar";
 import GoogleMap from "@/components/common/GoogleMap";
 
-import { PropertyRegion } from "@/types/listingDetail";
+import { PropertyRegion } from "@/types/listingDetailPost";
 
 import SearchIcon from "@/public/svgs/common/search-icon.svg";
 
-interface AddressFieldProps {
-  onNext: () => void;
+interface AddressComponent {
+  long_name: string;
+  short_name: string;
+  types: string[];
 }
 
-const AddressField = ({ onNext }: AddressFieldProps) => {
+interface AddressFieldProps {
+  onNext?: () => void;
+  edit?: boolean;
+}
+
+const AddressField = ({ onNext, edit }: AddressFieldProps) => {
   const {
     region: addressData,
     setRegion: setAddressData,
     searchKeyword,
     setSearchKeyword,
   } = useListingStore();
+
   const [isFocused, setIsFocused] = useState(false);
   const [isSearchClicked, setIsSearchClicked] = useState(false);
 
@@ -31,22 +43,59 @@ const AddressField = ({ onNext }: AddressFieldProps) => {
   const [selectedAddress, setSelectedAddress] = useState<PropertyRegion | null>(
     null,
   );
+  const [suggestions, setSuggestions] = useState<
+    { placeId: string; text: string }[]
+  >([]);
+  const router = useRouter();
+  const { id } = useParams();
 
-  const handleSearchClick = () => {
-    const fakeAddress: PropertyRegion = {
-      country: "Australia",
-      postCode: "2000",
-      state: "NSW",
-      suburb: "Sydney",
-      streetName: searchKeyword,
-      streetNumber: "123",
-      unit: "33",
-      buildingName: "maru",
-      longitude: 151.2093,
-      latitude: -33.8688,
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    if (!searchKeyword.trim()) {
+      setSuggestions([]);
+      return;
+    }
+
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    fetchPlaceSuggestions(searchKeyword, controller.signal).then(results => {
+      setSuggestions(results);
+    });
+
+    return () => {
+      controller.abort();
     };
-    setSelectedAddress(fakeAddress);
-    setAddressData(fakeAddress);
+  }, [searchKeyword]);
+
+  const handleSelectSuggestion = async (placeId: string, text: string) => {
+    setSearchKeyword(text);
+    setSuggestions([]);
+
+    const details = await fetchPlaceDetails(placeId);
+    if (!details) return;
+
+    const addressComponents = details.address_components as AddressComponent[];
+    const getComponent = (type: string) =>
+      addressComponents.find(c => c.types.includes(type))?.long_name || "";
+
+    const region: PropertyRegion = {
+      country: getComponent("country"),
+      state: getComponent("administrative_area_level_1"),
+      suburb: getComponent("locality") || getComponent("sublocality"),
+      postCode: getComponent("postal_code"),
+      streetName: getComponent("route"),
+      streetNumber: getComponent("street_number"),
+      unit: "",
+      buildingName: "",
+      latitude: details.geometry.location.lat,
+      longitude: details.geometry.location.lng,
+    };
+
+    setAddressData(region);
+    setSelectedAddress(region);
     setIsSearchClicked(true);
   };
 
@@ -70,6 +119,7 @@ const AddressField = ({ onNext }: AddressFieldProps) => {
     return isFocused ? "border-gray-900" : "border-gray-600";
   };
 
+  console.log(addressData);
   return (
     <div className="flex flex-col gap-2">
       <div className="text-heading3 px-4 py-4 text-gray-900">
@@ -101,9 +151,27 @@ const AddressField = ({ onNext }: AddressFieldProps) => {
                   ? "text-gray-600"
                   : "text-gray-400",
               )}
-              onClick={handleSearchClick}
+              onClick={() => setIsSearchClicked(true)}
             />
           </div>
+
+          {isFocused && suggestions.length > 0 && (
+            <ul className="absolute z-10 max-h-48 w-[343px] overflow-y-auto rounded border bg-white px-2">
+              {suggestions.map(item => (
+                <li
+                  key={item.placeId}
+                  className="cursor-pointer py-2 hover:bg-gray-100"
+                  onMouseDown={e => {
+                    e.preventDefault();
+                    handleSelectSuggestion(item.placeId, item.text);
+                  }}
+                >
+                  {item.text}
+                </li>
+              ))}
+            </ul>
+          )}
+
           {isFocused && !addressData.streetName && (
             <div className="text-cap1-med text-red">
               주소는 수정이 불가능하니 정확히 확인해주세요
@@ -206,7 +274,14 @@ const AddressField = ({ onNext }: AddressFieldProps) => {
               </div>
             </div>
           </div>
-          <BottomActionBar label="다음" variant="outline" onClick={onNext} />
+          {!edit ? (
+            <BottomActionBar label="다음" variant="outline" onClick={onNext} />
+          ) : (
+            <BottomActionBar
+              label="저장"
+              onClick={() => router.push(`/listings/${id}/edit`)}
+            />
+          )}
         </>
       )}
     </div>

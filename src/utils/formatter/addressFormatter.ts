@@ -1,4 +1,4 @@
-import { PropertyRegion } from "@/types/listingDetail";
+import { PropertyRegion } from "@/types/listingDetailPost";
 
 export const formatAddress = (region: PropertyRegion): string => {
   const {

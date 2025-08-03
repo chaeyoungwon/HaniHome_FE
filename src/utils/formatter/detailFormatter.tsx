@@ -23,7 +23,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetail";
+} from "@/types/listingDetailPost";
 
 import { formatDateToMonthDay } from "./dateFormatter";
 
@@ -283,11 +283,11 @@ export const formatMoveInDates = (
 ) => {
   if (!moveInInfo) return <div>N/A</div>;
   const moveInText =
-    moveInInfo.isImmediate && moveInInfo.isNegotiable
+    moveInInfo.immediate && moveInInfo.negotiable
       ? "즉시 입주 가능, 협의 가능"
-      : moveInInfo.isImmediate
+      : moveInInfo.immediate
         ? "즉시 입주 가능"
-        : moveInInfo.isNegotiable
+        : moveInInfo.negotiable
           ? "협의 가능"
           : "";
 
@@ -302,7 +302,7 @@ export const formatMoveInDates = (
           </span>
         </div>
       </div>
-      {(moveInInfo.isImmediate || moveInInfo.isNegotiable) && (
+      {(moveInInfo.immediate || moveInInfo.negotiable) && (
         <div className="flex items-center justify-end py-2">{moveInText}</div>
       )}
     </div>

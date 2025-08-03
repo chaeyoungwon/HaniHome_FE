@@ -52,8 +52,8 @@ export interface LivingConditions {
 export interface MoveInInfo {
   availableFrom: string;
   availableTo: string;
-  isImmediate: boolean;
-  isNegotiable: boolean;
+  immediate: boolean;
+  negotiable: boolean;
 }
 
 export interface TimeSlot {

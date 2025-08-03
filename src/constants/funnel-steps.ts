@@ -1,20 +1,20 @@
 export const FUNNEL_FLOW = [
-  { step: "ListingType" },
+  { step: "listingType" },
   {
-    step: "AddressPhoto",
+    step: "addressPhoto",
     subSteps: ["address", "photo"],
   },
-  { step: "ListingDetails" },
-  { step: "MovingConditions" },
-  { step: "ContractTerms" },
-  { step: "ListingDescription" },
-  { step: "CreateConfirm" },
-  { step: "CreateSuccess" },
+  { step: "listingDetails" },
+  { step: "movingConditions" },
+  { step: "contractTerms" },
+  { step: "listingDescription" },
+  { step: "createConfirm" },
+  { step: "createSuccess" },
 ] as const;
 
 export const FUNNEL_STEPS_LABEL = [
-  { key: "AddressPhoto", label: "주소와 사진" },
-  { key: "ListingDetails", label: "매물 상세" },
-  { key: "MovingConditions", label: "입주 조건" },
-  { key: "ContractTerms", label: "계약 사항" },
+  { key: "addressPhoto", label: "주소와 사진" },
+  { key: "listingDetails", label: "매물 상세" },
+  { key: "movingConditions", label: "입주 조건" },
+  { key: "contractTerms", label: "계약 사항" },
 ] as const;

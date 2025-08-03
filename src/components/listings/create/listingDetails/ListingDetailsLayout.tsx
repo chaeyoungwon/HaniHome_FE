@@ -26,7 +26,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetail";
+} from "@/types/listingDetailPost";
 
 import ListingDetailsDropdownContent from "./ListingDetailsDropdownContent";
 

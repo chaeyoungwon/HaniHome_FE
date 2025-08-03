@@ -4,17 +4,17 @@ interface OptionItem {
   optionId: number;
   label: string;
 }
-interface AvailableOptionsContentProps {
+interface AdditionalInfoContentProps {
   options: Record<string, readonly OptionItem[]>;
   defaultValue?: number[];
   onSelect: (selectedIds: number[]) => void;
 }
 
-const AvailableOptionsContent = ({
+const AdditionalInfoContent = ({
   options,
   defaultValue = [],
   onSelect,
-}: AvailableOptionsContentProps) => {
+}: AdditionalInfoContentProps) => {
   const [selectedIds, setSelectedIds] = useState<number[]>(defaultValue);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const AvailableOptionsContent = ({
         id => !categoryOptionIds.includes(id),
       );
       nextSelected = selectedIds.includes(optionId)
-        ? filtered 
+        ? filtered
         : [...filtered, optionId];
     }
 
@@ -79,4 +79,4 @@ const AvailableOptionsContent = ({
   );
 };
 
-export default AvailableOptionsContent;
+export default AdditionalInfoContent;

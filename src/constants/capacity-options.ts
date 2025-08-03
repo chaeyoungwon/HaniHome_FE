@@ -10,7 +10,7 @@ export const CAPACITY_RENT_MAP = {
   TWO: "2명",
   THREE: "3명",
   FOUR: "4명",
-  OTHER: "기타 (5명 이상)",
+  OTHER: "기타(5명 이상)",
 } as const;
 
 // 상세 페이지에서 사용하는 라벨 맵

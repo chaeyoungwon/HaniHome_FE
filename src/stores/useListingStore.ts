@@ -13,7 +13,7 @@ import {
   ShareInternalDetails,
   SharePropertySubType,
   TimeSlot,
-} from "@/types/listingDetail";
+} from "@/types/listingDetailPost";
 
 interface ListingState {
   listingType: "SHARE" | "RENT" | null;
@@ -149,8 +149,8 @@ const initialState = {
   moveInInfo: {
     availableFrom: "",
     availableTo: "",
-    isImmediate: false,
-    isNegotiable: false,
+    immediate: false,
+    negotiable: false,
   },
   livingConditions: null,
   isSquareMeter: false,

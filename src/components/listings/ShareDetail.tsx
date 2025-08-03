@@ -3,7 +3,7 @@ import Section from "@/components/listings/shared/Section";
 
 import { SHARE_TYPE_MAP } from "@/constants/housing-options";
 
-import { SharePropertySubType } from "@/types/listingDetail";
+import { SharePropertySubType } from "@/types/listingDetailPost";
 import { ShareProperty } from "@/types/property";
 
 import HomeIcon from "@/public/svgs/common/home-icon.svg";

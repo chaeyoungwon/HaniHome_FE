@@ -7,9 +7,12 @@ import ShareIcon from "@/public/svgs/listings/share-icon.svg";
 
 interface ListingTypeProps {
   onSelectType: (type: "SHARE" | "RENT") => void;
+  variant?: "create" | "edit";
 }
-const ListingType = ({ onSelectType }: ListingTypeProps) => {
-
+const ListingType = ({
+  onSelectType,
+  variant = "create",
+}: ListingTypeProps) => {
   const { listingType, setListingType } = useListingStore();
   const handleClick = (type: "SHARE" | "RENT") => {
     setListingType(type);
@@ -21,8 +24,14 @@ const ListingType = ({ onSelectType }: ListingTypeProps) => {
       <BackHeader />
       <div className="py-9">
         <div className="gray-900 text-heading2 px-4 py-3">
-          반가워요!
-          <br /> 어떤 매물을 내놓을까요?
+          {variant == "create" ? (
+            <>
+              반가워요!
+              <br /> 어떤 매물을 내놓을까요?
+            </>
+          ) : (
+            <>어떤 매물을 내놓을까요?</>
+          )}
         </div>
         <div className="flex items-center justify-center gap-6 px-4 py-8">
           {/*쉐어 */}

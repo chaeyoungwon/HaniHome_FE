@@ -1,6 +1,8 @@
 import AvailableDatePicker from "@/components/home/filter/AvailableDatePicker";
 
-import { MoveInInfo } from "@/types/listingDetail";
+
+import { MoveInInfo } from "@/types/listingDetailPost";
+
 
 interface MoveInfoContentProps {
   value: MoveInInfo;
@@ -24,21 +26,21 @@ const MoveInfoContent = ({ value, onSelect }: MoveInfoContentProps) => {
   const toggleImmediate = () =>
     onSelect({
       ...value,
-      isImmediate: !value.isImmediate,
+      immediate: !value.immediate,
     });
 
   const toggleNegotiable = () =>
     onSelect({
       ...value,
-      isNegotiable: !value.isNegotiable,
+      negotiable: !value.negotiable,
     });
 
   return (
     <AvailableDatePicker
       availableFrom={value.availableFrom}
       availableTo={value.availableTo}
-      immediate={value.isImmediate}
-      negotiable={value.isNegotiable}
+      immediate={value.immediate}
+      negotiable={value.negotiable}
       onDateChange={handleDateChange}
       onImmediateToggle={toggleImmediate}
       onNegotiableToggle={toggleNegotiable}
