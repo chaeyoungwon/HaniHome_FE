@@ -43,6 +43,14 @@ export const metadata: Metadata = {
     siteName: "하니홈",
     type: "website",
     url: "https://www.hanihome.app",
+    images: [
+      {
+        url: "/images/open-graph.png",
+        width: 1200,
+        height: 630,
+        alt: "하니홈 오픈그래프 이미지",
+      },
+    ],
   },
   creator: "HaniHome",
   publisher: "HaniHome",
