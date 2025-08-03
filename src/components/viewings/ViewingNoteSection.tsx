@@ -5,6 +5,8 @@ import { putViewingPropertyNotes } from "@/apis/viewing";
 
 import { useViewingDetail } from "@/hooks/viewing/useViewing";
 
+import { uploadFilesToPresignedUrls } from "@/utils/images/uploadFilesToPresignedUrls";
+
 import Divider from "@/components/common/Divider";
 import ImagePreviewSection from "@/components/common/ImagePreviewSection";
 import TextareaField from "@/components/common/TextareaField";
@@ -41,17 +43,7 @@ const ViewingNoteSection = forwardRef(
         );
         const presignedUrls = await getPropertyNotePresignedUrl(extensions);
 
-        await Promise.all(
-          presignedUrls.map((item, idx) =>
-            fetch(item.presignedUrl, {
-              method: "PUT",
-              headers: {
-                "Content-Type": newFiles[idx].type,
-              },
-              body: newFiles[idx],
-            }),
-          ),
-        );
+        await uploadFilesToPresignedUrls(newFiles, presignedUrls);
 
         const fileUrls = [
           ...existingImages, // 기존 이미지 유지

@@ -6,12 +6,9 @@ import clsx from "clsx";
 
 import { getProfilePresignedUrl } from "@/apis/s3Upload";
 
-import {
-  ALLOWED_IMAGE_TYPES,
-  IMAGE_MIME_TO_EXT,
-  MAX_IMAGE_SIZE_MB,
-  PROFILE_IMAGE_SIZE_CLASS,
-} from "@/constants/profile-uploader";
+import { useSingleImageUpload } from "@/hooks/common/useSingleImageUpload";
+
+import { PROFILE_IMAGE_SIZE_CLASS } from "@/constants/profile-uploader";
 
 import PlusIcon from "@/public/svgs/common/plus-icon.svg";
 
@@ -44,41 +41,23 @@ const ProfileImageUploader = ({
     };
   }, [previewUrl]);
 
-  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const { handleSingleFileUpload } = useSingleImageUpload({
+    getPresignedUrl: getProfilePresignedUrl,
+    setShowErrorModal,
+    onUploadSuccess: (uploadedUrl: string) => {
+      setPreviewUrl(uploadedUrl);
+      onChange?.(uploadedUrl);
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    const isValidType = ALLOWED_IMAGE_TYPES.includes(file.type);
-    const isValidSize = file.size / 1024 / 1024 <= MAX_IMAGE_SIZE_MB;
-
-    if (!isValidType || !isValidSize) {
-      setShowErrorModal(true);
-      return;
+    if (file) {
+      const blobUrl = URL.createObjectURL(file);
+      setPreviewUrl(blobUrl); // 임시 프리뷰 먼저 표시
+      handleSingleFileUpload(file);
     }
-
-    // 프리뷰 표시용 blob URL
-    const preview = URL.createObjectURL(file);
-    setPreviewUrl(preview);
-
-    try {
-      // S3 presigned URL 받아오기
-      const ext = IMAGE_MIME_TO_EXT[file.type] || "jpg";
-      const { presignedUrl, fileUrl } = await getProfilePresignedUrl(ext);
-
-      // 실제 업로드
-      await fetch(presignedUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": file.type,
-        },
-        body: file,
-      });
-
-      setPreviewUrl(fileUrl);
-      onChange?.(fileUrl);
-    } catch (err) {
-      console.error("S3 업로드 실패", err);
-    }
+    e.target.value = ""; // 같은 파일 다시 선택 가능하도록 초기화
   };
 
   return (

@@ -34,3 +34,6 @@ export interface UpdateUserPayload {
   gender: Gender;
   profileImage: string | null;
 }
+
+// 인증 타입 enum
+export type VerificationType = "ID_CARD" | "PASSPORT" | "DRIVER_LICENSE";

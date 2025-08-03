@@ -9,7 +9,7 @@ const ExistVerifyKindAlertModal = ({
   return (
     <AlertModal
       title="이미 인증된 요청이에요"
-      description="이미 인증된 요청이에요"
+      description="동일한 인증수단을 재인증할 수 없어요"
       onClose={onClose}
     />
   );

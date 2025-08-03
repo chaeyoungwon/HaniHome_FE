@@ -6,30 +6,30 @@ import clsx from "clsx";
 
 import DropdownArrow from "@/public/svgs/common/down-arrow.svg";
 
-interface DropdownOption {
+export interface DropdownOption<T extends string = string> {
   label: string;
-  value: string;
+  value: T;
 }
 
-interface DropdownFieldProps {
+export interface DropdownFieldProps<T extends string = string> {
   label?: string;
-  value: string;
+  value: T;
   placeholder?: string;
-  options: DropdownOption[];
-  onChange: (value: string) => void;
+  options: DropdownOption<T>[];
+  onChange: (value: T) => void;
 }
 
-const DropdownField = ({
+function DropdownField<T extends string>({
   label,
   value: selectedValue,
   placeholder = "선택해주세요",
   options,
   onChange,
-}: DropdownFieldProps) => {
+}: DropdownFieldProps<T>) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleSelect = (e: React.MouseEvent, optionValue: string) => {
+  const handleSelect = (e: React.MouseEvent, optionValue: T) => {
     e.stopPropagation();
     onChange(optionValue);
     setIsDropdownOpen(false);
@@ -105,6 +105,6 @@ const DropdownField = ({
       </div>
     </div>
   );
-};
+}
 
 export default DropdownField;

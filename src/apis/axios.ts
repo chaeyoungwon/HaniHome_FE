@@ -53,6 +53,8 @@ axiosInstance.interceptors.response.use(
       (resData?.serviceCode === "INVALID_REFRESH_TOKEN" ||
         resData?.data?.codeName === "INVALID_REFRESH_TOKEN");
 
+    const isInvalidToken =
+      res?.status === 400 && resData?.serviceCode === "INVALID_TOKEN";
     const originalRequest = error.config;
 
     if (isAccessTokenExpired && authHeader?.startsWith("Bearer ")) {
@@ -63,7 +65,7 @@ axiosInstance.interceptors.response.use(
       return axiosInstance(originalRequest);
     }
 
-    if (isRefreshTokenExpired) {
+    if (isRefreshTokenExpired || isInvalidToken) {
       clearAuth();
     }
 

@@ -1,12 +1,11 @@
 import { axiosInstance } from "@/apis/axios";
 
+import { VerificationType } from "@/types/auth";
+
 export interface PresignedUrlResponse {
   presignedUrl: string;
   fileUrl: string;
 }
-
-// 인증 타입 enum
-export type VerificationType = "ID_CARD" | "PASSPORT" | "DRIVER_LICENSE";
 
 // 프로필 이미지 업로드용 Presigned URL 요청
 export const getProfilePresignedUrl = async (
@@ -24,7 +23,7 @@ export const getProfilePresignedUrl = async (
 export const getVerificationPresignedUrl = async (
   type: VerificationType,
   fileExtensions: string[],
-): Promise<PresignedUrlResponse> => {
+): Promise<PresignedUrlResponse[]> => {
   const res = await axiosInstance.post(
     "/api/v1/s3/verifications/presigned-url",
     {
@@ -32,6 +31,17 @@ export const getVerificationPresignedUrl = async (
       fileExtensions,
     },
   );
+  return res.data.data;
+};
+
+// 매물 등록 이미지 업로드용 Presigned URL 요청
+export const getPropertyPresignedUrl = async (
+  fileExtensions: string[],
+): Promise<PresignedUrlResponse[]> => {
+  const res = await axiosInstance.post("/api/v1/s3/properties/presigned-url", {
+    fileExtensions,
+  });
+
   return res.data.data;
 };
 

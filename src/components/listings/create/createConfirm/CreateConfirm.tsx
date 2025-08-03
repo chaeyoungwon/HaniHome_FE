@@ -14,7 +14,7 @@ interface CreateConfirmProps {
   onNext: () => void;
   onPrev: () => void;
 }
-const CreateConfrim = ({ onNext }: CreateConfirmProps) => {
+const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
   const {
     listingType,
     region,
@@ -121,4 +121,4 @@ const CreateConfrim = ({ onNext }: CreateConfirmProps) => {
     </div>
   );
 };
-export default CreateConfrim;
+export default CreateConfirm;

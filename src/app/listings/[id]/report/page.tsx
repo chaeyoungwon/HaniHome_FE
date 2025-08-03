@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import { postReport } from "@/apis/property";
 import { getReportPresignedUrls } from "@/apis/s3Upload";
 
+import { uploadFilesToPresignedUrls } from "@/utils/images/uploadFilesToPresignedUrls";
+
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import CheckIcon from "@/components/common/CheckIcon";
@@ -83,17 +85,8 @@ const ListingReportPage = () => {
         "PROPERTY",
         extensions,
       );
-      await Promise.all(
-        presignedUrls.map((item, idx) =>
-          fetch(item.presignedUrl, {
-            method: "PUT",
-            headers: {
-              "Content-Type": newFiles[idx].type,
-            },
-            body: newFiles[idx],
-          }),
-        ),
-      );
+      await uploadFilesToPresignedUrls(newFiles, presignedUrls);
+
       await postReport({
         targetId: propertyId,
         targetType: "PROPERTY",

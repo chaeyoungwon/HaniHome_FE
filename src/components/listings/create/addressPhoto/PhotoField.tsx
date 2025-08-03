@@ -2,7 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 
-import { uploadMultipleImages } from "@/utils/images/uploadMultipleImages";
+import { getPropertyPresignedUrl } from "@/apis/s3Upload";
+
+import useMultipleImageUpload from "@/hooks/common/useMultipleImageUpload";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -14,23 +16,32 @@ import QuestionMarkIcon from "@/public/svgs/listings/question-mark-icon.svg";
 
 import BottomSheet from "./BottomSheet";
 
+const MAX_IMAGE_COUNT = 10;
+
 interface PhotoFieldProps {
   onNext: () => void;
   onPrev: () => void;
 }
 
-const MAX_IMAGE_COUNT = 10;
-
 const PhotoField = ({ onNext }: PhotoFieldProps) => {
   const { photoUrls, setPhotoUrls } = useListingStore();
-  const [previewUrls, setPreviewUrls] = useState<string[]>(photoUrls);
+  const [previewUrls, setPreviewUrls] = useState<string[]>(photoUrls); // 이미지 URL 미리보기
+  const [, setUploadedFiles] = useState<File[]>([]); // 실제 파일 객체
 
   const [isOpen, setIsOpen] = useState(false);
-  const [, setUploadedFiles] = useState<File[]>([]);
   const [showErrorModal, setShowErrorModal] = useState(false);
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [, setAlertMessage] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { handleFileChange, alertMessage: uploadAlertMessage } =
+    useMultipleImageUpload({
+      maxImageCount: MAX_IMAGE_COUNT,
+      setPreviewUrls,
+      setUploadedFiles, // File 객체 저장
+      getPresignedUrls: getPropertyPresignedUrl,
+      setShowErrorModal,
+    });
 
   const handleClickUpload = useCallback(() => {
     fileInputRef.current?.click();
@@ -38,53 +49,18 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
 
   const handleRemoveImage = useCallback((index: number) => {
     setPreviewUrls(prev => prev.filter((_, i) => i !== index));
-    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index)); // 실제 파일 객체도 삭제
   }, []);
-
-  const handleFileChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files;
-      if (!files || files.length === 0) return;
-
-      const totalCount = previewUrls.length + files.length;
-
-      if (totalCount > MAX_IMAGE_COUNT) {
-        setAlertMessage(
-          `이미지는 최대 ${MAX_IMAGE_COUNT}장까지 업로드할 수 있어요.`,
-        );
-        e.target.value = "";
-        return;
-      }
-
-      try {
-        await uploadMultipleImages({
-          files,
-          setPreviewUrls,
-          setUploadedFiles,
-          setField: (_key, value) => setUploadedFiles(value),
-          fieldName: "unused",
-          setShowErrorModal,
-          maxFiles: MAX_IMAGE_COUNT,
-        });
-      } catch (error) {
-        console.error("이미지 업로드 중 에러 발생:", error);
-        setShowErrorModal(true);
-      }
-
-      e.target.value = "";
-    },
-    [previewUrls, setPhotoUrls, setUploadedFiles],
-  );
 
   useEffect(() => {
     if (photoUrls.length > 0) {
       setPreviewUrls(photoUrls);
     }
-  }, []);
+  }, [photoUrls]);
 
   useEffect(() => {
     if (previewUrls.length > 0) {
-      setPhotoUrls(previewUrls);
+      setPhotoUrls(previewUrls); // 이미지 URL을 업데이트
     }
   }, [previewUrls]);
 
@@ -130,7 +106,7 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
         accept="image/png, image/jpeg"
         className="hidden"
         ref={fileInputRef}
-        onChange={handleFileChange}
+        onChange={e => handleFileChange(e, previewUrls)}
       />
       <div className="px-4">
         {previewUrls.length > 0 && (
@@ -149,7 +125,7 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
           {
             label: "저장",
             onClick: () => {
-              //Todo: 저장 로직 추가
+              // Save logic or transition
               console.log("저장");
             },
             variant: "outline",
@@ -167,9 +143,9 @@ const PhotoField = ({ onNext }: PhotoFieldProps) => {
         <ImageAlertModal onClose={() => setShowErrorModal(false)} />
       )}
 
-      {alertMessage && (
+      {uploadAlertMessage && (
         <AlertMessage
-          message={alertMessage}
+          message={uploadAlertMessage}
           className="bottom-17"
           onDone={() => setAlertMessage(null)}
         />
