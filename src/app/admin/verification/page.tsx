@@ -1,31 +1,46 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Verification } from "../components/types/verification";
+import { Verification, VerificationDetail } from "../components/types/verification";
+import VerificationDetailModal from "../components/verification/VerificationDetailModal";
 
 
 
 
-const mockData: Verification[] = [
-    {
-      id: 0,
-      type: "ID_CARD",
-      status: "PENDING",
-      requestedAt: "2025-07-18T13:59:28.276Z",
-      memberId: 123,
-    },
-    {
-      id: 1,
-      type: "PASSPORT",
-      status: "APPROVED",
-      requestedAt: "2025-07-16T10:25:00.000Z",
-      memberId: 456,
-    },
-  ]; 
+const mockData: VerificationDetail[] = [
+  {
+    id: 0,
+    type: "ID_CARD",
+    status: "PENDING",
+    requestedAt: "2025-07-18T13:59:28.276Z",
+    memberId: 123,
+    documentImageUrls: ["/sample-id.jpg"], // 예시 이미지
+  },
+  {
+    id: 1,
+    type: "PASSPORT",
+    status: "APPROVED",
+    requestedAt: "2025-07-16T10:25:00.000Z",
+    memberId: 456,
+    documentImageUrls: ["/sample-passport.jpg"],
+    approvedAt: "2025-07-17T08:30:00.000Z",
+  },
+  {
+    id: 2,
+    type: "DRIVER_LICENSE",
+    status: "REJECTED",
+    requestedAt: "2025-07-15T09:00:00.000Z",
+    memberId: 789,
+    documentImageUrls: ["/sample-license.jpg"],
+    rejectedAt: "2025-07-16T10:00:00.000Z",
+    rejectionReason: "사진이 너무 흐립니다.",
+  }
+];
 
 
 
 const AdminVerificationPage = () => {
     const [requests, setRequests] = useState<Verification[]>([]);
+    const [selectedVerification, setSelectedVerification] = useState<VerificationDetail | null>(null);
   
     useEffect(() => {
       // api 연동하겠습니다.
@@ -47,7 +62,9 @@ const AdminVerificationPage = () => {
           </thead>
           <tbody>
             {requests.map((item) => (
-              <tr key={item.id} className="border-b border-gray-100 hover:bg-gray-50">
+              <tr key={item.id}
+                  className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer"
+                  onClick={()=>setSelectedVerification(item as VerificationDetail)}>
                 <td className="py-2">{item.memberId}</td>
                 <td className="py-2">{item.type}</td>
                 <td className="py-2">{new Date(item.requestedAt).toLocaleString("ko-KR")}</td>
@@ -68,6 +85,16 @@ const AdminVerificationPage = () => {
             ))}
           </tbody>
         </table>
+        {/*모달*/}
+        {
+          selectedVerification && (
+            <VerificationDetailModal
+              data={selectedVerification}
+              onClose={() => setSelectedVerification(null)}
+            />
+
+          )
+        }
       </div>
     );
   };
