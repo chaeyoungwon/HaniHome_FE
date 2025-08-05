@@ -5,7 +5,7 @@ import {
   CAPACITY_SHARE_MAP,
 } from "@/constants/capacity-options";
 
-import { CapacityRent, CapacityShare } from "@/types/listingDetailPost";
+import { CapacityRent, CapacityShare } from "@/types/listingDetailPost.type";
 
 interface CapacityPeopleFieldProps {
   listingType: "RENT" | "SHARE";

@@ -4,7 +4,7 @@ import clsx from "clsx";
 
 import { listingDetailTabs } from "@/constants/listing-detail-tabs";
 
-import { Property } from "@/types/property";
+import { Property } from "@/types/property.type";
 
 interface DetailTabsProps {
   listingId: string;

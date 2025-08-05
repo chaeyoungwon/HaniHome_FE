@@ -1,9 +1,9 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
-import { getPropertyNotePresignedUrl } from "@/apis/s3Upload";
-import { putViewingPropertyNotes } from "@/apis/viewing";
+import { getPropertyNotePresignedUrl } from "@/apis/s3UploadApi";
+import { putViewingPropertyNotes } from "@/apis/viewingApi";
 
-import { useViewingDetail } from "@/hooks/viewing/useViewing";
+import { useViewingDetail } from "@/hooks/viewing/useViewingApi";
 
 import { uploadFilesToPresignedUrls } from "@/utils/images/uploadFilesToPresignedUrls";
 

@@ -4,7 +4,7 @@ import { formatAddress } from "@/utils/formatter/addressFormatter";
 
 import GoogleMap from "@/components/common/GoogleMap";
 
-import { PropertyRegion } from "@/types/listingDetailPost";
+import { PropertyRegion } from "@/types/listingDetailPost.type";
 
 interface AddressMapProps {
   region: PropertyRegion;

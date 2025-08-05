@@ -6,7 +6,7 @@ import AlertMessage from "@/components/common/AlertMessage";
 import BackHeader from "@/components/layout/header/BackHeader";
 import DetailTabs from "@/components/listings/DetailTabs";
 
-import { PropertyErrorResponse } from "@/types/property";
+import { PropertyErrorResponse } from "@/types/property.type";
 
 import ListingContentSkeleton from "./ListingContentSkeleton";
 

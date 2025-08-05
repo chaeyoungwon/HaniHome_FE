@@ -1,7 +1,7 @@
 import { useListingStore } from "@/stores/useListingStore";
 
-import { useMyInfo } from "@/hooks/member/useMember";
-import { usePostProperty } from "@/hooks/property/useProperty";
+import { useMyInfo } from "@/hooks/member/useMemberApi";
+import { usePostProperty } from "@/hooks/property/usePropertyApi";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import BackHeader from "@/components/layout/header/BackHeader";
@@ -11,7 +11,7 @@ import TitleSection from "@/components/listings/detailShow/TitleSection";
 
 import { propertyInfo } from "@/constants/mock/listing-detail-dummies";
 
-import { PropertyDetail } from "@/types/listingDetailPost";
+import { PropertyDetail } from "@/types/listingDetailPost.type";
 
 interface CreateConfirmProps {
   onNext: () => void;

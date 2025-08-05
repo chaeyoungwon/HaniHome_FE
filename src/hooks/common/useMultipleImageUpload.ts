@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { PresignedUrlResponse } from "@/apis/s3Upload";
+import { PresignedUrlResponse } from "@/apis/s3UploadApi";
 
 import { uploadFilesToPresignedUrls } from "@/utils/images/uploadFilesToPresignedUrls";
 

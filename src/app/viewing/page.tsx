@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
-import { useMyViewingList } from "@/hooks/viewing/useViewing";
+import { useMyViewingList } from "@/hooks/viewing/useViewingApi";
 
 import GuestLoginGuide from "@/components/common/GuestLoginGuide";
 import LoadingLottie from "@/components/common/LoadingLottie";
@@ -17,7 +17,7 @@ import ViewingConfirmedSection from "@/components/viewings/ViewingConfirmedSecti
 
 import { viewingTabs } from "@/constants/viewing-tabs";
 
-import { ViewingPropertyItem, ViewingStatus } from "@/types/viewing";
+import { ViewingPropertyItem, ViewingStatus } from "@/types/viewing.type";
 
 const Viewing = () => {
   const { isLoggedIn } = useAuthStore();

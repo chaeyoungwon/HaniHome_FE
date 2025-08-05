@@ -2,7 +2,7 @@ import { create } from "zustand";
 
 import { TimeLabel } from "@/constants/time-options";
 
-import { Schedule } from "@/types/schedule";
+import { Schedule } from "@/types/schedule.type";
 
 interface StorePerId {
   schedule: Schedule;

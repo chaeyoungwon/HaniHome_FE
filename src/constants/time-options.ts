@@ -1,4 +1,4 @@
-import { TimeSlot } from "@/types/listingDetailPost";
+import { TimeSlot } from "@/types/listingDetailPost.type";
 
 export type TimeLabel = "아침" | "점심" | "저녁";
 

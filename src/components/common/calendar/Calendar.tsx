@@ -6,7 +6,7 @@ import { enUS } from "date-fns/locale";
 
 import { useCalendarHandlers } from "@/hooks/calendar/useCalendarHandlers";
 
-import { CalendarProps, Range } from "@/types/calendar";
+import { CalendarProps, Range } from "@/types/calendar.type";
 
 import RightArrow from "@/public/svgs/common/right-filled-arrow.svg";
 

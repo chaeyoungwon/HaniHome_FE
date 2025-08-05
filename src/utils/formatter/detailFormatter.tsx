@@ -23,7 +23,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 import { formatDateToMonthDay } from "./dateFormatter";
 

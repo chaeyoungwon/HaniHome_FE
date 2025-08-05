@@ -1,10 +1,10 @@
 import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 
-import { useOptionItems } from "@/hooks/optionItem/useOptionItem";
+import { useOptionItems } from "@/hooks/optionItem/useOptionItemApi";
 import {
   usePutViewingChecklists,
   useViewingChecklists,
-} from "@/hooks/viewing/useViewing";
+} from "@/hooks/viewing/useViewingApi";
 
 import { groupOptionItemsByParent } from "@/utils/listing/groupOptionItemsByParent";
 

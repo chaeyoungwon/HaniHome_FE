@@ -1,0 +1,27 @@
+import { UpdateUserPayload } from "@/types/auth.type";
+import { Member } from "@/types/member.type";
+
+import { axiosInstance } from "./axios";
+
+// 내 정보 조회
+export const getMyInfo = async () => {
+  const res = await axiosInstance.get(`/api/v1/members/me`);
+  return res.data.data;
+};
+
+// 멤버 정보 조회
+export const getUserInfo = async (memberId: number): Promise<Member> => {
+  const res = await axiosInstance.get(`/api/v1/members/${memberId}`);
+  return res.data.data;
+};
+
+// 내 정보 수정
+export const updateUser = async (payload: UpdateUserPayload) => {
+  const res = await axiosInstance.patch("/api/v1/members/me", payload);
+  return res.data.data;
+};
+
+// 회원 탈퇴
+export const deleteUser = async () => {
+  await axiosInstance.delete(`/api/v1/members/me`);
+};

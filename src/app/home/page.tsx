@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useFilterStore } from "@/stores/useFilterStore";
 
-import { useMyInfo } from "@/hooks/member/useMember";
+import { useMyInfo } from "@/hooks/member/useMemberApi";
 
 import { extractSuburb } from "@/utils/address/extractSuburb";
 

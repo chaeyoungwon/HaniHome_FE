@@ -8,7 +8,7 @@ import SelectableChip from "@/components/common/SelectableChip";
 
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
-import { CostDetails } from "@/types/listingDetailPost";
+import { CostDetails } from "@/types/listingDetailPost.type";
 
 interface CostDetailFieldProps {
   value: CostDetails;

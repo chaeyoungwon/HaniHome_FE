@@ -13,7 +13,7 @@ import { GENDER_PREFERENCE_MAP } from "@/constants/gender-options";
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 import { COMMON_MOVING_CONDITIONS } from "@/constants/question-map";
 
-import { MovingConditionsOption } from "@/types/createPropertyAnswer";
+import { MovingConditionsOption } from "@/types/createPropertyAnswer.type";
 
 import MovingConditionDropdownContent from "./MovingConditionDropdownContent";
 
@@ -152,8 +152,7 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
     }
 
     if (itemId === "moveInInfo" && moveInInfo) {
-      const { availableFrom, availableTo, immediate, negotiable } =
-        moveInInfo;
+      const { availableFrom, availableTo, immediate, negotiable } = moveInInfo;
 
       const parts: string[] = [];
 

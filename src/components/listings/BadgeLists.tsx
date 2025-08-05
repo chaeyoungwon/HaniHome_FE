@@ -2,7 +2,7 @@ import React from "react";
 
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
-import { OptionItem } from "@/types/property";
+import { OptionItem } from "@/types/property.type";
 
 const advantageItems = CATEGORY_OPTIONS[1].items;
 

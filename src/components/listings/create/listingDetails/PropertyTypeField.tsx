@@ -5,7 +5,7 @@ import { RENT_TYPE_MAP, SHARE_TYPE_MAP } from "@/constants/housing-options";
 import {
   RentPropertySubType,
   SharePropertySubType,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 interface PropertyTypeFieldProps {
   listingType: "RENT" | "SHARE";

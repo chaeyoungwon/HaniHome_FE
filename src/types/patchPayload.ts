@@ -8,7 +8,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 export type PatchPayload =
   | {

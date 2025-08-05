@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ViewingPropertyItem } from "@/types/viewing";
+import { ViewingPropertyItem } from "@/types/viewing.type";
 
 import ContentWrapper from "../layout/ContentWrapper";
 import CancelReasonModal from "./CancelReasonModal";

@@ -1,6 +1,6 @@
 import { useListingStore } from "@/stores/useListingStore";
 
-import { ContractTermsOption } from "@/types/createPropertyAnswer";
+import { ContractTermsOption } from "@/types/createPropertyAnswer.type";
 
 import CostDetailField from "./CostDetailField";
 import MeetingTimeField from "./MeetingTimeField";

@@ -9,8 +9,8 @@ import { useMetroStore } from "@/stores/useMetroStore";
 
 import { useCountUp } from "@/hooks/filter/useCountup";
 import { useDebouncedValue } from "@/hooks/filter/useDebouncedValue";
-import { usePropertySearch } from "@/hooks/filter/useFilter";
-import { useMetroStops } from "@/hooks/filter/useMetro";
+import { usePropertySearch } from "@/hooks/filter/useFilterApi";
+import { useMetroStops } from "@/hooks/filter/useMetroApi";
 
 import { buildQueryParams } from "@/utils/filter/buildQueryParams";
 
@@ -58,20 +58,20 @@ const Filter = () => {
   const [tempFilters, setTempFilters] = useState({
     selectedTypes,
     selectedRoomTypes,
-    billIncluded,
+    billIncluded: null as boolean | null,
     availableFrom,
     availableTo,
-    immediate,
-    negotiable,
+    immediate: null as boolean | null,
+    negotiable: null as boolean | null,
     minWeeklyCost,
     maxWeeklyCost,
     radiusKm,
-    selectedMetroStop: null as null | {
+    selectedMetroStop: null as {
       id: number | null;
       name: string;
       latitude: number | null;
       longitude: number | null;
-    },
+    } | null,
   });
 
   const debouncedMinCost = useDebouncedValue(tempFilters.minWeeklyCost, 500);
@@ -158,11 +158,11 @@ const Filter = () => {
     setTempFilters({
       selectedTypes: [],
       selectedRoomTypes: [],
-      billIncluded: false,
+      billIncluded: null,
       availableFrom: null,
       availableTo: null,
-      immediate: false,
-      negotiable: false,
+      immediate: null,
+      negotiable: null,
       minWeeklyCost: null,
       maxWeeklyCost: null,
       radiusKm: null,
@@ -175,11 +175,11 @@ const Filter = () => {
     setFilters({
       selectedTypes: tempFilters.selectedTypes,
       selectedRoomTypes: tempFilters.selectedRoomTypes,
-      billIncluded: tempFilters.billIncluded,
+      billIncluded: tempFilters.billIncluded ?? false,
       availableFrom: tempFilters.availableFrom,
       availableTo: tempFilters.availableTo,
-      immediate: tempFilters.immediate,
-      negotiable: tempFilters.negotiable,
+      immediate: tempFilters.immediate ?? false,
+      negotiable: tempFilters.negotiable ?? false,
       minWeeklyCost: debouncedMinCost,
       maxWeeklyCost: debouncedMaxCost,
       radiusKm: debouncedRadiusKm,
@@ -188,6 +188,7 @@ const Filter = () => {
 
     router.push("/home");
   };
+
   const animatedCount = useCountUp(count, 800);
 
   useEffect(() => {

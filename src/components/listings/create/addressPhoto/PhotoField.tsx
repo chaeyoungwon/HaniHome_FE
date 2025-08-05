@@ -4,15 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 
-import { getPropertyPresignedUrl } from "@/apis/s3Upload";
+import { getPropertyPresignedUrl } from "@/apis/s3UploadApi";
 
 import useMultipleImageUpload from "@/hooks/common/useMultipleImageUpload";
 import {
   usePatchProperty,
   usePropertyDetailEditList,
-} from "@/hooks/property/useProperty";
+} from "@/hooks/property/usePropertyApi";
 
-import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
+import toPostPropertyDetail from "@/utils/listing//toPostPropertyDetail";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";

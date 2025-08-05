@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useLoginModalStore } from "@/stores/useLoginModalStore";
 
-import { useUnreadNotificationCount } from "@/hooks/notification/useNotification";
+import { useUnreadNotificationCount } from "@/hooks/notification/useNotificationApi";
 
 import MainLogo from "@/public/svgs/common/logo-wordmark.svg";
 import AlarmIcon from "@/public/svgs/header/alarm-icon.svg";

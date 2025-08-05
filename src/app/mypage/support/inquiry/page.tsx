@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { postOneOnOneConsult } from "@/apis/support";
+import { postOneOnOneConsult } from "@/apis/supportApi";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import CompleteModal from "@/components/common/CompleteModal";

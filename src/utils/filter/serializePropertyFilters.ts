@@ -1,4 +1,4 @@
-import { FilteredPropertyParams } from "@/types/property";
+import { FilteredPropertyParams } from "@/types/property.type";
 
 export const serializePropertyFilters = (params: FilteredPropertyParams) => {
   const searchParams = new URLSearchParams();

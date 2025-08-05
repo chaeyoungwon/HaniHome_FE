@@ -1,4 +1,4 @@
-import { OptionItem } from "@/types/property";
+import { OptionItem } from "@/types/property.type";
 
 export const groupOptionItemsByParent = (items: OptionItem[]) => {
   // 아이디순 정렬

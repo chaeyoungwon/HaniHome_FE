@@ -4,9 +4,9 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
+import { usePropertyDetailEditList } from "@/hooks/property/usePropertyApi";
 
-import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
+import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import BackHeader from "@/components/layout/header/BackHeader";
@@ -17,7 +17,7 @@ import TitleSection from "@/components/listings/detailShow/TitleSection";
 import {
   RentPropertyDetail,
   SharePropertyDetail,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 const ListingsEdit = () => {
   const router = useRouter();

@@ -1,6 +1,6 @@
 import CheckIcon from "@/components/common/CheckIcon";
 
-import { LivingConditions } from "@/types/listingDetailPost";
+import { LivingConditions } from "@/types/listingDetailPost.type";
 
 interface LivingConditionsContentProps {
   value?: LivingConditions | null;

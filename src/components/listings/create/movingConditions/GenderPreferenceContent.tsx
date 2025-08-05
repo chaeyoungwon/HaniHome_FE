@@ -3,7 +3,7 @@ import DropdownOptionsList from "@/components/listings/create/common/DropdownOpt
 
 import { GENDER_PREFERENCE_MAP } from "@/constants/gender-options";
 
-import { GenderPreference } from "@/types/listingDetailPost";
+import { GenderPreference } from "@/types/listingDetailPost.type";
 
 interface GenderPreferenceContentProps {
   value: GenderPreference | null;

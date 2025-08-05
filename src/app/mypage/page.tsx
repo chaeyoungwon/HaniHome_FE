@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 
 import { useAuthStore } from "@/stores/useAuthStore";
 
-import { useAuth } from "@/hooks/auth/useAuth";
-import { useMyInfo } from "@/hooks/member/useMember";
+import { useAuth } from "@/hooks/auth/useAuthApi";
+import { useMyInfo } from "@/hooks/member/useMemberApi";
 
 import Divider from "@/components/common/Divider";
 import TitleHeader from "@/components/layout/header/TitleHeader";
@@ -18,7 +18,7 @@ import WithdrawAlertModal from "@/components/mypage/WithdrawAlertModal";
 
 import { getSections } from "@/constants/mypage-section";
 
-import { SectionData } from "@/types/mypageSection";
+import { SectionData } from "@/types/mypageSection.type";
 
 import CertificateBadge from "@/public/svgs/common/certificated-icon.svg";
 import Arrow from "@/public/svgs/common/left-arrow.svg";
@@ -51,7 +51,7 @@ const Mypage = () => {
         <div
           className="flex h-22 items-center justify-between px-4 py-2"
           onClick={() => {
-            if (isLoggedIn) router.push("profile/edit");
+            if (isLoggedIn) router.push("/mypage/profile/edit");
           }}
         >
           <div className="flex gap-[24px]">

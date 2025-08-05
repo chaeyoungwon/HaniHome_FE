@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 
-import { useMyDeals } from "@/hooks/property/useProperty";
+import { useMyDeals } from "@/hooks/property/usePropertyApi";
 
 import LoadingLottie from "@/components/common/LoadingLottie";
 import ListingCard from "@/components/home/ListingCard";

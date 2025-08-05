@@ -1,6 +1,6 @@
-import { usePatchNotificationRead } from "@/hooks/notification/useNotification";
+import { usePatchNotificationRead } from "@/hooks/notification/useNotificationApi";
 
-import { NotificationItem } from "@/types/notification";
+import { NotificationItem } from "@/types/notification.type";
 
 const NotificationCard = ({ id, title, content, isRead }: NotificationItem) => {
   const { mutate } = usePatchNotificationRead();

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { MetroStop } from "@/types/metro";
+import { MetroStop } from "@/types/metro.type";
 
 interface MetroState {
   stops: MetroStop[];

@@ -1,4 +1,4 @@
-import { VerificationType } from "@/types/auth";
+import { VerificationType } from "@/types/auth.type";
 
 export const GENDER_OPTIONS = [
   { label: "남성", value: "MALE" },

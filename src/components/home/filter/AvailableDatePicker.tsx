@@ -16,8 +16,8 @@ type Range = {
 interface AvailableDatePickerProps {
   availableFrom: string | null;
   availableTo: string | null;
-  immediate: boolean;
-  negotiable: boolean;
+  immediate: boolean | null;
+  negotiable: boolean | null;
   onDateChange: (from: string, to: string) => void;
   onImmediateToggle: () => void;
   onNegotiableToggle: () => void;
@@ -105,7 +105,7 @@ const AvailableDatePicker = ({
           className="text-cap1-med flex cursor-pointer items-center gap-1 text-gray-700"
           onClick={onImmediateToggle}
         >
-          <CheckIcon checked={immediate} />
+          <CheckIcon checked={immediate || false} />
           즉시 입주 가능
         </div>
 
@@ -113,7 +113,7 @@ const AvailableDatePicker = ({
           className="text-cap1-med flex cursor-pointer items-center gap-1 text-gray-700"
           onClick={onNegotiableToggle}
         >
-          <CheckIcon checked={negotiable} />
+          <CheckIcon checked={negotiable || false} />
           입주 일자 협의 가능
         </div>
       </div>

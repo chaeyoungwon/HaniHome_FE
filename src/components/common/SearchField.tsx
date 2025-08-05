@@ -5,11 +5,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useMetroStore } from "@/stores/useMetroStore";
 import clsx from "clsx";
 
-import { fetchPlaceSuggestions } from "@/apis/googlePlaces";
+import { fetchPlaceSuggestions } from "@/apis/googlePlacesApi";
 
 import useKeyboardNavigation from "@/hooks/common/useKeyboardNavigation";
 
-import { PlacePrediction } from "@/types/googlePlaces";
+import { PlacePrediction } from "@/types/googlePlaces.type";
 
 import SearchIcon from "@/public/svgs/common/search-icon.svg";
 

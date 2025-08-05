@@ -10,14 +10,14 @@ import clsx from "clsx";
 import {
   usePatchProperty,
   usePropertyDetailEditList,
-} from "@/hooks/property/useProperty";
+} from "@/hooks/property/usePropertyApi";
 
 import {
   formatCapcityPeople,
   formatIsBrokered,
   formatPropertySubType,
 } from "@/utils/formatter/detailFormatter";
-import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
+import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -29,13 +29,13 @@ import ListingDetailsDropdownContent from "@/components/listings/create/listingD
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 import { QUESTION_MAP } from "@/constants/question-map";
 
-import { ListingDetailsOption } from "@/types/createPropertyAnswer";
+import { ListingDetailsOption } from "@/types/createPropertyAnswer.type";
 import {
   RentInternalDetails,
   RentPropertyDetail,
   ShareInternalDetails,
   SharePropertyDetail,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 import { PatchPayload } from "@/types/patchPayload";
 
 import DownArrow from "@/public/svgs/common/down-arrow.svg";

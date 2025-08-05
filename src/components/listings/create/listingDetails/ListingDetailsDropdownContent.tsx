@@ -14,7 +14,7 @@ import { CATEGORY_OPTIONS } from "@/constants/property-category";
 import { QUESTION_MAP } from "@/constants/question-map";
 
 // 타입 정의
-import { ListingDetailsOption } from "@/types/createPropertyAnswer";
+import { ListingDetailsOption } from "@/types/createPropertyAnswer.type";
 import {
   CapacityRent,
   CapacityShare,
@@ -22,7 +22,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 // Props 정의
 type ValueOf<T extends ListingDetailsOption["type"]> = Extract<

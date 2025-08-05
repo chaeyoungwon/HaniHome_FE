@@ -2,7 +2,7 @@ import React from "react";
 
 import { PARKING_OPTIONID_MAP } from "@/constants/parking-options";
 
-import { OptionItem } from "@/types/property";
+import { OptionItem } from "@/types/property.type";
 
 import Label from "./Label";
 import Section from "./Section";

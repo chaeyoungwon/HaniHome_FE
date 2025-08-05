@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 
 import { useSignupStore } from "@/stores/useSignupStore";
 
-import { useAuth } from "@/hooks/auth/useAuth";
+import { useAuth } from "@/hooks/auth/useAuthApi";
 import { useNickname } from "@/hooks/signup/useNickname";
 
 import { formatConsents } from "@/utils/formatter/consentTypeFormatter";
@@ -20,7 +20,7 @@ import ProfileImageUploader from "@/components/signup/profile/ProfileImageUpload
 
 import { GENDER_OPTIONS } from "@/constants/dropdown-options";
 
-import { SignupPayload } from "@/types/auth";
+import { SignupPayload } from "@/types/auth.type";
 
 const SignupProfilePage = () => {
   const {

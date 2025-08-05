@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { calculateNewRange } from "@/utils/calendar/calculateNewRange";
 
-import { CalendarProps } from "@/types/calendar";
+import { CalendarProps } from "@/types/calendar.type";
 
 export const useCalendarHandlers = ({
   range,

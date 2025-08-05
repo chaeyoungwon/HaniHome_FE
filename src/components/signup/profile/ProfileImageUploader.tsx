@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import clsx from "clsx";
 
-import { getProfilePresignedUrl } from "@/apis/s3Upload";
+import { getProfilePresignedUrl } from "@/apis/s3UploadApi";
 
 import { useSingleImageUpload } from "@/hooks/common/useSingleImageUpload";
 

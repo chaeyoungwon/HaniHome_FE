@@ -1,4 +1,4 @@
-import { ViewingPropertyItem } from "@/types/viewing";
+import { ViewingPropertyItem } from "@/types/viewing.type";
 
 import ContentWrapper from "../layout/ContentWrapper";
 import ViewingEmptyMessage from "./ViewingEmptyMessage";

@@ -1,4 +1,4 @@
-import { Property } from "@/types/property";
+import { Property } from "@/types/property.type";
 
 import ListingDetailSkeleton from "../skeleton/listingsDetail/ListingDetailSkeleton";
 import RentDetail from "./RentDetail";

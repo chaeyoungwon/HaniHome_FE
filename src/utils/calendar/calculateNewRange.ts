@@ -1,4 +1,4 @@
-import { Range } from "@/types/calendar";
+import { Range } from "@/types/calendar.type";
 
 export const calculateNewRange = (
   updated: Date,

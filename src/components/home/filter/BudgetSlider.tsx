@@ -9,7 +9,7 @@ const MIN_GAP = 50;
 interface BudgetSliderProps {
   minWeeklyCost: number | null;
   maxWeeklyCost: number | null;
-  billIncluded: boolean;
+  billIncluded: boolean | null;
   onBudgetChange: (min: number, max: number) => void;
   onBillToggle: () => void;
 }
@@ -77,7 +77,7 @@ const BudgetSlider = ({
           className="flex cursor-pointer items-center justify-end gap-1"
           onClick={onBillToggle}
         >
-          <CheckIcon checked={billIncluded} />
+          <CheckIcon checked={billIncluded || false} />
           <span className="text-cap1-med text-gray-700">빌 포함</span>
         </div>
       </div>

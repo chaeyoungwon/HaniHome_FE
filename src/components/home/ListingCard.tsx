@@ -6,6 +6,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 
 import { formatRelativeTime } from "@/utils/formatter/dateFormatter";
 import {
+  getArea,
   getDisplayStatus,
   getDisplayType,
   getDistanceInKm,
@@ -13,7 +14,7 @@ import {
 
 import Dot from "@/components/common/Dot";
 
-import { ListingCardProps } from "@/types/listingCard";
+import { ListingCardProps } from "@/types/listingCard.type";
 
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
 import HeartOutlineIcon from "@/public/svgs/common/heart-outline-icon.svg";
@@ -70,13 +71,14 @@ const ListingCard = ({
           </div>
 
           <p className="text-cap1-med mt-2 flex items-center gap-1 text-gray-600">
-            {internalArea !== undefined && (
+            {internalArea != null && (
               <>
-                {internalArea}㎡{(totalFloors !== undefined || kind) && <Dot />}
+                {getArea(internalArea)}
+                {(totalFloors !== undefined || kind) && <Dot />}
               </>
             )}
 
-            {totalFloors !== undefined && (
+            {totalFloors !== null && (
               <>
                 전체 {totalFloors}층 {kind && <Dot />}
               </>

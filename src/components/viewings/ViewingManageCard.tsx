@@ -5,7 +5,7 @@ import { formatViewingCardTime } from "@/utils/formatter/dateFormatter";
 import Divider from "@/components/common/Divider";
 import ViewingPostCard from "@/components/common/ViewingPostCard";
 
-import { ViewingPropertyItem } from "@/types/viewing";
+import { ViewingPropertyItem } from "@/types/viewing.type";
 
 interface ViewingManageCardProps {
   id: number;

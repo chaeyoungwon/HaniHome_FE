@@ -12,7 +12,7 @@ import {
 } from "@/constants/capacity-options";
 import { GENDER_PREFERENCE_LABEL_MAP } from "@/constants/gender-options";
 
-import { Property } from "@/types/property";
+import { Property } from "@/types/property.type";
 
 import MoveInConditionSkeleton from "../skeleton/listingsDetail/MoveInConditionSkeleton";
 import ExtraConditions from "./ExtraConditions";

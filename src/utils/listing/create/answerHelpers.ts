@@ -7,7 +7,7 @@ import {
 import { RENT_TYPE_MAP, SHARE_TYPE_MAP } from "@/constants/housing-options";
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
-import { ListingDetailsOption } from "@/types/createPropertyAnswer";
+import { ListingDetailsOption } from "@/types/createPropertyAnswer.type";
 import {
   CapacityRent,
   CapacityShare,
@@ -15,7 +15,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 type GetAnswerValueReturn =
   | RentInternalDetails

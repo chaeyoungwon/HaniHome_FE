@@ -1,6 +1,6 @@
 "use client";
 
-import { SectionItem } from "@/types/mypageSection";
+import { SectionItem } from "@/types/mypageSection.type";
 
 import Arrow from "@/public/svgs/common/left-arrow.svg";
 

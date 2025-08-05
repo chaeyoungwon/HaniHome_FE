@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 
-import { usePatchDisplayStatus } from "@/hooks/property/useProperty";
-import { useCancelAllViewings } from "@/hooks/viewing/useViewing";
+import { usePatchDisplayStatus } from "@/hooks/property/usePropertyApi";
+import { useCancelAllViewings } from "@/hooks/viewing/useViewingApi";
 
 import AlertModal from "@/components/common/AlertModal";
 

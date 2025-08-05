@@ -5,7 +5,7 @@ import Section from "@/components/listings/shared/Section";
 
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
-import { Property } from "@/types/property";
+import { Property } from "@/types/property.type";
 
 import ContractInfoSkeleton from "../skeleton/listingsDetail/ContractInfoSkeleton";
 

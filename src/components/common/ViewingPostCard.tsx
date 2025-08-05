@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import {
+  getArea,
   getDisplayType,
   getDistanceInKm,
 } from "@/utils/formatter/propertyFormatter";
@@ -55,7 +56,7 @@ export const ViewingPostCard = ({
             <p className="text-cap1-med flex items-center gap-1 text-gray-600">
               {internalArea !== undefined && (
                 <>
-                  {internalArea}㎡
+                  {getArea(internalArea)}
                   {(totalFloors !== undefined || kind) && <Dot />}
                 </>
               )}

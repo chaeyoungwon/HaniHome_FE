@@ -18,7 +18,7 @@ import FunnelLayout from "@/components/listings/create/common/FunnelLayout";
 
 import { QUESTION_MAP } from "@/constants/question-map";
 
-import { ListingDetailsOption } from "@/types/createPropertyAnswer";
+import { ListingDetailsOption } from "@/types/createPropertyAnswer.type";
 import {
   CapacityRent,
   CapacityShare,
@@ -26,7 +26,7 @@ import {
   RentPropertySubType,
   ShareInternalDetails,
   SharePropertySubType,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 import ListingDetailsDropdownContent from "./ListingDetailsDropdownContent";
 

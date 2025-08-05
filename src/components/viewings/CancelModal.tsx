@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { useCancelReasons } from "@/hooks/optionItem/useOptionItem";
+import { useCancelReasons } from "@/hooks/optionItem/useOptionItemApi";
 
 import ModalLayout from "@/components/common/ModalLayout";
 import SelectableChip from "@/components/common/SelectableChip";

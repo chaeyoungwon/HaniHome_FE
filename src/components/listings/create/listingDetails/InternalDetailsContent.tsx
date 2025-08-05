@@ -16,7 +16,7 @@ import { LISTING_INFORMATION_LABEL } from "@/constants/listing-create-options";
 import {
   RentInternalDetails,
   ShareInternalDetails,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 import ChangeIcon from "@/public/svgs/listings/change-icon.svg";
 import QuestionIcon from "@/public/svgs/listings/question-mark-icon.svg";

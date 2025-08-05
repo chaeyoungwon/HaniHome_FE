@@ -5,7 +5,7 @@ import { useState } from "react";
 import {
   useDeleteAllNotifications,
   useMyNotifications,
-} from "@/hooks/notification/useNotification";
+} from "@/hooks/notification/useNotificationApi";
 
 import AlertModal from "@/components/common/AlertModal";
 import LoadingLottie from "@/components/common/LoadingLottie";

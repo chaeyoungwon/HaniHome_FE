@@ -4,8 +4,8 @@ import { useParams } from "next/navigation";
 
 import { useState } from "react";
 
-import { useCompleteTrade } from "@/hooks/property/useProperty";
-import { useViewingGuests } from "@/hooks/viewing/useViewing";
+import { useCompleteTrade } from "@/hooks/property/usePropertyApi";
+import { useViewingGuests } from "@/hooks/viewing/useViewingApi";
 
 import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
 

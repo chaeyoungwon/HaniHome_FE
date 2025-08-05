@@ -4,14 +4,14 @@ import { useRouter } from "next/navigation";
 
 import { useMemo, useState } from "react";
 
-import { useMyProperties } from "@/hooks/property/useProperty";
+import { useMyProperties } from "@/hooks/property/usePropertyApi";
 
 import LoadingLottie from "@/components/common/LoadingLottie";
 import SelectTab from "@/components/common/SelectTab";
 import ListingCard from "@/components/home/ListingCard";
 import BackHeader from "@/components/layout/header/BackHeader";
 
-import { SummaryProperty } from "@/types/property";
+import { SummaryProperty } from "@/types/property.type";
 
 const TABS = [
   { label: "거래중", key: "active" },
@@ -54,11 +54,15 @@ const Listings = () => {
   return (
     <div>
       <BackHeader />
-      <SelectTab
-        tabs={TABS}
-        activeTab={activeTab}
-        onChange={tab => setActiveTab(tab as "active" | "completed" | "hidden")}
-      />
+      <div className="sticky top-12 z-10 bg-white">
+        <SelectTab
+          tabs={TABS}
+          activeTab={activeTab}
+          onChange={tab =>
+            setActiveTab(tab as "active" | "completed" | "hidden")
+          }
+        />
+      </div>
 
       {isLoading ? (
         <div className="flex h-screen items-center justify-center">

@@ -2,7 +2,7 @@ import ContractInfo from "@/components/listings/ContractInfo";
 import ListingDetail from "@/components/listings/ListingDetail";
 import MoveInCondition from "@/components/listings/MoveInCondition";
 
-import { Property } from "@/types/property";
+import { Property } from "@/types/property.type";
 
 type TabItem = {
   key: string;

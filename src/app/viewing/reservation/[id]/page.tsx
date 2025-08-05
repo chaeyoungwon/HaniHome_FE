@@ -8,7 +8,7 @@ import { useViewingScheduleStore } from "@/stores/useViewingScheduleStore";
 
 import { useSingleDateCalendar } from "@/hooks/calendar/useSingleDateHandlers";
 import { useViewingReservation } from "@/hooks/reservation/useConfirmSchedule";
-import { useMyViewingDates } from "@/hooks/viewing/useViewing";
+import { useMyViewingDates } from "@/hooks/viewing/useViewingApi";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import BackHeader from "@/components/layout/header/BackHeader";

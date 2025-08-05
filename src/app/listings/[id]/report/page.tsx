@@ -4,8 +4,8 @@ import { useParams } from "next/navigation";
 
 import { useEffect, useRef, useState } from "react";
 
-import { postReport } from "@/apis/property";
-import { getReportPresignedUrls } from "@/apis/s3Upload";
+import { postReport } from "@/apis/propertyApi";
+import { getReportPresignedUrls } from "@/apis/s3UploadApi";
 
 import { uploadFilesToPresignedUrls } from "@/utils/images/uploadFilesToPresignedUrls";
 

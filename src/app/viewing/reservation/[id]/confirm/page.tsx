@@ -7,9 +7,9 @@ import { useState } from "react";
 import { useViewingScheduleStore } from "@/stores/useViewingScheduleStore";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { createViewing } from "@/apis/viewing";
+import { createViewing } from "@/apis/viewingApi";
 
-import { usePropertyList } from "@/hooks/property/useProperty";
+import { usePropertyList } from "@/hooks/property/usePropertyApi";
 
 import { formatDateTime, getTimeLabel } from "@/utils/formatter/dateFormatter";
 

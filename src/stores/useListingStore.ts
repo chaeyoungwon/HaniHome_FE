@@ -13,7 +13,7 @@ import {
   ShareInternalDetails,
   SharePropertySubType,
   TimeSlot,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 interface ListingState {
   listingType: "SHARE" | "RENT" | null;

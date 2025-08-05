@@ -1,13 +1,13 @@
 import { useRef, useState } from "react";
 
-import { useVerificationsQuery } from "@/hooks/mypage/useVerification";
+import { useVerificationsQuery } from "@/hooks/mypage/useVerificationApi";
 
 import {
   ALLOWED_IMAGE_TYPES,
   MAX_IMAGE_SIZE_MB,
 } from "@/constants/profile-uploader";
 
-import { VerificationType } from "@/types/auth";
+import { VerificationType } from "@/types/auth.type";
 
 const MAX_FILES = 2;
 

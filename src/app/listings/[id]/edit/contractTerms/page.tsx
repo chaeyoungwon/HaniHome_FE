@@ -4,9 +4,12 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-import { usePropertyDetailEditList, usePatchProperty } from "@/hooks/property/useProperty";
+import {
+  usePatchProperty,
+  usePropertyDetailEditList,
+} from "@/hooks/property/usePropertyApi";
 
-import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
+import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import BackHeader from "@/components/layout/header/BackHeader";
@@ -16,7 +19,7 @@ import CostDetailField from "@/components/listings/create/contractTerms/CostDeta
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 import { COMMON_CONTRACT_TERMS } from "@/constants/question-map";
 
-import { CostDetails } from "@/types/listingDetailPost";
+import { CostDetails } from "@/types/listingDetailPost.type";
 
 import DownArrow from "@/public/svgs/common/down-arrow.svg";
 

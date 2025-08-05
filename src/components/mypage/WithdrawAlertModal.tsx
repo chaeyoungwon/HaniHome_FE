@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { useDeleteUser } from "@/hooks/member/useMember";
+import { useDeleteUser } from "@/hooks/member/useMemberApi";
 
 import AlertModal from "@/components/common/AlertModal";
 import CompleteModal from "@/components/common/CompleteModal";

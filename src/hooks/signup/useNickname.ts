@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { nicknameSchema } from "@/schemas/nickname";
 
-import { checkNicknameDuplicate } from "@/apis/auth";
+import { checkNicknameDuplicate } from "@/apis/authApi";
 
 export const useNickname = () => {
   const [message, setMessage] = useState<string | undefined>();

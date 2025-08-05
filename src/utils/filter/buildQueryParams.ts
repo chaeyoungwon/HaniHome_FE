@@ -3,15 +3,15 @@ import { RENT_TYPE_MAP, SHARE_TYPE_MAP } from "@/constants/housing-options";
 import {
   RentPropertySubType,
   SharePropertySubType,
-} from "@/types/listingDetailPost";
-import { FilteredPropertyParams } from "@/types/property";
+} from "@/types/listingDetailPost.type";
+import { FilteredPropertyParams } from "@/types/property.type";
 
 interface ParamsInput {
   selectedTypes: ("쉐어" | "렌트")[];
   selectedRoomTypes: string[];
-  billIncluded: boolean;
-  immediate: boolean;
-  negotiable: boolean;
+  billIncluded: boolean | null;
+  immediate: boolean | null;
+  negotiable: boolean | null;
   minWeeklyCost: number | null;
   maxWeeklyCost: number | null;
   radiusKm: number | null;
@@ -23,7 +23,7 @@ interface ParamsInput {
 }
 
 export const buildQueryParams = (
-  input: ParamsInput,
+  input: Partial<ParamsInput>,
 ): FilteredPropertyParams => {
   const {
     selectedTypes,
@@ -41,15 +41,15 @@ export const buildQueryParams = (
     suburb,
   } = input;
 
-  const kinds = selectedTypes
-    .map(type => (type === "쉐어" ? "SHARE" : "RENT"))
+  const kinds = (selectedTypes ?? [])
+    .map(type => (type === "쉐어" ? "SHARE" : type === "렌트" ? "RENT" : null))
     .filter((k): k is "SHARE" | "RENT" => k !== null);
 
-  const sharePropertySubTypes: string[] = [];
-  const rentPropertySubTypes: string[] = [];
+  const sharePropertySubTypes: SharePropertySubType[] = [];
+  const rentPropertySubTypes: RentPropertySubType[] = [];
 
-  for (const room of selectedRoomTypes) {
-    if (selectedTypes.includes("쉐어")) {
+  for (const room of selectedRoomTypes ?? []) {
+    if ((selectedTypes ?? []).includes("쉐어")) {
       const found = Object.entries(SHARE_TYPE_MAP).find(
         ([, value]) => value === room,
       );
@@ -58,7 +58,7 @@ export const buildQueryParams = (
       }
     }
 
-    if (selectedTypes.includes("렌트")) {
+    if ((selectedTypes ?? []).includes("렌트")) {
       const found = Object.entries(RENT_TYPE_MAP).find(
         ([, value]) => value === room,
       );
@@ -68,28 +68,36 @@ export const buildQueryParams = (
     }
   }
 
-  const params: FilteredPropertyParams = {
-    kinds,
-    sharePropertySubTypes,
-    rentPropertySubTypes,
-    billIncluded,
-    immediate,
-    negotiable,
-    suburb,
+  const result: FilteredPropertyParams = {
+    suburb: suburb ?? "",
   };
 
-  if (minWeeklyCost !== null) params.minWeeklyCost = minWeeklyCost;
-  if (maxWeeklyCost !== null) params.maxWeeklyCost = maxWeeklyCost;
-  if (radiusKm !== null) params.radiusKm = radiusKm;
-
-  if (metroStopLatitude !== null) params.metroStopLatitude = metroStopLatitude;
-  if (metroStopLongitude !== null)
-    params.metroStopLongitude = metroStopLongitude;
-
-  if (availableFrom && availableTo && availableFrom !== availableTo) {
-    params.availableFrom = availableFrom;
-    params.availableTo = availableTo;
+  if (kinds.length > 0) {
+    result.kinds = kinds;
   }
 
-  return params;
+  if (sharePropertySubTypes.length > 0) {
+    result.sharePropertySubTypes = sharePropertySubTypes;
+  }
+
+  if (rentPropertySubTypes.length > 0) {
+    result.rentPropertySubTypes = rentPropertySubTypes;
+  }
+  if (billIncluded !== null) result.billIncluded = billIncluded;
+  if (immediate !== null) result.immediate = immediate;
+  if (negotiable !== null) result.negotiable = negotiable;
+
+  if (minWeeklyCost != null) result.minWeeklyCost = minWeeklyCost;
+  if (maxWeeklyCost != null) result.maxWeeklyCost = maxWeeklyCost;
+  if (radiusKm != null) result.radiusKm = radiusKm;
+  if (metroStopLatitude != null) result.metroStopLatitude = metroStopLatitude;
+  if (metroStopLongitude != null)
+    result.metroStopLongitude = metroStopLongitude;
+
+  if (availableFrom && availableTo && availableFrom !== availableTo) {
+    result.availableFrom = availableFrom;
+    result.availableTo = availableTo;
+  }
+
+  return result;
 };

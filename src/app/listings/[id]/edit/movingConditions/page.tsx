@@ -10,10 +10,10 @@ import clsx from "clsx";
 import {
   usePatchProperty,
   usePropertyDetailEditList,
-} from "@/hooks/property/useProperty";
+} from "@/hooks/property/usePropertyApi";
 
 import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
-import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
+import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -25,8 +25,7 @@ import MovingConditionDropdownContent from "@/components/listings/create/movingC
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 import { COMMON_MOVING_CONDITIONS } from "@/constants/question-map";
 
-import { MovingConditionsOption } from "@/types/createPropertyAnswer";
-
+import { MovingConditionsOption } from "@/types/createPropertyAnswer.type";
 import { PatchPayload } from "@/types/patchPayload";
 
 import DownArrow from "@/public/svgs/common/down-arrow.svg";

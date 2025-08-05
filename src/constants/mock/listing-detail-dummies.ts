@@ -1,4 +1,4 @@
-import { PropertyDetail } from "@/types/listingDetailPost";
+import { PropertyDetail } from "@/types/listingDetailPost.type";
 
 export const propertyInfo: PropertyDetail[] = [
   {

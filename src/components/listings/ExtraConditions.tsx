@@ -1,6 +1,6 @@
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
-import { OptionItem } from "@/types/property";
+import { OptionItem } from "@/types/property.type";
 
 const ADDITIONAL_ITEMS = CATEGORY_OPTIONS[3].items;
 

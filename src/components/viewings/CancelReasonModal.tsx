@@ -1,5 +1,5 @@
-import { useCancelReasons } from "@/hooks/optionItem/useOptionItem";
-import { useCancelReason } from "@/hooks/viewing/useViewing";
+import { useCancelReasons } from "@/hooks/optionItem/useOptionItemApi";
+import { useCancelReason } from "@/hooks/viewing/useViewingApi";
 
 import ModalLayout from "@/components/common/ModalLayout";
 

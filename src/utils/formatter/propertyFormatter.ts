@@ -5,3 +5,7 @@ export const getDisplayType = (kind: string) =>
   kind === "SHARE" ? "쉐어" : "렌트";
 
 export const getDistanceInKm = (distance: number) => distance.toFixed(1);
+
+export const getArea = (area: number): string => {
+  return `${area.toFixed(1)}㎡`;
+};

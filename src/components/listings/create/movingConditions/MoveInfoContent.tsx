@@ -1,8 +1,6 @@
 import AvailableDatePicker from "@/components/home/filter/AvailableDatePicker";
 
-
-import { MoveInInfo } from "@/types/listingDetailPost";
-
+import { MoveInInfo } from "@/types/listingDetailPost.type";
 
 interface MoveInfoContentProps {
   value: MoveInInfo;

@@ -13,14 +13,14 @@ import "dayjs/locale/ko";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 
-import { usePropertySearch } from "@/hooks/filter/useFilter";
-import { useToggleWish } from "@/hooks/wishlist/useWishList";
+import { usePropertySearch } from "@/hooks/filter/useFilterApi";
+import { useToggleWish } from "@/hooks/wishlist/useWishListApi";
 
 import { buildQueryParams } from "@/utils/filter/buildQueryParams";
 
 import { FALLBACK_SUBURB } from "@/constants/default-region";
 
-import { SummaryProperty } from "@/types/property";
+import { SummaryProperty } from "@/types/property.type";
 
 import ListingListSkeleton from "../skeleton/home/ListingListSkeleton";
 import ListingCard from "./ListingCard";
@@ -52,24 +52,14 @@ const ListingList = ({ fallbackSuburb }: { fallbackSuburb: string | null }) => {
 
   const finalSuburb = suburb || fallbackSuburb || FALLBACK_SUBURB;
 
-  const params = useMemo(
-    () =>
-      buildQueryParams({
-        selectedTypes,
-        selectedRoomTypes,
-        billIncluded,
-        availableFrom,
-        availableTo,
-        immediate,
-        negotiable,
-        minWeeklyCost,
-        maxWeeklyCost,
-        radiusKm,
+  const params = useMemo(() => {
+    if (!isLoggedIn) {
+      return buildQueryParams({
         suburb: finalSuburb,
-        metroStopLatitude: selectedMetroStop?.latitude ?? null,
-        metroStopLongitude: selectedMetroStop?.longitude ?? null,
-      }),
-    [
+      });
+    }
+
+    return buildQueryParams({
       selectedTypes,
       selectedRoomTypes,
       billIncluded,
@@ -80,11 +70,26 @@ const ListingList = ({ fallbackSuburb }: { fallbackSuburb: string | null }) => {
       minWeeklyCost,
       maxWeeklyCost,
       radiusKm,
-      finalSuburb,
-      selectedMetroStop?.latitude,
-      selectedMetroStop?.longitude,
-    ],
-  );
+      suburb: finalSuburb,
+      metroStopLatitude: selectedMetroStop?.latitude ?? null,
+      metroStopLongitude: selectedMetroStop?.longitude ?? null,
+    });
+  }, [
+    isLoggedIn,
+    selectedTypes,
+    selectedRoomTypes,
+    billIncluded,
+    availableFrom,
+    availableTo,
+    immediate,
+    negotiable,
+    minWeeklyCost,
+    maxWeeklyCost,
+    radiusKm,
+    finalSuburb,
+    selectedMetroStop?.latitude,
+    selectedMetroStop?.longitude,
+  ]);
 
   const { data: searchData, isLoading } = usePropertySearch(params, {
     enabled: isAuthInitialized && !!(finalSuburb && finalSuburb.trim()),

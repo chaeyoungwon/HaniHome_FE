@@ -9,9 +9,9 @@ import { useListingStore } from "@/stores/useListingStore";
 import {
   usePatchProperty,
   usePropertyDetailEditList,
-} from "@/hooks/property/useProperty";
+} from "@/hooks/property/usePropertyApi";
 
-import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
+import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import TextareaField from "@/components/common/TextareaField";

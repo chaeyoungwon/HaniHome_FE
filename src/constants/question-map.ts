@@ -1,5 +1,5 @@
 // 공통 ContractTerms
-import { ContractTermsOption } from "@/types/createPropertyAnswer";
+import { ContractTermsOption } from "@/types/createPropertyAnswer.type";
 
 export const COMMON_MOVING_CONDITIONS = [
   {

@@ -5,8 +5,8 @@ import Section from "@/components/listings/shared/Section";
 import { CAPACITY_RENT_LABEL_MAP } from "@/constants/capacity-options";
 import { RENT_TYPE_MAP } from "@/constants/housing-options";
 
-import { RentPropertySubType } from "@/types/listingDetailPost";
-import { RentProperty } from "@/types/property";
+import { RentPropertySubType } from "@/types/listingDetailPost.type";
+import { RentProperty } from "@/types/property.type";
 
 import PersonIcon from "@/public/svgs/common/mypage-icon.svg";
 
@@ -22,24 +22,24 @@ const RentDetail = ({
   listingId: string;
   data: RentProperty;
 }) => {
-  const infoList = [
-    {
+  const infoList: { label: string; value: string }[] = [
+    data.internalDetails.numberOfRoom != null && {
       label: "방 개수",
-      value: `${data.internalDetails.numberOfRoom ?? "-"}개`,
+      value: `${data.internalDetails.numberOfRoom}개`,
     },
-    {
+    data.internalDetails.numberOfBath != null && {
       label: "욕실 개수",
-      value: `${data.internalDetails.numberOfBath ?? "-"}개`,
+      value: `${data.internalDetails.numberOfBath}개`,
     },
-    {
+    data.internalDetails.totalFloors != null && {
       label: "건물 전체 층",
-      value: `${data.internalDetails.totalFloors ?? "-"}층`,
+      value: `${data.internalDetails.totalFloors}층`,
     },
-    {
+    data.internalDetails.propertyFloors != null && {
       label: "해당 층",
-      value: `${data.internalDetails.propertyFloors ?? "-"}층`,
+      value: `${data.internalDetails.propertyFloors}층`,
     },
-  ];
+  ].filter((item): item is { label: string; value: string } => Boolean(item));
 
   const rentTypeText = data.optionItems.find(item => item.optionItemId === 54)
     ? "개인 임대"

@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
 
-import { OptionItem } from "@/types/property";
+import { OptionItem } from "@/types/property.type";
 
 import Arrow from "@/public/svgs/common/left-arrow.svg";
 

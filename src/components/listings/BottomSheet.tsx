@@ -2,7 +2,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-import { useDeleteProperty } from "@/hooks/property/useProperty";
+import { useDeleteProperty } from "@/hooks/property/usePropertyApi";
 
 import Divider from "@/components/common/Divider";
 

@@ -13,7 +13,7 @@ const ViewingCompletePage = () => {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey: ["myViewingList"] });
+    queryClient.refetchQueries({ queryKey: ["myViewingList"] });
     sessionStorage.setItem("showViewingTooltip", "true");
   }, [queryClient]);
 

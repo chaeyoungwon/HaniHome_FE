@@ -1,6 +1,6 @@
 import BadgeList from "@/components/listings/BadgeLists";
 
-import { OptionItem } from "@/types/property";
+import { OptionItem } from "@/types/property.type";
 
 import Label from "./Label";
 import Section from "./Section";

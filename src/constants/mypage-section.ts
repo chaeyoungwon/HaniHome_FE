@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 
-import { SectionItem } from "@/types/mypageSection";
+import { SectionItem } from "@/types/mypageSection.type";
 
 interface SectionHandlers {
   onLogout: () => void;

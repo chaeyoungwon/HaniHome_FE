@@ -17,7 +17,7 @@ import {
   PropertyDetail,
   RentPropertyDetail,
   SharePropertyDetail,
-} from "@/types/listingDetailPost";
+} from "@/types/listingDetailPost.type";
 
 import DownArrow from "@/public/svgs/common/down-arrow.svg";
 

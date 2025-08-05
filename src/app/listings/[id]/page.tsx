@@ -11,9 +11,11 @@ import { AxiosError } from "axios";
 import {
   usePatchDisplayStatus,
   usePropertyDetailList,
-} from "@/hooks/property/useProperty";
-import { useViewingGuests } from "@/hooks/viewing/useViewing";
-import { useToggleWish } from "@/hooks/wishlist/useWishList";
+} from "@/hooks/property/usePropertyApi";
+import { useViewingGuests } from "@/hooks/viewing/useViewingApi";
+import { useToggleWish } from "@/hooks/wishlist/useWishListApi";
+
+import { getArea } from "@/utils/formatter/propertyFormatter";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import BackHeader from "@/components/layout/header/BackHeader";
@@ -26,7 +28,7 @@ import ListingDeleteModal from "@/components/mypage/ListingDeleteModal";
 import ListingHideModal from "@/components/mypage/ListingHideModal";
 import ListingDetailLoadingSkeleton from "@/components/skeleton/listingsDetail/ListingDetailLoadingSkeleton";
 
-import { PropertyErrorResponse } from "@/types/property";
+import { PropertyErrorResponse } from "@/types/property.type";
 
 import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
@@ -223,17 +225,21 @@ const ListingDetailPage = () => {
               <span className="text-heading1">
                 <span className="text-gray-900">주 / </span>
                 <span className="text-mint">
-                  {data.costDetails?.weeklyCost?.toLocaleString() ?? "-"}$
+                  {data.costDetails?.weeklyCost?.toLocaleString() ?? "(-)"}$
                 </span>
               </span>
               <span className="text-body2-med flex h-fit items-center justify-center rounded-[100px] border border-gray-300 px-[10px] py-1 text-gray-700">
                 {data.tradeStatus === "COMPLETED" ? "거래 완료" : "거래중"}
               </span>
             </div>
-            <div className="text-body1-sb flex gap-3 text-gray-700">
-              <span>{data.region?.state ?? "region"}</span>
+            <div className="text-body1-sb flex items-center gap-3 text-gray-700">
+              <span className="line-clamp-2 max-h-[44px] max-w-[89px]">
+                {data.region?.state ?? "region"}
+              </span>
               <span>|</span>
-              <span>{data.region?.suburb ?? "suburb"}</span>
+              <span className="line-clamp-2 max-h-[44px] max-w-[87px]">
+                {data.region?.suburb ?? "suburb"}
+              </span>
             </div>
           </div>
 
@@ -257,11 +263,14 @@ const ListingDetailPage = () => {
             )}
             <div className="flex flex-col items-end gap-1">
               <span>
-                (Internal Area) {data.internalDetails?.internalArea ?? "-"}㎡
+                (Internal Area){" "}
+                {getArea(data.internalDetails?.internalArea ?? "(-)")}
               </span>
-              <span className="text-gray-500">
-                (Total Area) {data.internalDetails?.totalArea ?? "-"}㎡
-              </span>
+              {data.internalDetails.totalArea && (
+                <span className="text-gray-500">
+                  (Total Area) {getArea(data.internalDetails?.totalArea)}
+                </span>
+              )}
             </div>
           </div>
         </div>

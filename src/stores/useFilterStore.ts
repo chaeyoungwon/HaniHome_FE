@@ -27,7 +27,7 @@ interface FilterStore {
   rentPropertySubTypes: string[];
   minWeeklyCost: number | null;
   maxWeeklyCost: number | null;
-  billIncluded: boolean;
+  billIncluded: boolean | null;
   availableFrom: string | null;
   availableTo: string | null;
   suburb: string;
@@ -40,8 +40,8 @@ interface FilterStore {
   } | null;
 
   radiusKm: number | null;
-  immediate: boolean;
-  negotiable: boolean;
+  immediate: boolean | null;
+  negotiable: boolean | null;
 
   setFilters: (
     filters: Partial<
@@ -113,14 +113,13 @@ export const useFilterStore = create(
           rentPropertySubTypes: [],
           minWeeklyCost: null,
           maxWeeklyCost: null,
-          billIncluded: false,
+          billIncluded: null,
+          immediate: null,
+          negotiable: null,
           availableFrom: null,
           availableTo: null,
           selectedMetroStop: null,
           radiusKm: null,
-          immediate: false,
-          negotiable: false,
-          suburb: "",
         }),
     }),
     {

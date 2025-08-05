@@ -11,7 +11,7 @@ import FunnelLayout from "@/components/listings/create/common/FunnelLayout";
 
 import { COMMON_CONTRACT_TERMS } from "@/constants/question-map";
 
-import { ContractTermsOption } from "@/types/createPropertyAnswer";
+import { ContractTermsOption } from "@/types/createPropertyAnswer.type";
 
 import ContractTermsContent from "./ContractTermsContent";
 
