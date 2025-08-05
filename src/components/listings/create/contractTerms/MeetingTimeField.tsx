@@ -115,6 +115,7 @@ const MeetingTimeField = ({
       },
     ]);
     setCurrentMonth(from);
+
   }, [viewingAlwaysAvailable, meetingDateFrom, meetingDateTo]);
 
   return (

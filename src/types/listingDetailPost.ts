@@ -82,8 +82,8 @@ interface PropertyBase {
   optionItemIds: number[];
   livingConditions: LivingConditions;
   moveInInfo: MoveInInfo;
-  meetingDateFrom: string;
-  meetingDateTo: string;
+  meetingDateFrom: string | null;
+  meetingDateTo: string | null;
   timeSlots: TimeSlot[];
   viewingAlwaysAvailable: boolean;
   description: string;

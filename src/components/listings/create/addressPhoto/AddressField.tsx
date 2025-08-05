@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 import clsx from "clsx";
+
 import { fetchPlaceDetails, fetchPlaceSuggestions } from "@/apis/googlePlaces";
 
 import {
@@ -154,8 +155,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
   const handleSave = () => {
     if (!data) return null;
     const jsonDiscriminator = data.kind;
-    const payload = { jsonDiscriminator,
-      region: addressData, };
+    const payload = { jsonDiscriminator, region: addressData };
 
     patchProperty(payload, {
       onSuccess: () => {

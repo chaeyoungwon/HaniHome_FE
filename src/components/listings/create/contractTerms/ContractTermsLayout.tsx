@@ -213,7 +213,7 @@ const ContractTerms = ({ onNext }: ContractTermsProps) => {
             label: "저장",
             onClick: () => {
               //Todo: 저장 로직 추가
-              console.log("저장");
+              console.log(selectedAnswers);
             },
             variant: "outline",
           },
