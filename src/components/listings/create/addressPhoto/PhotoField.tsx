@@ -7,7 +7,10 @@ import { useListingStore } from "@/stores/useListingStore";
 import { getPropertyPresignedUrl } from "@/apis/s3Upload";
 
 import useMultipleImageUpload from "@/hooks/common/useMultipleImageUpload";
-import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
+import {
+  usePatchProperty,
+  usePropertyDetailEditList,
+} from "@/hooks/property/useProperty";
 
 import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
 
@@ -51,6 +54,7 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
       setUploadedFiles, // File 객체 저장
       getPresignedUrls: getPropertyPresignedUrl,
       setShowErrorModal,
+      onUploadedUrls: setPhotoUrls,
     });
 
   const handleClickUpload = useCallback(() => {
@@ -59,7 +63,7 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
 
   const handleRemoveImage = useCallback((index: number) => {
     setPreviewUrls(prev => prev.filter((_, i) => i !== index));
-    setUploadedFiles(prev => prev.filter((_, i) => i !== index)); // 실제 파일 객체도 삭제
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
   }, []);
 
   useEffect(() => {
@@ -76,6 +80,23 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
       setPreviewUrls(photoUrls);
     }
   }, [photoUrls]);
+
+  const { mutate: patchProperty } = usePatchProperty(Number(id));
+
+  const handleSave = () => {
+    if (!data) return null;
+    const jsonDiscriminator = data.kind;
+    const payload = {
+      jsonDiscriminator,
+      photoUrls,
+    };
+    console.log(payload);
+    patchProperty(payload, {
+      onSuccess: () => {
+        router.push(`/listings/${id}/edit`);
+      },
+    });
+  };
 
   return (
     <div className="max-w-[375px] pb-[70px]">
@@ -154,10 +175,7 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
           ]}
         />
       ) : (
-        <BottomActionBar
-          label="저장"
-          onClick={() => router.push(`/listings/${id}/edit`)}
-        />
+        <BottomActionBar label="저장" onClick={handleSave} />
       )}
 
       {showErrorModal && (

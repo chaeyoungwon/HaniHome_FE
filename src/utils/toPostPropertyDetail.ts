@@ -12,7 +12,6 @@ export default function toPostPropertyDetail(
   getProperty: PropertyDetail,
 ): SharePropertyDetail | RentPropertyDetail {
   const base = {
-    jsonDiscriminator: getProperty.kind,
     memberId: getProperty.memberId,
     kind: getProperty.kind,
     genderPreference: getProperty.genderPreference,
@@ -38,6 +37,7 @@ export default function toPostPropertyDetail(
       sharePropertySubType: (getProperty as ShareProperty).sharePropertySubType,
       capacityShare: (getProperty as ShareProperty).capacityShare,
       internalDetails: (getProperty as ShareProperty).internalDetails,
+      
     };
   } else {
     return {

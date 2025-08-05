@@ -6,10 +6,12 @@ import { useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 import clsx from "clsx";
-
 import { fetchPlaceDetails, fetchPlaceSuggestions } from "@/apis/googlePlaces";
 
-import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
+import {
+  usePatchProperty,
+  usePropertyDetailEditList,
+} from "@/hooks/property/useProperty";
 
 import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
 
@@ -147,7 +149,20 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
     return isFocused ? "border-gray-900" : "border-gray-600";
   };
 
-  console.log(addressData);
+  const { mutate: patchProperty } = usePatchProperty(Number(id));
+
+  const handleSave = () => {
+    if (!data) return null;
+    const jsonDiscriminator = data.kind;
+    const payload = { jsonDiscriminator,
+      region: addressData, };
+
+    patchProperty(payload, {
+      onSuccess: () => {
+        router.push(`/listings/${id}/edit`);
+      },
+    });
+  };
 
   return (
     <div className="flex flex-col gap-2">
@@ -307,10 +322,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
           {!edit ? (
             <BottomActionBar label="다음" variant="outline" onClick={onNext} />
           ) : (
-            <BottomActionBar
-              label="저장"
-              onClick={() => router.push(`/listings/${id}/edit`)}
-            />
+            <BottomActionBar label="저장" onClick={handleSave} />
           )}
         </>
       )}

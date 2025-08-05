@@ -17,6 +17,7 @@ interface UseMultipleImageUploadProps {
     fileExtensions: string[],
   ) => Promise<PresignedUrlResponse[]>;
   setShowErrorModal: React.Dispatch<React.SetStateAction<boolean>>;
+  onUploadedUrls?: (urls: string[]) => void;
 }
 
 const useMultipleImageUpload = ({
@@ -25,6 +26,7 @@ const useMultipleImageUpload = ({
   setUploadedFiles,
   getPresignedUrls,
   setShowErrorModal,
+  onUploadedUrls,
 }: UseMultipleImageUploadProps) => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
 
@@ -69,11 +71,15 @@ const useMultipleImageUpload = ({
     try {
       const fileExtensions = validFiles.map(file => file.type.split("/")[1]);
       const presignedUrls = await getPresignedUrls(fileExtensions);
-
+     
       await uploadFilesToPresignedUrls(validFiles, presignedUrls);
-
-      setPreviewUrls(prev => [...prev, ...presignedUrls.map(p => p.fileUrl)]);
+      const uploadedUrls = presignedUrls.map(p => p.fileUrl);
+      setPreviewUrls(prev => [...prev, ...uploadedUrls]);
       setUploadedFiles(prev => [...prev, ...validFiles]);
+
+      if (onUploadedUrls) {
+        onUploadedUrls([...previewUrls, ...uploadedUrls]);
+      }
     } catch (error) {
       console.error("이미지 업로드 중 에러 발생:", error);
       setShowErrorModal(true);

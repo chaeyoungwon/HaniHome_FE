@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
-import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
+import { usePropertyDetailEditList, usePatchProperty } from "@/hooks/property/useProperty";
 
 import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
 
@@ -13,6 +13,7 @@ import BackHeader from "@/components/layout/header/BackHeader";
 import FunnelStepMenu from "@/components/listings/create/common/FunnelStepMenu";
 import CostDetailField from "@/components/listings/create/contractTerms/CostDetailField";
 
+import { CATEGORY_OPTIONS } from "@/constants/property-category";
 import { COMMON_CONTRACT_TERMS } from "@/constants/question-map";
 
 import { CostDetails } from "@/types/listingDetailPost";
@@ -24,7 +25,7 @@ const ContractTermsEdit = () => {
 
   const params = useParams();
   const id = params.id as string;
-  const { data } = usePropertyDetailEditList(id ?? ""); // ← 서버 데이터 가져오기
+  const { data } = usePropertyDetailEditList(id ?? "");
 
   const [costDetails, setCostDetails] = useState<CostDetails>({
     weeklyCost: 0,
@@ -63,9 +64,41 @@ const ContractTermsEdit = () => {
     return parts.join(", ");
   };
   const router = useRouter();
+
+  const INCLUDED_OPTION_IDS = CATEGORY_OPTIONS[4];
+
+  const { mutate: patchProperty } = usePatchProperty(Number(id));
+
   const handleSave = () => {
-    router.push(`/listings/${id}/edit`);
+    const includedOptionIds = new Set<number>(
+      INCLUDED_OPTION_IDS.items.map(item => item.optionId),
+    );
+
+    //기존 optionItemIds 중 included 항목만 제거
+    const filteredOptionItemIds = optionItemIds.filter(
+      id => !includedOptionIds.has(id),
+    );
+
+    //현재 상태의 included optionItemIds만 다시 추가
+    const finalOptionItemIds = [
+      ...filteredOptionItemIds,
+      ...optionItemIds.filter(id => includedOptionIds.has(id)),
+    ];
+    const jsonDiscriminator = data?.kind;
+
+    const payload = {
+      jsonDiscriminator,
+      costDetails,
+      optionItemIds: finalOptionItemIds,
+    };
+
+    patchProperty(payload, {
+      onSuccess: () => {
+        router.push(`/listings/${id}/edit`);
+      },
+    });
   };
+
   return (
     <div className="pb-[70px]">
       <BackHeader />

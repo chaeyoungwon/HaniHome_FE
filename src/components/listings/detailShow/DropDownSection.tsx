@@ -62,8 +62,8 @@ const DropDownSection = ({
         return router.push(`/listings/${id}/edit/movingConditions?open=${key}`);
       case "costDetails":
         return router.push(`/listings/${id}/edit/contractTerms?open=${key}`);
-      default:
-        return router.push(`/listings/${id}/edit/${key}`);
+      case "kind":
+        alert("매물종류 수정 불가");
     }
   };
 

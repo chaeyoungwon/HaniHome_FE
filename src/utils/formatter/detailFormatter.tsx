@@ -103,12 +103,11 @@ export const formatInternalDetails = (
   const displayValue = (value: number | undefined | null) => {
     if (value === null || value === undefined) return "(-)";
 
-    const formatted = value.toFixed(1);
+    const formatted = Number.isInteger(value)
+      ? value.toString()
+      : value.toFixed(1);
 
-    if (formatted.length > 5) {
-      return formatted.slice(0, 5);
-    }
-    return formatted;
+    return formatted.length > 5 ? formatted.slice(0, 5) + ".." : formatted;
   };
 
   return (

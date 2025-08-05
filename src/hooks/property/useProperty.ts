@@ -70,7 +70,7 @@ export const usePatchProperty = (propertyId: number) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: Property) => patchProperty(propertyId, payload),
+    mutationFn: (payload:Partial<PropertyDetailPost>) => patchProperty(propertyId, payload),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["propertyDetailList", propertyId],

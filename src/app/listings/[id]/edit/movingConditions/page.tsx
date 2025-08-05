@@ -7,7 +7,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useListingStore } from "@/stores/useListingStore";
 import clsx from "clsx";
 
-import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
+import {
+  usePatchProperty,
+  usePropertyDetailEditList,
+} from "@/hooks/property/useProperty";
 
 import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
 import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
@@ -24,29 +27,35 @@ import { COMMON_MOVING_CONDITIONS } from "@/constants/question-map";
 
 import { MovingConditionsOption } from "@/types/createPropertyAnswer";
 
+import { PatchPayload } from "@/types/patchPayload";
+
 import DownArrow from "@/public/svgs/common/down-arrow.svg";
 
 const MovingConditionsEdit = () => {
   const fixedKey = "movingConditions";
+
   const [showAlert, setShowAlert] = useState(false);
+
   const params = useParams();
   const id = params.id as string;
   const router = useRouter();
 
-  const { data } = usePropertyDetailEditList(id ?? "");
-
   const searchParams = useSearchParams();
   const open = searchParams.get("open");
+
+  const { data } = usePropertyDetailEditList(id ?? "");
 
   const {
     genderPreference,
     livingConditions,
     moveInInfo,
     optionItemIds,
+    lgbtAvailable,
     setGenderPreference,
     setLivingConditions,
     setMoveInInfo,
     setOptionItemIds,
+    setLgbtAvailable,
   } = useListingStore();
 
   const listing = useMemo(() => {
@@ -60,9 +69,8 @@ const MovingConditionsEdit = () => {
     setMoveInInfo(listing.moveInInfo);
     setLivingConditions(listing.livingConditions);
     setGenderPreference(listing.genderPreference);
+    setLgbtAvailable(listing.lgbtAvailable);
   }, [listing]);
-
-  console.log(listing);
 
   const handleItemClick = () => {
     setShowAlert(true);
@@ -78,14 +86,23 @@ const MovingConditionsEdit = () => {
     };
 
     switch (id) {
-      case "genderPreference":
-        return genderPreference === "ANY"
-          ? "무관"
-          : genderPreference === "MALE_ONLY"
-            ? "남자만"
-            : genderPreference === "FEMALE_ONLY"
-              ? "여자만"
-              : "커플 가능";
+      case "genderPreference": {
+        let base =
+          genderPreference === "ANY"
+            ? "무관"
+            : genderPreference === "MALE_ONLY"
+              ? "남자만"
+              : genderPreference === "FEMALE_ONLY"
+                ? "여자만"
+                : "커플 가능";
+
+        if (lgbtAvailable) {
+          base += " (LGBTQ 가능)";
+        }
+
+        return base;
+      }
+
       case "livingConditions": {
         const parts = [];
         if (livingConditions?.noticePeriodWeeks)
@@ -95,7 +112,7 @@ const MovingConditionsEdit = () => {
         if (livingConditions?.contractTerms) parts.push("계약 형태");
         return parts.join(", ");
       }
-      case "moveInInfo":{
+      case "moveInInfo": {
         const { availableFrom, availableTo, immediate, negotiable } =
           moveInInfo;
 
@@ -173,6 +190,46 @@ const MovingConditionsEdit = () => {
     }
   };
 
+  const { mutate: patchProperty } = usePatchProperty(Number(id));
+
+  const handleSave = () => {
+    if (!data || !open) return;
+
+    const jsonDiscriminator = data.kind as "SHARE" | "RENT";
+
+    let payload: PatchPayload | null = null;
+
+    if (open === "genderPreference" && genderPreference) {
+      payload =
+        jsonDiscriminator === "SHARE"
+          ? { jsonDiscriminator: "SHARE", genderPreference, lgbtAvailable }
+          : { jsonDiscriminator: "RENT", genderPreference, lgbtAvailable };
+    } else if (open === "livingConditions" && livingConditions) {
+      payload =
+        jsonDiscriminator === "SHARE"
+          ? { jsonDiscriminator: "SHARE", livingConditions }
+          : { jsonDiscriminator: "RENT", livingConditions };
+    } else if (open === "moveInInfo") {
+      payload =
+        jsonDiscriminator === "SHARE"
+          ? { jsonDiscriminator: "SHARE", moveInInfo }
+          : { jsonDiscriminator: "RENT", moveInInfo };
+    } else if (open === "additionalInfo") {
+      payload =
+        jsonDiscriminator === "SHARE"
+          ? { jsonDiscriminator: "SHARE", optionItemIds }
+          : { jsonDiscriminator: "RENT", optionItemIds };
+    }
+
+    if (payload) {
+      patchProperty(payload, {
+        onSuccess: () => {
+          router.push(`/listings/${id}/edit`);
+        },
+      });
+    }
+  };
+
   return (
     <div className="pb-[70px]">
       <BackHeader />
@@ -228,12 +285,7 @@ const MovingConditionsEdit = () => {
           className="bottom-[70px]"
         />
       )}
-      <BottomActionBar
-        label="저장"
-        onClick={() => {
-          router.push(`/listings/${id}/edit`);
-        }}
-      />
+      <BottomActionBar label="저장" onClick={handleSave} />
     </div>
   );
 };

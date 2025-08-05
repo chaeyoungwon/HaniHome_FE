@@ -98,9 +98,9 @@ export interface ShareInternalDetails extends InternalDetailsBase {
 
 export interface SharePropertyDetail extends PropertyBase {
   jsonDiscriminator: "SHARE";
-  sharePropertySubType: SharePropertySubType;
-  internalDetails: ShareInternalDetails;
-  capacityShare: CapacityShare;
+  sharePropertySubType: SharePropertySubType | null;
+  internalDetails: ShareInternalDetails | null;
+  capacityShare: CapacityShare | null;
 }
 
 // --- RENT 전용 ---
@@ -113,9 +113,9 @@ export interface RentInternalDetails extends InternalDetailsBase {
 
 export interface RentPropertyDetail extends PropertyBase {
   jsonDiscriminator: "RENT";
-  rentPropertySubType: RentPropertySubType;
-  internalDetails: RentInternalDetails;
-  capacityRent: CapacityRent;
+  rentPropertySubType: RentPropertySubType | null;
+  internalDetails: RentInternalDetails | null;
+  capacityRent: CapacityRent | null;
 }
 
 export type PropertyDetail = SharePropertyDetail | RentPropertyDetail;

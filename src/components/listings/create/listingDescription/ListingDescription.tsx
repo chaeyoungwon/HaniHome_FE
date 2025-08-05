@@ -2,11 +2,14 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 
-import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
+import {
+  usePatchProperty,
+  usePropertyDetailEditList,
+} from "@/hooks/property/useProperty";
 
 import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
 
@@ -59,6 +62,20 @@ const ListingDescription = ({
     }
   };
 
+  const { mutate: patchProperty } = usePatchProperty(Number(id));
+
+  const handleSave = () => {
+    const jsonDiscriminator = data?.kind;
+    const payload = {
+      jsonDiscriminator,
+      description,
+    };
+    patchProperty(payload, {
+      onSuccess: () => {
+        router.push(`/listings/${id}/edit`);
+      },
+    });
+  };
   return (
     <>
       <BackHeader rightIcon="close" />
@@ -101,12 +118,7 @@ const ListingDescription = ({
           ]}
         />
       ) : (
-        <BottomActionBar
-          label="저장"
-          onClick={() => {
-            router.push(`/listings/${id}/edit`);
-          }}
-        />
+        <BottomActionBar label="저장" onClick={handleSave} />
       )}
     </>
   );

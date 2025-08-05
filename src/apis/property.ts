@@ -35,8 +35,9 @@ export const fetchPropertyDetaiEditlList = async (
   const res = await axiosInstance.get(`/api/v1/properties/${propertyId}`);
   return res.data.data;
 };
+
 // 매물 수정
-export const patchProperty = async (propertyId: number, payload: Property) => {
+export const patchProperty = async (propertyId: number, payload: Partial<PropertyDetailPost>) => {
   const res = await axiosInstance.patch(
     `/api/v1/properties/${propertyId}`,
     payload,

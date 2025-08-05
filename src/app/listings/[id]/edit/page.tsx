@@ -74,7 +74,7 @@ const ListingsEdit = () => {
           />
         )}
       </div>
-      <BottomActionBar label="저장" />
+      <BottomActionBar label="저장" onClick={()=>{router.push(`/listings/${id}?mode=edit`)}}/>
     </>
   );
 };

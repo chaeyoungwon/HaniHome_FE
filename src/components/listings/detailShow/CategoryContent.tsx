@@ -91,19 +91,19 @@ const CategoryContent = ({
     case "highlights":
       return (
         <div className={baseClass}>
-          {formatHighlights(value as number[]) || "N/A"}
+          {formatHighlights(value as number[]) || "(-)"}
         </div>
       );
     case "furniture":
       return (
         <div className={baseClass}>
-          {formatFurniture(value as number[]) || "N/A"}
+          {formatFurniture(value as number[]) || "(-)"}
         </div>
       );
     case "isBrokered":
       return (
         <div className={baseClass}>
-          {formatIsBrokered(value as number[]) || "N/A"}
+          {formatIsBrokered(value as number[]) || "(-)"}
         </div>
       );
     case "genderPreference":
