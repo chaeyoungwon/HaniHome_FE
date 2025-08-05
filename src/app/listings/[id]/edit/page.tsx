@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
 
@@ -43,9 +43,6 @@ const ListingsEdit = () => {
     }
   }, [data]);
 
-  const handleRemoveImage = useCallback((index: number) => {
-    setPreviewUrls(prev => prev.filter((_, i) => i !== index));
-  }, []);
 
   if (isLoading) return <div>로딩 중...</div>;
   if (error || !originalDetail || !currentDetail)
@@ -66,7 +63,7 @@ const ListingsEdit = () => {
             router.push(`/listings/${id}/edit/addressPhoto?subStep=photo`)
           }
         >
-          <ImageSlider images={previewUrls} onRemove={handleRemoveImage} />
+          <ImageSlider images={previewUrls} onRemove={()=>{}} />
         </div>
         {currentDetail && originalDetail && (
           <DropDownSection

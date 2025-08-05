@@ -7,6 +7,9 @@ import { useListingStore } from "@/stores/useListingStore";
 import { getPropertyPresignedUrl } from "@/apis/s3Upload";
 
 import useMultipleImageUpload from "@/hooks/common/useMultipleImageUpload";
+import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
+
+import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
@@ -29,6 +32,7 @@ interface PhotoFieldProps {
 const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
   const router = useRouter();
   const { id } = useParams();
+  const { data } = usePropertyDetailEditList(id as string);
 
   const { photoUrls, setPhotoUrls } = useListingStore();
   const [previewUrls, setPreviewUrls] = useState<string[]>(photoUrls); // 이미지 URL 미리보기
@@ -59,19 +63,22 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
   }, []);
 
   useEffect(() => {
+    if (edit && data) {
+      const parsed = toPostPropertyDetail(data);
+      if (Array.isArray(parsed.photoUrls)) {
+        setPhotoUrls(parsed.photoUrls);
+      }
+    }
+  }, [edit, data, setPhotoUrls]);
+
+  useEffect(() => {
     if (photoUrls.length > 0) {
       setPreviewUrls(photoUrls);
     }
   }, [photoUrls]);
 
-  useEffect(() => {
-    if (previewUrls.length > 0) {
-      setPhotoUrls(previewUrls); // 이미지 URL을 업데이트
-    }
-  }, [previewUrls]);
-
   return (
-    <div className="max-w-[375px]">
+    <div className="max-w-[375px] pb-[70px]">
       <div className="flex flex-col gap-2">
         <div className="text-heading3 p-4 text-gray-900">
           직접 촬영한 매물 사진을 올려주세요
@@ -135,7 +142,6 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
                 console.log("저장");
               },
               variant: "outline",
-
             },
             {
               label: "다음",

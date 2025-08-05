@@ -32,7 +32,7 @@ type ValueOf<T extends ListingDetailsOption["type"]> = Extract<
 
 interface Props<T extends ListingDetailsOption["type"]> {
   id: T;
-  value: ValueOf<T> | null;
+  value?: ValueOf<T> | null;
   onSelect: (value: ValueOf<T> | null) => void;
 }
 

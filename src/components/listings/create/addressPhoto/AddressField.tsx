@@ -9,6 +9,10 @@ import clsx from "clsx";
 
 import { fetchPlaceDetails, fetchPlaceSuggestions } from "@/apis/googlePlaces";
 
+import { usePropertyDetailEditList } from "@/hooks/property/useProperty";
+
+import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
+
 import BottomActionBar from "@/components/common/BottomActionBar";
 import GoogleMap from "@/components/common/GoogleMap";
 
@@ -46,10 +50,33 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
   const [suggestions, setSuggestions] = useState<
     { placeId: string; text: string }[]
   >([]);
+
   const router = useRouter();
   const { id } = useParams();
+  const { data } = usePropertyDetailEditList(id as string);
 
   const abortControllerRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    if (edit && data) {
+      const parsed = toPostPropertyDetail(data);
+      if (parsed.region) {
+        setAddressData(parsed.region);
+        setSearchKeyword(
+          [
+            parsed.region.streetNumber,
+            parsed.region.streetName,
+            parsed.region.suburb,
+            parsed.region.state,
+          ]
+            .filter(Boolean)
+            .join(" "),
+        );
+        setIsSearchClicked(true);
+        setSelectedAddress(parsed.region);
+      }
+    }
+  }, [edit, data, setAddressData, setSearchKeyword]);
 
   useEffect(() => {
     if (!searchKeyword.trim()) {
@@ -73,6 +100,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
   const handleSelectSuggestion = async (placeId: string, text: string) => {
     setSearchKeyword(text);
     setSuggestions([]);
+    setIsFocused(false);
 
     const details = await fetchPlaceDetails(placeId);
     if (!details) return;
@@ -120,6 +148,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
   };
 
   console.log(addressData);
+
   return (
     <div className="flex flex-col gap-2">
       <div className="text-heading3 px-4 py-4 text-gray-900">
@@ -178,6 +207,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
             </div>
           )}
         </div>
+
         {isSearchClicked && selectedAddress && (
           <div className="h-[343px] w-[343px] py-3">
             <GoogleMap

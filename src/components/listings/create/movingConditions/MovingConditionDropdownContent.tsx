@@ -12,7 +12,7 @@ import MoveInfoContent from "./MoveInfoContent";
 
 interface MovingConditionDropdownContentProps {
   id: string;
-  value: MovingConditionsOption;
+  value: MovingConditionsOption | undefined;
   onSelect: (value: MovingConditionsOption) => void;
 }
 

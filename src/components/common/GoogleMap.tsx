@@ -12,8 +12,9 @@ const GoogleMap = ({ lat, lng }: { lat: number; lng: number }) => {
   return (
     <APIProvider apiKey={API_KEY}>
       <Map
+        key={`${lat}-${lng}`}
         mapId="caf14668283853a63656a7d1"
-        defaultCenter={{ lat, lng }}
+        center={{ lat, lng }}
         defaultZoom={16}
         gestureHandling="greedy"
         disableDefaultUI={true}

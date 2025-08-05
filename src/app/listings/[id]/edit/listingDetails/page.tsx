@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -16,7 +16,6 @@ import {
   formatIsBrokered,
   formatPropertySubType,
 } from "@/utils/formatter/detailFormatter";
-
 import toPostPropertyDetail from "@/utils/toPostPropertyDetail";
 
 import AlertMessage from "@/components/common/AlertMessage";
@@ -24,14 +23,14 @@ import BottomActionBar from "@/components/common/BottomActionBar";
 import Divider from "@/components/common/Divider";
 import BackHeader from "@/components/layout/header/BackHeader";
 import FunnelStepMenu from "@/components/listings/create/common/FunnelStepMenu";
+import ListingDetailsDropdownContent from "@/components/listings/create/listingDetails/ListingDetailsDropdownContent";
 
 import { QUESTION_MAP } from "@/constants/question-map";
 
+import { ListingDetailsOption } from "@/types/createPropertyAnswer";
 import {
   RentInternalDetails,
-  RentPropertyDetail,
   ShareInternalDetails,
-  SharePropertyDetail,
 } from "@/types/listingDetailPost";
 
 import DownArrow from "@/public/svgs/common/down-arrow.svg";
@@ -39,6 +38,12 @@ import DownArrow from "@/public/svgs/common/down-arrow.svg";
 const ListingDetailsEdit = () => {
   const {
     listingType,
+    rentPropertyType,
+    sharePropertyType,
+    rentCapacityPeople,
+    shareCapacityPeople,
+    rentInternalDetails,
+    shareInternalDetails,
     optionItemIds,
     setListingType,
     setRentPropertyType,
@@ -50,6 +55,7 @@ const ListingDetailsEdit = () => {
     setOptionItemIds,
   } = useListingStore();
 
+  const router = useRouter();
   const params = useParams();
   const id = params.id as string;
   const { data, isLoading, error } = usePropertyDetailEditList(id ?? "");
@@ -93,8 +99,6 @@ const ListingDetailsEdit = () => {
   if (!listingType) return null;
   if (!listing) return null;
 
-  console.log("listing 전체:", listing);
-
   const handleItemClick = () => {
     setShowAlert(true);
   };
@@ -108,31 +112,23 @@ const ListingDetailsEdit = () => {
 
         switch (item.id) {
           case "propertyType": {
-            if (listing.jsonDiscriminator === "SHARE") {
-              value = formatPropertySubType(
-                (listing as SharePropertyDetail).sharePropertySubType,
-                "SHARE",
-              );
-            } else if (listing.jsonDiscriminator === "RENT") {
-              value = formatPropertySubType(
-                (listing as RentPropertyDetail).rentPropertySubType,
-                "RENT",
-              );
+            if (listingType === "SHARE" && sharePropertyType) {
+              value = formatPropertySubType(sharePropertyType, listingType);
+            } else if (listingType === "RENT" && rentPropertyType) {
+              value = formatPropertySubType(rentPropertyType, listingType);
+            } else {
+              value = "N/A";
             }
             break;
           }
 
           case "capacityPeople": {
-            if (listing.jsonDiscriminator === "SHARE") {
-              value = formatCapcityPeople(
-                (listing as SharePropertyDetail).capacityShare,
-                "SHARE",
-              );
-            } else if (listing.jsonDiscriminator === "RENT") {
-              value = formatCapcityPeople(
-                (listing as RentPropertyDetail).capacityRent,
-                "RENT",
-              );
+            if (listingType === "SHARE" && shareCapacityPeople !== null) {
+              value = formatCapcityPeople(shareCapacityPeople, "SHARE");
+            } else if (listingType === "RENT" && rentCapacityPeople !== null) {
+              value = formatCapcityPeople(rentCapacityPeople, "RENT");
+            } else {
+              value = "N/A";
             }
             break;
           }
@@ -147,36 +143,41 @@ const ListingDetailsEdit = () => {
             break;
           }
 
-          case "isbrokered": {
+          case "isBrokered": {
             value = formatIsBrokered(optionItemIds);
             break;
           }
 
           case "internalDetails": {
-            const val = listing.internalDetails;
+            const val =
+              listingType === "SHARE"
+                ? shareInternalDetails
+                : rentInternalDetails;
+
+            if (!val) {
+              value = "답변내용";
+              break;
+            }
 
             const areaLabels = ["internalArea", "totalArea"];
             const areaTexts = areaLabels
               .filter(key => val[key as keyof typeof val])
               .map(() => "면적");
 
-            const resident =
-              "totalResidents" in val && val.totalResidents ? "거주인" : "";
-            const shareBathroom =
-              "totalBathUser" in val && val.totalBathUser ? "욕실 쉐어" : "";
-
+            const resident = "";
+            const shareBathroom = "";
             let rooms = "";
             let bathrooms = "";
             let veranda = "";
             let yard = "";
             let withOwner = "";
 
-            if (listing.jsonDiscriminator === "SHARE") {
+            if (listingType === "SHARE") {
               const shareVal = val as ShareInternalDetails;
               bathrooms = shareVal.totalBathUser ? "욕실 쉐어" : "";
               rooms = shareVal.totalResidents ? "거주인" : "";
               withOwner = shareVal.withPropertyOwner ? "집주인 거주" : "";
-            } else if (listing.jsonDiscriminator === "RENT") {
+            } else if (listingType === "RENT") {
               const rentVal = val as RentInternalDetails;
               rooms = rentVal.numberOfRoom ? "방 개수" : "";
               bathrooms = rentVal.numberOfBath ? "욕실 개수" : "";
@@ -239,7 +240,12 @@ const ListingDetailsEdit = () => {
                 />
               </div>
             </div>
-
+            {open === item.id && (
+              <ListingDetailsDropdownContent
+                id={item.id as ListingDetailsOption["type"]}
+                onSelect={() => {}}
+              />
+            )}
             {index < array.length - 1 && <Divider className="my-1" />}
           </div>
         );
@@ -251,7 +257,12 @@ const ListingDetailsEdit = () => {
           className="bottom-[70px]"
         />
       )}
-      <BottomActionBar label="저장" />
+      <BottomActionBar
+        label="저장"
+        onClick={() => {
+          router.push(`/listings/${id}/edit`);
+        }}
+      />
     </>
   );
 };
