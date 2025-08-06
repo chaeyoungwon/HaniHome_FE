@@ -1,11 +1,11 @@
 export const FUNNEL_FLOW = [
   { step: "listingType" },
-  {
-    step: "addressPhoto",
-    subSteps: ["address", "photo"],
-  },
-  { step: "listingDetails" },
-  { step: "movingConditions" },
+  // {
+  //   step: "addressPhoto",
+  //   subSteps: ["address", "photo"],
+  // },
+  // { step: "listingDetails" },
+  // { step: "movingConditions" },
   { step: "contractTerms" },
   { step: "listingDescription" },
   { step: "createConfirm" },

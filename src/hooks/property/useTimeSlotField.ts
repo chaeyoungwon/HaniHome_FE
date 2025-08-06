@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { convertLocalTimeToUtcString } from "@/utils/formatter/dateFormatter";
+import { convertUtcStringToLocalTime } from "@/utils/formatter/dateFormatter";
 import { timeToMinutes } from "@/utils/listing/create/timeslotUtils";
 
 import {
@@ -47,7 +49,7 @@ export const useTimeSlotField = (
     val: string,
   ) => {
     const { minTime, maxTime } = PERIOD_LIMITS[period];
-    const valMin = timeToMinutes(val);
+    let valMin = timeToMinutes(val);
     const minLimit = timeToMinutes(minTime);
     const maxLimit = timeToMinutes(maxTime === "00:00" ? "24:00" : maxTime);
 
@@ -57,12 +59,25 @@ export const useTimeSlotField = (
     }
 
     const idx = PERIODS.indexOf(period);
-    const otherVal =
+    const otherValUtc =
       slots[idx][type === "start" ? "timeTo" : "timeFrom"] || "00:00";
-    const otherMin = timeToMinutes(otherVal);
+    const otherValLocal = convertUtcStringToLocalTime(otherValUtc);
+
+    let otherMin = timeToMinutes(otherValLocal);
+    if (type === "start") {
+      // 시작 시간이 종료 시간보다 같거나 크면 종료 시간에 24시간(1440분) 더함
+      if (otherMin <= valMin && otherValLocal !== "00:00") {
+        otherMin += 24 * 60;
+      }
+    } else if (type === "end") {
+      // 종료 시간이 시작 시간보다 같거나 작으면 종료 시간에 24시간 더함
+      if (valMin <= otherMin && val !== "00:00") {
+        valMin += 24 * 60;
+      }
+    }
 
     if (
-      (type === "start" && valMin >= otherMin && otherVal !== "00:00") ||
+      (type === "start" && valMin >= otherMin && otherValLocal !== "00:00") ||
       (type === "end" && valMin <= otherMin && val !== "00:00")
     ) {
       setAlertMsg("시작 시간은 종료 시간보다 이전이어야 합니다.");
@@ -78,11 +93,13 @@ export const useTimeSlotField = (
       const idx = PERIODS.indexOf(period);
       const updatedSlots = [...slots];
       const saveTime =
-        type === "end" && tempTime === "00:00" ? "24:00" : tempTime;
+        type === "end" && tempTime === "24:00" ? "00:00" : tempTime;
+
+      const utcTime = convertLocalTimeToUtcString(saveTime);
 
       updatedSlots[idx] = {
         ...updatedSlots[idx],
-        [type === "start" ? "timeFrom" : "timeTo"]: saveTime,
+        [type === "start" ? "timeFrom" : "timeTo"]: utcTime,
       };
       setSlots(updatedSlots);
       onChange(updatedSlots);
@@ -96,8 +113,8 @@ export const useTimeSlotField = (
       const isCurrent = PERIODS[idx] === period;
       return (
         !isCurrent &&
-        (slot.timeFrom === "00:00" || slot.timeFrom === "") !==
-          (slot.timeTo === "00:00" || slot.timeTo === "")
+        (slot.timeFrom === null || slot.timeFrom === null) !==
+          (slot.timeTo === null || slot.timeTo === null)
       );
     });
 
@@ -114,11 +131,13 @@ export const useTimeSlotField = (
       setActiveSpinner({ period, type });
       const idx = PERIODS.indexOf(period);
       const currentTime =
-        slots[idx]?.[type === "start" ? "timeFrom" : "timeTo"] || "00:00";
+        slots[idx]?.[type === "start" ? "timeFrom" : "timeTo"] || null;
       setTempTime(currentTime);
 
-      const [hour, minute] = currentTime.split(":").map(Number);
-      setScrollTarget({ hour, minute });
+      if (currentTime) {
+        const [hour, minute] = currentTime.split(":").map(Number);
+        setScrollTarget({ hour, minute });
+      }
     }
   };
 

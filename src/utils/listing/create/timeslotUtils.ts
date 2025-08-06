@@ -5,6 +5,7 @@ export const timeToMinutes = (timeStr: string): number => {
   return h * 60 + m;
 };
 
-export const displayTime = (timeStr: string): string => {
+export const displayTime = (timeStr: string | null): string => {
+  if (!timeStr) return "";
   return timeStr === "24:00" ? "00:00" : timeStr;
 };

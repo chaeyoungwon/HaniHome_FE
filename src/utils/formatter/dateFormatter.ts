@@ -134,3 +134,34 @@ export const formatToDateRange = (from: string, to: string): string => {
 
   return `${format(from)} - ${format(to)}`;
 };
+
+//UTC 시간으로 전환
+export const convertLocalTimeToUtcString = (localTime: string): string => {
+  const [hour, minute] = localTime.split(":").map(Number);
+
+  const localDate = new Date();
+  localDate.setHours(hour, minute, 0, 0);
+
+  const iso = localDate.toISOString(); // 예: "2025-08-05T21:00:00.000Z"
+
+  // UTC 시간 추출
+  const utcHour = iso.substring(11, 13);
+  const utcMinute = iso.substring(14, 16);
+
+  return `${utcHour}:${utcMinute}`; // 예: "21:00"
+};
+
+export const convertUtcStringToLocalTime = (utcTime: string): string => {
+  const [hour, minute] = utcTime.split(":").map(Number);
+
+  // 현재 날짜를 기준으로 UTC 시간 설정
+  const utcDate = new Date();
+  utcDate.setUTCHours(hour, minute, 0, 0);
+
+  // 로컬 시간 추출
+  const localHour = utcDate.getHours();
+  const localMinute = utcDate.getMinutes();
+
+  // HH:mm 포맷으로 반환
+  return `${String(localHour).padStart(2, "0")}:${String(localMinute).padStart(2, "0")}`;
+};

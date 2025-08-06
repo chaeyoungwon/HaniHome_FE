@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { useState } from "react";
 
+import AlertMessage from "@/components/common/AlertMessage";
 import Divider from "@/components/common/Divider";
 
 import {
@@ -39,6 +40,9 @@ const DropDownSection = ({
   );
   const router = useRouter();
   const { id } = useParams();
+  const [alertMsg, setAlertMsg] = useState<string | null>(null);
+
+  const closeAlert = () => setAlertMsg(null);
 
   const handleItemClick = (key: string) => {
     switch (key) {
@@ -63,7 +67,7 @@ const DropDownSection = ({
       case "costDetails":
         return router.push(`/listings/${id}/edit/contractTerms?open=${key}`);
       case "kind":
-        alert("매물종류 수정 불가");
+        return setAlertMsg("매물 종류는 수정할 수 없습니다");
     }
   };
 
@@ -163,6 +167,13 @@ const DropDownSection = ({
                     value={value}
                     listingData={listingData}
                   />
+                  {alertMsg && (
+                    <AlertMessage
+                      message={alertMsg}
+                      onDone={closeAlert}
+                      className="bottom-[70px]"
+                    />
+                  )}
                 </div>
               )}
             </div>

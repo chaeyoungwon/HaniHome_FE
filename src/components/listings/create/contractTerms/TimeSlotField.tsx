@@ -1,6 +1,6 @@
 import { useTimeSlotField } from "@/hooks/property/useTimeSlotField";
 
-import { displayTime } from "@/utils/listing/create/timeslotUtils";
+import { convertUtcStringToLocalTime } from "@/utils/formatter/dateFormatter";
 
 import AlertMessage from "@/components/common/AlertMessage";
 import TimeSpinner from "@/components/common/calendar/TimeSpinner";
@@ -27,11 +27,14 @@ const TimeSlotField = ({ value, onChange }: TimeSlotFieldProps) => {
     scrollTarget,
   } = useTimeSlotField(value, onChange);
 
-  const getDisplayTime = (time: string, isActive: boolean) => {
-    const [hour, minute] = (displayTime(time) || "00:00").split(":");
-    return isActive ? (
-      <span>nn : nn</span>
-    ) : (
+  const getDisplayTime = (time: string | null, isActive: boolean) => {
+    if (!time) {
+      return isActive ? <span>nn : nn</span> : <span>00 : 00</span>;
+    }
+
+    const localTime = convertUtcStringToLocalTime(time);
+    const [hour, minute] = (localTime || "00:00").split(":");
+    return (
       <span className="flex items-center gap-[2px]">
         <span>{hour}</span>
         <span>:</span>
@@ -40,11 +43,10 @@ const TimeSlotField = ({ value, onChange }: TimeSlotFieldProps) => {
     );
   };
 
-  const getButtonClass = (time: string, isActive: boolean) => {
+  const getButtonClass = (time: string | null, isActive: boolean) => {
     if (isActive) return "bg-mint-contrast border-mint-contrast text-white";
-    if (!time || time === "00:00")
-      return "bg-gray-0 border-gray-300 text-gray-300";
-    if (time === "24:00") return "text-mint bg-white border-gray-400";
+    if (!time) return "bg-gray-0 border-gray-300 text-gray-300";
+    if (time === "00:00") return "text-mint bg-white border-gray-400";
     return "text-mint border-gray-400";
   };
 

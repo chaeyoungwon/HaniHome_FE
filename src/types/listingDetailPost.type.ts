@@ -57,8 +57,8 @@ export interface MoveInInfo {
 }
 
 export interface TimeSlot {
-  timeFrom: string;
-  timeTo: string;
+  timeFrom: string | null;
+  timeTo: string | null;
 }
 
 export interface InternalDetailsBase {

@@ -8,8 +8,8 @@ import { useListingStore } from "@/stores/useListingStore";
 import clsx from "clsx";
 
 import {
+  fetchPlaceDetailSuggestions,
   fetchPlaceDetails,
-  fetchPlaceSuggestions,
 } from "@/apis/googlePlacesApi";
 
 import {
@@ -94,9 +94,11 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
     const controller = new AbortController();
     abortControllerRef.current = controller;
 
-    fetchPlaceSuggestions(searchKeyword, controller.signal).then(results => {
-      setSuggestions(results);
-    });
+    fetchPlaceDetailSuggestions(searchKeyword, controller.signal).then(
+      results => {
+        setSuggestions(results);
+      },
+    );
 
     return () => {
       controller.abort();
@@ -201,22 +203,26 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
               onClick={() => setIsSearchClicked(true)}
             />
           </div>
-
           {isFocused && suggestions.length > 0 && (
-            <ul className="absolute z-10 max-h-48 w-[343px] overflow-y-auto rounded border bg-white px-2">
-              {suggestions.map(item => (
-                <li
-                  key={item.placeId}
-                  className="cursor-pointer py-2 hover:bg-gray-100"
-                  onMouseDown={e => {
-                    e.preventDefault();
-                    handleSelectSuggestion(item.placeId, item.text);
-                  }}
-                >
-                  {item.text}
-                </li>
-              ))}
-            </ul>
+            <div className="relative z-10 mt-[-12px] w-full rounded-sm rounded-t-none border border-gray-500 bg-white">
+              <ul className="flex flex-col">
+                {suggestions.map(item => (
+                  <li
+                    key={item.placeId}
+                    className="text-cap1-med cursor-pointer truncate max-w-[343px] px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    onMouseDown={e => {
+                      e.preventDefault(); // prevent input blur
+                      handleSelectSuggestion(item.placeId, item.text);
+                    }}
+                  >
+                    {item.text}
+                  </li>
+                ))}
+              </ul>
+              <div className="px-4 pb-2 text-right text-[6.625px] text-gray-700">
+                powered by google
+              </div>
+            </div>
           )}
 
           {isFocused && !addressData.streetName && (

@@ -52,6 +52,36 @@ export const fetchPlaceSuggestions = async (
   }
 };
 
+export const fetchPlaceDetailSuggestions = async (
+  input: string,
+  signal?: AbortSignal,
+): Promise<PlacePrediction[]> => {
+  if (!input.trim()) return [];
+
+  try {
+    const res = await fetch("/api/autocomplete", {
+      method: "POST",
+      signal,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input, type: "address" }),
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch predictions");
+
+    const data = (await res.json()) as GooglePlacesAPIResponse;
+    
+    return (
+      data?.suggestions?.map(s => ({
+        placeId: s.placePrediction.placeId,
+        text: s.placePrediction.text.text,
+      })) ?? []
+    );
+  } catch (error) {
+    console.error("fetchPlaceDetailSuggestions error", error);
+    return [];
+  }
+};
+
 export const getCoordsFromRegion = async (region: PropertyRegion) => {
   const address = [
     region.streetNumber,

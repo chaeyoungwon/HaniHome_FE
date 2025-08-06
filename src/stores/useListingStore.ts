@@ -136,9 +136,9 @@ const initialState = {
   },
   optionItemIds: [],
   timeSlots: [
-    { timeFrom: "00:00", timeTo: "00:00" },
-    { timeFrom: "00:00", timeTo: "00:00" },
-    { timeFrom: "00:00", timeTo: "00:00" },
+    { timeFrom: null, timeTo: null },
+    { timeFrom: null, timeTo: null },
+    { timeFrom: null, timeTo: null },
   ],
   meetingDateFrom: null,
   meetingDateTo: null,

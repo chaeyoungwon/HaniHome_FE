@@ -1,5 +1,5 @@
 export async function POST(req: Request) {
-  const { input } = await req.json();
+  const { input, type = "regions" } = await req.json();
 
   const googleRes = await fetch(
     "https://places.googleapis.com/v1/places:autocomplete",
@@ -14,7 +14,15 @@ export async function POST(req: Request) {
       body: JSON.stringify({
         input,
         includedRegionCodes: ["au"],
-        includedPrimaryTypes: ["(regions)"],
+        ...(type === "address"
+          ? {
+              includedPrimaryTypes: ["street_address", "premise"],
+            }
+          : type === "regions"
+            ? {
+                includedPrimaryTypes: ["(regions)"],
+              }
+            : {}),
       }),
     },
   );
