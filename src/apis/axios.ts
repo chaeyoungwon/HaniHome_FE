@@ -27,6 +27,7 @@ axiosInstance.interceptors.request.use(
   error => Promise.reject(error),
 );
 
+// 응답 인터셉터에서 처리
 axiosInstance.interceptors.response.use(
   response => {
     const authHeader = response.headers["authorization"];
@@ -37,35 +38,17 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   error => {
-    const res = error.response;
-    const resData = res?.data;
-
-    const authHeader = res?.headers?.["authorization"];
     const { clearAuth } = useAuthStore.getState();
+    const res = error.response;
+    const code = res?.data?.serviceCode || res?.data?.data?.codeName || "";
 
-    const isAccessTokenExpired =
+    const shouldLogout =
       res?.status === 400 &&
-      (resData?.serviceCode === "ACCESS_TOKEN_EXPIRED" ||
-        resData?.data?.codeName === "ACCESS_TOKEN_EXPIRED");
+      (code === "INVALID_REFRESH_TOKEN" ||
+        code === "INVALID_TOKEN" ||
+        code === "ACCESS_TOKEN_EXPIRED");
 
-    const isRefreshTokenExpired =
-      res?.status === 400 &&
-      (resData?.serviceCode === "INVALID_REFRESH_TOKEN" ||
-        resData?.data?.codeName === "INVALID_REFRESH_TOKEN");
-
-    const isInvalidToken =
-      res?.status === 400 && resData?.serviceCode === "INVALID_TOKEN";
-    const originalRequest = error.config;
-
-    if (isAccessTokenExpired && authHeader?.startsWith("Bearer ")) {
-      const newToken = authHeader.split(" ")[1];
-      useAuthStore.getState().setAccessToken(newToken);
-
-      originalRequest.headers.Authorization = `Bearer ${newToken}`;
-      return axiosInstance(originalRequest);
-    }
-
-    if (isRefreshTokenExpired || isInvalidToken) {
+    if (shouldLogout) {
       clearAuth();
     }
 
