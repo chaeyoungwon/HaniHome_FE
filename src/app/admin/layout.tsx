@@ -1,5 +1,5 @@
 // app/admin/layout.tsx
-import AdminNavbar from "./components/common/AdminNavbar";
+import AdminNavbar from "@/components/admin/common/AdminNavbar";
 import ReactQueryProvider from "@/utils/reactQueryProvider";
 
 export default function AdminLayout({

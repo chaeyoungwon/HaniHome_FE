@@ -1,9 +1,9 @@
 "use client";
 
-import { VerificationDetail } from "../types/verification";
+import { VerificationDetail } from "@/types/admin/verification";
 import Image from "next/image";
 import { useState } from "react";
-
+import { approveVerification, rejectVerification } from "@/apis/admin/verification/adminVerificationApi";
 
 interface Props {
   data: VerificationDetail; //상세 조회 대상 데이터 
@@ -14,18 +14,28 @@ const VerificationDetailModal = ({ data, onClose }: Props) => {
   const [rejectionReason, setRejectionReason] = useState("");
   const [showRejectionField, setShowRejectionField] = useState(false);
 
-  const handleApprove = () => {
-    console.log("승인됨", data.id);
-    alert("승인됨");
+  const handleApprove = async () => {
+    try {
+      await approveVerification(data.id);
+      alert("승인됨");
+      onClose();
+    } catch {
+      alert("승인 실패");
+    }
   };
 
   const handleReject = () => {
     setShowRejectionField(true);
   };
 
-  const handleRejectSubmit = () => {
-    console.log("거부됨", data.id, rejectionReason);
-    alert("거부됨");
+  const handleRejectSubmit = async () => {
+    try {
+      await rejectVerification(data.id, rejectionReason);
+      alert("거부됨");
+      onClose();
+    } catch {
+      alert("거부 실패");
+    }
   };
 
   return (
@@ -34,13 +44,13 @@ const VerificationDetailModal = ({ data, onClose }: Props) => {
         {/* 닫기 버튼 */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700"
+          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 cursor-pointer"
         >
           ✕
         </button>
 
         {/* 이미지 */}
-        <div className="mb-4 flex gap-4">
+        <div className="mb-4 flex justify-center gap-4">
           {data.documentImageUrls.map((url, idx) => (
             <Image
               key={idx}

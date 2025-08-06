@@ -1,4 +1,4 @@
-import { axiosInstance } from "./axios";
+import { axiosInstance } from "@/apis/axios";
 
 export const getOneOnOneConsultList = async (
   status?: "REQUESTED" | "COMPLETED",
