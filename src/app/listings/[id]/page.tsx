@@ -184,6 +184,7 @@ const ListingDetailPage = () => {
                 alt="프로필 이미지"
                 width={48}
                 height={48}
+                unoptimized
                 className="h-12 w-12 rounded-full border border-gray-300 object-cover"
               />
             ) : (

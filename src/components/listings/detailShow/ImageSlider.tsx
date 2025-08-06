@@ -27,6 +27,8 @@ const ImageSlider = ({
               src={src}
               alt={`image${index}`}
               fill
+              sizes="280px"
+              unoptimized
               className="rounded-lg border border-gray-300 object-cover"
             />
             {onRemove && (
@@ -40,6 +42,7 @@ const ImageSlider = ({
                   alt="삭제"
                   width={24}
                   height={24}
+                  unoptimized
                 />
               </button>
             )}

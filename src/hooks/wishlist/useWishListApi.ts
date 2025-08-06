@@ -26,10 +26,13 @@ export const useWishList = () => {
 };
 
 export const useWishedProperties = (sort: WishListSortType = "latest") => {
+  const { isLoggedIn } = useAuthStore();
+
   return useQuery({
     queryKey: ["wishList", sort],
     queryFn: () => getWishedProperties(sort),
     staleTime: 0,
+    enabled: isLoggedIn,
   });
 };
 

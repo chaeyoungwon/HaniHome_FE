@@ -51,6 +51,7 @@ const ListingCard = ({
         width={108}
         height={108}
         alt="매물 이미지"
+        unoptimized
         className="h-27 w-27 rounded-sm border border-gray-200 object-cover"
       />
 

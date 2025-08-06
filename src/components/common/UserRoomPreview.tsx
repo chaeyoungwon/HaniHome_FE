@@ -66,6 +66,7 @@ const UserRoomPreview = ({
           "absolute top-0 left-0 z-1 border-gray-300 object-cover",
           userClassName,
         )}
+        unoptimized={true}
         style={{
           width: `${size}px`,
           height: `${size}px`,
@@ -78,6 +79,7 @@ const UserRoomPreview = ({
         width={size}
         height={size}
         className={clsx("absolute border-gray-300 object-cover", roomClassName)}
+        unoptimized={true}
         style={{
           top: `${offset}px`,
           left: `${offset}px`,

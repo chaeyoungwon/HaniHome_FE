@@ -7,7 +7,10 @@ interface VerifyImageUploaderProps {
   onDelete: (index: number) => void;
 }
 
-const VerifyImageUploader = ({ images, onDelete }: VerifyImageUploaderProps) => {
+const VerifyImageUploader = ({
+  images,
+  onDelete,
+}: VerifyImageUploaderProps) => {
   return (
     <div className="flex gap-3">
       {images.map((src, idx) => (
@@ -19,6 +22,7 @@ const VerifyImageUploader = ({ images, onDelete }: VerifyImageUploaderProps) => 
             src={src}
             alt={`uploaded-${idx}`}
             fill
+            unoptimized
             className="object-cover"
             sizes="160px"
           />

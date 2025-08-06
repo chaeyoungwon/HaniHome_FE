@@ -23,6 +23,7 @@ const AdminNavbar = () => {
           alt="하니홈 로고"
           width={160}
           height={28}
+          unoptimized
           priority
         />
       </button>

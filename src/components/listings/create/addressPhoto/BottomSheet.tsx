@@ -46,12 +46,14 @@ const BottomSheet = ({ onClose }: BottomSheetProps) => {
               src="/svgs/listings/room-image1.svg"
               width={160}
               height={160}
+              unoptimized
               alt="방 사진 예시 1"
             />
             <Image
               src="/svgs/listings/room-image2.svg"
               width={160}
               height={160}
+              unoptimized
               alt="방 사진 예시 2"
             />
           </div>

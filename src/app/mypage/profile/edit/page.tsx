@@ -161,6 +161,7 @@ const ProfileEditPage = () => {
                   width={24}
                   height={24}
                   alt="인스타"
+                  unoptimized
                 />
               </div>
             </div>

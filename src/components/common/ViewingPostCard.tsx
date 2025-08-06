@@ -40,6 +40,7 @@ export const ViewingPostCard = ({
         width={108}
         height={108}
         alt="매물 이미지"
+        unoptimized
         className="h-18 w-18 rounded-sm border border-gray-200 object-cover"
       />
 

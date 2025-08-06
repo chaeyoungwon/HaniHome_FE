@@ -26,6 +26,7 @@ const ImageSlider = ({ photoUrls }: ImageSliderProps) => {
             alt={`매물 이미지 ${idx + 1}`}
             width={375}
             height={375}
+            unoptimized
             className="h-[375px] w-[375px] border border-gray-200 object-cover"
             priority={idx === 0}
           />
