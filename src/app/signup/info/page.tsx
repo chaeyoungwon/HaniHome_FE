@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import { SignupInfoInput, signupInfoSchema } from "@/schemas/signup";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useSignupStore } from "@/stores/useSignupStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -19,6 +20,7 @@ const SignupInfoPage = () => {
   const router = useRouter();
   const { name, phoneNumber, agreed, setField, setAgreed } = useSignupStore();
 
+  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
   const {
     register,
     handleSubmit,
@@ -56,6 +58,12 @@ const SignupInfoPage = () => {
     });
     return () => subscription.unsubscribe();
   }, [watch, setField]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.replace("/home");
+    }
+  }, [isLoggedIn, router]);
 
   return (
     <div className="flex w-full flex-col">
