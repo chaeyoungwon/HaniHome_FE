@@ -75,7 +75,7 @@ const ListingCard = ({
             {internalArea != null && (
               <>
                 {getArea(internalArea)}
-                {(totalFloors !== undefined || kind) && <Dot />}
+                {(totalFloors !== null || kind) && <Dot />}
               </>
             )}
 

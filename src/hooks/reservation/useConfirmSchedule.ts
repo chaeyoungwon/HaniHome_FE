@@ -122,6 +122,7 @@ export const useViewingReservation = ({
 
     return allDatesInMonth.filter(date => {
       const formatted = format(date, "yyyy-MM-dd");
+      if (dayjs(date).isBefore(dayjs().startOf("day"))) return true;
 
       if (selectedTime !== "NN : NN" && filteredAvailableDates) {
         return !filteredAvailableDates.includes(formatted);
@@ -134,21 +135,25 @@ export const useViewingReservation = ({
   const isDisabledTime = (time: string, date: string) => {
     if (!availableDatesData) return true;
 
+    const now = dayjs().tz(userTimeZone);
+    const isToday = date === now.format("YYYY-MM-DD");
+
     const hasAvailableSlot = (availableDatesData[date] ?? []).some(slot => {
       const utcDatetime = `${date}T${slot.time}Z`;
-      const localTime = dayjs.utc(utcDatetime).tz(userTimeZone).format("HH:mm");
+      const localTime = dayjs.utc(utcDatetime).tz(userTimeZone);
 
-      return localTime === time && !slot.reserved;
+      if (isToday && localTime.isBefore(now)) return false;
+
+      return localTime.format("HH:mm") === time && !slot.reserved;
     });
 
     if (!hasAvailableSlot) return true; // 호스트 slot 중 사용가능한 게 없으면 비활성화
 
-    // 내 뷰잉 일정과 겹치는지 체크
     const isMyViewingConflict = (myViewingDatesData?.[date] ?? []).some(t => {
       const utcDatetime = `${date}T${t}Z`;
-      const localTime = dayjs.utc(utcDatetime).tz(userTimeZone).format("HH:mm");
+      const localTime = dayjs.utc(utcDatetime).tz(userTimeZone);
 
-      return localTime === time;
+      return localTime.format("HH:mm") === time;
     });
 
     return isMyViewingConflict;

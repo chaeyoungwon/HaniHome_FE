@@ -80,14 +80,14 @@ const RoomList = ({
             {/* 정보 */}
             <div className="text-cap1-med flex flex-col gap-[2px] text-gray-600">
               <div className="flex flex-wrap items-center gap-1">
-                {internalArea !== undefined && (
+                {internalArea !== null && (
                   <>
-                    {getArea(internalArea)}
-                    {(totalFloors !== undefined || kind) && <Dot />}
+                    {getArea(internalArea!)}
+                    {(totalFloors !== null || kind) && <Dot />}
                   </>
                 )}
 
-                {totalFloors !== undefined && (
+                {totalFloors !== null && (
                   <>
                     전체 {totalFloors}층{kind && <Dot />}
                   </>

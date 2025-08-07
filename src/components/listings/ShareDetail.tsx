@@ -60,28 +60,36 @@ const ShareDetail = ({
               ),
             ].filter(Boolean)}
           />
-          <InfoCard
-            className="gap-3"
-            title="층수"
-            items={[
-              data.internalDetails.totalFloors !== undefined && (
-                <div className="flex items-center gap-[6px]" key="totalFloor">
-                  <HomeIcon className="h-6 w-6 text-gray-600" />
-                  <span className="text-body2-med text-gray-700">
-                    총 {data.internalDetails.totalFloors}층
-                  </span>
-                </div>
-              ),
-              data.internalDetails.propertyFloor !== undefined && (
-                <div className="flex items-center gap-[6px]" key="currentFloor">
-                  <HomeFilledIcon className="h-6 w-6 text-gray-600" />
-                  <span className="text-body2-med text-gray-700">
-                    {data.internalDetails.propertyFloor}층에 위치
-                  </span>
-                </div>
-              ),
-            ].filter(Boolean)}
-          />
+          {!(
+            data.internalDetails.totalFloors == null &&
+            data.internalDetails.propertyFloor == null
+          ) && (
+            <InfoCard
+              className="gap-3"
+              title="층수"
+              items={[
+                data.internalDetails.totalFloors !== null && (
+                  <div className="flex items-center gap-[6px]" key="totalFloor">
+                    <HomeIcon className="h-6 w-6 text-gray-600" />
+                    <span className="text-body2-med text-gray-700">
+                      총 {data.internalDetails.totalFloors}층
+                    </span>
+                  </div>
+                ),
+                data.internalDetails.propertyFloor !== null && (
+                  <div
+                    className="flex items-center gap-[6px]"
+                    key="currentFloor"
+                  >
+                    <HomeFilledIcon className="h-6 w-6 text-gray-600" />
+                    <span className="text-body2-med text-gray-700">
+                      {data.internalDetails.propertyFloor}층에 위치
+                    </span>
+                  </div>
+                ),
+              ].filter(Boolean)}
+            />
+          )}
         </div>
       </Section>
 
