@@ -4,24 +4,23 @@ import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
+import { getFabInitialTranslateX } from "@/utils/layout/getFabInitialTranslateX";
+
 import PlusIcon from "@/public/svgs/common/plus-icon.svg";
 
 const AddListingFab = () => {
   const router = useRouter();
   const [hovered, setHovered] = useState(false);
-  const [translateX, setTranslateX] = useState<string>("");
+  const [translateX, setTranslateX] = useState<string>(() =>
+    getFabInitialTranslateX(),
+  );
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+
     const updateTransform = () => {
-      const screenW = window.innerWidth;
-      const maxWidth = Math.min(screenW, 430);
-      const half = maxWidth / 2;
-
-      // 최소 180px 기준 ~ 최대 215px 기준 사이에서 대응
-      const clampedHalf = Math.max(180, Math.min(half, 215));
-      const offset = clampedHalf - 20;
-
-      setTranslateX(`calc(${offset}px - 100%)`);
+      setTranslateX(getFabInitialTranslateX());
     };
 
     updateTransform(); // 초기 실행
@@ -35,9 +34,9 @@ const AddListingFab = () => {
       onClick={() => router.push("/listings/create/redirect")}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`bg-mint shadow-fab active:bg-mint-contrast fixed bottom-23.5 left-1/2 z-50 flex h-13.5 cursor-pointer items-center rounded-full text-white transition-all duration-500 ${
-        hovered ? "px-4" : "px-[15px]"
-      }`}
+      className={`bg-mint shadow-fab active:bg-mint-contrast fixed bottom-23.5 left-1/2 z-50 flex h-13.5 cursor-pointer items-center rounded-full text-white ${
+        mounted ? "transition-all duration-500" : "transition-none"
+      } ${hovered ? "px-4" : "px-[15px]"}`}
       style={{
         transform: `translateX(${translateX})`,
       }}
