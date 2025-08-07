@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 
@@ -12,6 +12,7 @@ import {
 } from "@/utils/listing/create/answerHelpers";
 import { useDropdownAutoManager } from "@/utils/listing/create/useDropdownAutoManager";
 
+import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import DropdownSelector from "@/components/listings/create/common/DropdownSelector";
 import FunnelLayout from "@/components/listings/create/common/FunnelLayout";
@@ -43,41 +44,42 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
   const questions = useMemo(() => {
     return listingType ? QUESTION_MAP[listingType][section] : [];
   }, [listingType, section]);
-
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { highlightIds, furnitureIds, isBrokeredIds } = LISTING_DETAILS_IDS;
 
-  const { openIndices, toggleIndex, autoAdvance } = useDropdownAutoManager({
-    totalCount: questions.length,
-    shouldAutoClose: index => {
-      const id = questions[index].id as ListingDetailsOption["type"];
-      const answer = getAnswerValue(id, store);
+  const { openIndices, visibleIndices, toggleIndex, autoAdvance } =
+    useDropdownAutoManager({
+      totalCount: questions.length,
+      shouldAutoClose: index => {
+        const id = questions[index].id as ListingDetailsOption["type"];
+        const answer = getAnswerValue(id, store);
 
-      if (id === "highlights" && Array.isArray(answer)) {
-        return answer.filter(id => highlightIds.includes(id)).length >= 5;
-      }
+        if (id === "highlights" && Array.isArray(answer)) {
+          return answer.filter(id => highlightIds.includes(id)).length >= 5;
+        }
 
-      if (
-        id === "internalDetails" &&
-        typeof answer === "object" &&
-        answer !== null &&
-        !Array.isArray(answer)
-      ) {
-        const requiredKeys = [
-          ...(listingType === "RENT"
-            ? ["numberOfRoom", "numberOfBath"]
-            : ["totalResidents", "totalBathUser"]),
-          "internalArea",
-        ];
-        return requiredKeys.every(
-          key =>
-            typeof (answer as unknown as Record<string, number>)[key] ===
-            "number",
-        );
-      }
+        if (
+          id === "internalDetails" &&
+          typeof answer === "object" &&
+          answer !== null &&
+          !Array.isArray(answer)
+        ) {
+          const requiredKeys = [
+            ...(listingType === "RENT"
+              ? ["numberOfRoom", "numberOfBath"]
+              : ["totalResidents", "totalBathUser"]),
+            "internalArea",
+          ];
+          return requiredKeys.every(
+            key =>
+              typeof (answer as unknown as Record<string, number>)[key] ===
+              "number",
+          );
+        }
 
-      return !!answer;
-    },
-  });
+        return !!answer;
+      },
+    });
 
   useEffect(() => {
     openIndices.forEach(idx => {
@@ -108,6 +110,7 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
             )}
             isOpen={openIndices.includes(index)}
             onClick={() => toggleIndex(index)}
+            isVisible={visibleIndices.includes(index)}
           >
             <ListingDetailsDropdownContent
               id={item.id as ListingDetailsOption["type"]}
@@ -169,32 +172,39 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
           </DropdownSelector>
         );
       })}
-
-      <BottomActionBar
-        buttons={[
-          {
-            label: "저장",
-            onClick: () => {
-              console.log("저장된 Zustand 상태", {
-                rentPropertyType: store.rentPropertyType,
-                sharePropertyType: store.sharePropertyType,
-                rentCapacityPeople: store.rentCapacityPeople,
-                shareCapacityPeople: store.shareCapacityPeople,
-                rentInternalDetails: store.rentInternalDetails,
-                shareInternalDetails: store.shareInternalDetails,
-                optionItemIds,
-              });
+      {isAllAnswered(questions, store) && (
+        <BottomActionBar
+          buttons={[
+            {
+              label: "저장",
+              onClick: () => {
+                console.log("저장된 Zustand 상태", {
+                  rentPropertyType: store.rentPropertyType,
+                  sharePropertyType: store.sharePropertyType,
+                  rentCapacityPeople: store.rentCapacityPeople,
+                  shareCapacityPeople: store.shareCapacityPeople,
+                  rentInternalDetails: store.rentInternalDetails,
+                  shareInternalDetails: store.shareInternalDetails,
+                  optionItemIds,
+                });
+              },
+              variant: "outline",
             },
-            variant: "outline",
-          },
-          {
-            label: "다음",
-            onClick: onNext,
-            variant: "filled",
-            disabled: !isAllAnswered(questions, store),
-          },
-        ]}
-      />
+            {
+              label: "다음",
+              onClick: onNext,
+              variant: "filled",
+            },
+          ]}
+        />
+      )}
+      {alertMessage && (
+        <AlertMessage
+          message={alertMessage}
+          className="bottom-[70px]"
+          onDone={() => setAlertMessage(null)}
+        />
+      )}
     </FunnelLayout>
   );
 };

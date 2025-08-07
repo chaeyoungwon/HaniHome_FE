@@ -242,7 +242,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
         )}
       </div>
 
-      {!isSearchClicked && (
+      { !selectedAddress && (
         <>
           <div className="flex items-center gap-2 px-4 py-3">
             <div className="text-body2-med text-gray-700">
@@ -265,7 +265,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
         </>
       )}
 
-      {isSearchClicked && (
+      {isSearchClicked && selectedAddress && (
         <>
           <div className="pb-[70px]">
             <div className="flex flex-col gap-2">

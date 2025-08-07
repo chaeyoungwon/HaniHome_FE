@@ -8,6 +8,7 @@ import {
   SharePropertyDetail,
 } from "@/types/listingDetailPost.type";
 
+
 export default function toPostPropertyDetail(
   getProperty: PropertyDetail,
 ): SharePropertyDetail | RentPropertyDetail {
@@ -37,7 +38,6 @@ export default function toPostPropertyDetail(
       sharePropertySubType: (getProperty as ShareProperty).sharePropertySubType,
       capacityShare: (getProperty as ShareProperty).capacityShare,
       internalDetails: (getProperty as ShareProperty).internalDetails,
-      
     };
   } else {
     return {

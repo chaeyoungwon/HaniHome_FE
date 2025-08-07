@@ -9,6 +9,7 @@ import {
   SummaryProperty,
 } from "@/types/property.type";
 import { FilteredPropertyParams } from "@/types/property.type";
+import { TemporaryProperty } from "@/types/temporaryProperty.type";
 
 import { axiosInstance } from "./axios";
 
@@ -37,7 +38,10 @@ export const fetchPropertyDetaiEditlList = async (
 };
 
 // 매물 수정
-export const patchProperty = async (propertyId: number, payload: Partial<PropertyDetailPost>) => {
+export const patchProperty = async (
+  propertyId: number,
+  payload: Partial<PropertyDetailPost>,
+) => {
   const res = await axiosInstance.patch(
     `/api/v1/properties/${propertyId}`,
     payload,
@@ -140,5 +144,30 @@ export const getMyDeals = async (
 //매물 등록
 export const postProperty = async (payload: PropertyDetailPost) => {
   const { data } = await axiosInstance.post("/api/v1/properties", payload);
+  return data;
+};
+
+//임시저장 매물 조회
+export const getTemporaryPropertyId = async () => {
+  const res = await axiosInstance.get("api/v1/temporary-properties");
+  return res.data.data;
+};
+
+//임시저장 매물 데이터 조회
+export const fetchTemporaryPropertyData = async (
+  temporaryPropertyId: number,
+) => {
+  const res = await axiosInstance.get(
+    `/api/v1/temporary-properties/${temporaryPropertyId}`,
+  );
+  return res.data.data;
+};
+
+//임시저장 매물 등록
+export const postTemporaryPropertyData = async (payload: TemporaryProperty) => {
+  const { data } = await axiosInstance.post(
+    "/api/v1/temporary-properties",
+    payload,
+  );
   return data;
 };

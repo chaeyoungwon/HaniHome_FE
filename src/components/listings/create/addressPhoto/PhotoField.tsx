@@ -1,9 +1,13 @@
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 
+import {
+  fetchTemporaryPropertyData,
+  postTemporaryPropertyData,
+} from "@/apis/propertyApi";
 import { getPropertyPresignedUrl } from "@/apis/s3UploadApi";
 
 import useMultipleImageUpload from "@/hooks/common/useMultipleImageUpload";
@@ -19,6 +23,7 @@ import BottomActionBar from "@/components/common/BottomActionBar";
 import Divider from "@/components/common/Divider";
 import ImageSlider from "@/components/listings/detailShow/ImageSlider";
 import ImageAlertModal from "@/components/signup/profile/ImageAlertModal";
+import { TemporaryProperty } from "@/types/temporaryProperty.type";
 
 import QuestionMarkIcon from "@/public/svgs/listings/question-mark-icon.svg";
 
@@ -36,8 +41,10 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
   const router = useRouter();
   const { id } = useParams();
   const { data } = usePropertyDetailEditList(id as string);
+  const searchParams = useSearchParams();
+  const draftId = searchParams.get("draftId");
 
-  const { listingType, photoUrls, setPhotoUrls } = useListingStore();
+  const { photoUrls, setPhotoUrls } = useListingStore();
 
   const [previewUrls, setPreviewUrls] = useState<string[]>(photoUrls); // 이미지 URL 미리보기
   const [, setUploadedFiles] = useState<File[]>([]); // 실제 파일 객체
@@ -45,6 +52,8 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [, setAlertMessage] = useState<string | null>(null);
+
+  const [draftData, setDraftData] = useState<TemporaryProperty | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -67,6 +76,7 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index));
   }, []);
 
+  //수정
   useEffect(() => {
     if (edit && data) {
       const parsed = toPostPropertyDetail(data);
@@ -81,6 +91,47 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
       setPreviewUrls(photoUrls);
     }
   }, [photoUrls]);
+
+  //임시저장
+  useEffect(() => {
+    const initDraft = async () => {
+      if (!draftId || edit) return; // edit 모드에서는 무시
+
+      try {
+        const draftData = await fetchTemporaryPropertyData(Number(draftId));
+        setDraftData(draftData);
+        console.log(draftData);
+        if (Array.isArray(draftData.photoUrls)) {
+          setPhotoUrls(draftData.photoUrls); // Zustand store에 저장
+          setPreviewUrls(draftData.photoUrls); // 미리보기에도 반영
+        }
+      } catch (error) {
+        console.error("임시 저장 데이터 가져오기 실패", error);
+      }
+    };
+
+    initDraft();
+  }, [draftId, edit]);
+
+  const handleTemporarySave = async () => {
+    if (!draftData) return;
+
+    const payload = {
+      jsonDiscriminator: draftData.kind,
+      ...draftData,
+      photoUrls,
+    };
+
+    try {
+      await postTemporaryPropertyData(payload);
+      console.log(payload)
+      router.push(
+        `/listings/create?step=addressPhoto&draftId=${draftId}&subStep=photo`,
+      );
+    } catch (e) {
+      console.error("임시 저장 실패:", e);
+    }
+  };
 
   const { mutate: patchProperty } = usePatchProperty(Number(id));
 
@@ -155,25 +206,24 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
 
       {isOpen && <BottomSheet onClose={() => setIsOpen(false)} />}
       {!edit ? (
-        <BottomActionBar
-          buttons={[
-            {
-              label: "저장",
-              onClick: () => {
-                console.log(listingType, photoUrls, previewUrls);
+        previewUrls.length >= 3 && (
+          <BottomActionBar
+            buttons={[
+              {
+                label: "저장",
+                onClick: handleTemporarySave,
+                variant: "outline",
               },
-              variant: "outline",
-            },
-            {
-              label: "다음",
-              onClick: () => {
-                if (onNext) onNext();
+              {
+                label: "다음",
+                onClick: () => {
+                  if (onNext) onNext();
+                },
+                variant: "filled",
               },
-              variant: "filled",
-              disabled: previewUrls.length < 3,
-            },
-          ]}
-        />
+            ]}
+          />
+        )
       ) : (
         <BottomActionBar label="저장" onClick={handleSave} />
       )}

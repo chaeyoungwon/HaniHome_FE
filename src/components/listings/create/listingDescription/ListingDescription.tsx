@@ -13,6 +13,7 @@ import {
 
 import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 
+import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import TextareaField from "@/components/common/TextareaField";
 import BackHeader from "@/components/layout/header/BackHeader";
@@ -34,7 +35,7 @@ const ListingDescription = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { description, setDescription } = useListingStore();
   const [text, setText] = useState(description || "");
-
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
   useEffect(() => {
     if (edit && data) {
       const parsed = toPostPropertyDetail(data);
@@ -96,29 +97,37 @@ const ListingDescription = ({
         gap="gap-2"
       />
       {!edit ? (
-        <BottomActionBar
-          buttons={[
-            {
-              label: "저장",
-              onClick: () => {
-                setDescription(text);
-                console.log("저장");
+        text && (
+          <BottomActionBar
+            buttons={[
+              {
+                label: "저장",
+                onClick: () => {
+                  setDescription(text);
+                  console.log("저장");
+                },
+                variant: "outline",
               },
-              variant: "outline",
-            },
-            {
-              label: "다음",
-              onClick: () => {
-                setDescription(text);
-                if (onNext) onNext();
+              {
+                label: "다음",
+                onClick: () => {
+                  setDescription(text);
+                  if (onNext) onNext();
+                },
+                variant: "filled",
               },
-              variant: "filled",
-              disabled: !text,
-            },
-          ]}
-        />
+            ]}
+          />
+        )
       ) : (
         <BottomActionBar label="저장" onClick={handleSave} />
+      )}
+      {alertMessage && (
+        <AlertMessage
+          message={alertMessage}
+          className="bottom-[70px]"
+          onDone={() => setAlertMessage(null)}
+        />
       )}
     </>
   );

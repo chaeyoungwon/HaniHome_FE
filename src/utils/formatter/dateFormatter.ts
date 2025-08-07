@@ -71,9 +71,14 @@ export const formatMeetingDay = (isoString: string) => {
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
 
+  const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
+  const weekday = weekdays[date.getDay()]; // 0 ~ 6
   return {
     date: `${year}.${month}.${day}`, // "25.06.30"
+    fullDate: `${date.getFullYear()}.${month}.${day}`, //2025.06.30
     time: `${hours} : ${minutes}`, // "14 : 00"
+
+    weekday: `(${weekday})`,
   };
 };
 

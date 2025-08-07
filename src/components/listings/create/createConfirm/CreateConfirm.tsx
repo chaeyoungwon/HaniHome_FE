@@ -143,12 +143,11 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
             label: "저장",
             onClick: () => {
               console.log(payload);
-              // 원한다면 저장만 하는 로직을 따로 정의해도 됨
             },
             variant: "outline",
           },
           {
-            label: isLoading ? "등록 중..." : "다음",
+            label: "다음",
             onClick: handlePost,
             variant: "filled",
             disabled: isLoading,
