@@ -52,7 +52,7 @@ const ListingDetailLoadingSkeleton = ({
         <div className="mt-6 mb-15">
           <div className="flex flex-col gap-3 px-4 py-8">
             <span className="text-heading3 text-gray-900">위치</span>
-            <div className="flex h-[343px] w-[343px] items-center justify-center">
+            <div className="flex h-full max-h-[398px] min-h-[343px] w-full max-w-[398px] items-center justify-center">
               <span className="text-heading3 text-gray-600">
                 상세 주소는 뷰잉 예약 후 확인 가능합니다.
               </span>

@@ -2,7 +2,7 @@ const ListingContentSkeleton = () => {
   return (
     <div className="pointer-events-none">
       {/* 이미지 영역 */}
-      <div className="h-[375px] w-[375px] animate-pulse bg-gray-200" />
+      <div className="h-full max-h-[430px] min-h-[375px] w-full max-w-[430px] animate-pulse bg-gray-200" />
 
       {/* 프로필 영역 */}
       <div className="flex items-center gap-[14px] border-b border-gray-200 px-4 py-3">

@@ -74,7 +74,7 @@ const BottomSheet = ({
 
       {/* 바텀시트 */}
       <div
-        className={`fixed bottom-0 left-1/2 z-[100] w-[375px] -translate-x-1/2 rounded-t-2xl border border-gray-500 bg-white pt-3 transition-transform duration-300 ease-in-out ${
+        className={`fixed bottom-0 left-1/2 z-[100] w-full max-w-[430px] -translate-x-1/2 rounded-t-2xl border border-gray-500 bg-white pt-3 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-y-0" : "translate-y-full"
         }`}
         onClick={e => e.stopPropagation()}

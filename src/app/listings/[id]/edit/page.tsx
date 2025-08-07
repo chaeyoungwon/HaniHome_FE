@@ -43,7 +43,6 @@ const ListingsEdit = () => {
     }
   }, [data]);
 
-
   if (isLoading) return <div>로딩 중...</div>;
   if (error || !originalDetail || !currentDetail)
     return <div>데이터를 불러올 수 없습니다.</div>;
@@ -51,7 +50,7 @@ const ListingsEdit = () => {
   // console.log("바뀐값: ", currentDetail);
   return (
     <>
-      <div className="w-[375px] pb-[130px]">
+      <div className="w-full max-w-[430px] pb-[130px]">
         <BackHeader />
         <TitleSection
           title="수정할 정보 섹션을 클릭해주세요"
@@ -63,7 +62,7 @@ const ListingsEdit = () => {
             router.push(`/listings/${id}/edit/addressPhoto?subStep=photo`)
           }
         >
-          <ImageSlider images={previewUrls} onRemove={()=>{}} />
+          <ImageSlider images={previewUrls} onRemove={() => {}} />
         </div>
         {currentDetail && originalDetail && (
           <DropDownSection
@@ -74,7 +73,12 @@ const ListingsEdit = () => {
           />
         )}
       </div>
-      <BottomActionBar label="저장" onClick={()=>{router.push(`/listings/${id}?mode=edit`)}}/>
+      <BottomActionBar
+        label="저장"
+        onClick={() => {
+          router.push(`/listings/${id}?mode=edit`);
+        }}
+      />
     </>
   );
 };

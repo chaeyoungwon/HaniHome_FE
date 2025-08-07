@@ -141,7 +141,7 @@ const SearchField = ({
           {label}
         </label>
       )}
-      <div className="flex max-w-[343px] flex-col">
+      <div className="flex w-full max-w-[398px] flex-col">
         <div className="group relative w-full">
           <input
             id="search-input"

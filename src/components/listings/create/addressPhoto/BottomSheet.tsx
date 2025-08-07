@@ -30,10 +30,10 @@ const BottomSheet = ({ onClose }: BottomSheetProps) => {
       />
       {/* 바텀시트 */}
       <div
-        className={`fixed bottom-0 left-1/2 z-110 w-[375px] -translate-x-1/2 rounded-t-2xl border border-gray-500 bg-white transition-transform duration-500 ease-in-out ${isOpen ? "translate-y-0" : "translate-y-full"} `}
+        className={`fixed bottom-0 left-1/2 z-110 w-full max-w-[430px] -translate-x-1/2 rounded-t-2xl border border-gray-500 bg-white transition-transform duration-500 ease-in-out ${isOpen ? "translate-y-0" : "translate-y-full"} `}
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex flex-col gap-4 px-5 pt-3">
+        <div className="mx-auto flex w-[328px] flex-col justify-center gap-4 pt-3">
           <div className="flex justify-center">
             <div className="h-1 w-[53px] rounded-[50px] bg-gray-500" />
           </div>

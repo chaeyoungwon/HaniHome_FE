@@ -55,7 +55,9 @@ const Home = () => {
         <FilterBar />
         <ListingList fallbackSuburb={selectedSuburb} />
       </div>
-      {isLoggedIn && <AddListingFab />}
+      <div className="relative mx-auto max-w-[430px]">
+        {isLoggedIn && <AddListingFab />}
+      </div>
     </ContentWrapper>
   );
 };

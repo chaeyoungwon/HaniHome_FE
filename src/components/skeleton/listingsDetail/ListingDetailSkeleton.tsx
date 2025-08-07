@@ -61,8 +61,8 @@ const ListingDetailSkeleton = () => {
       <Section withDivider={false}>
         <div className="flex flex-col gap-3 px-4 py-3">
           <Label>호스트 설명</Label>
-          <div className="flex max-w-[343px] flex-col gap-4">
-            <div className="h-[79px] w-[343px] rounded bg-gray-200" />
+          <div className="flex w-full max-w-[398px] flex-col gap-4">
+            <div className="h-[79px] w-full max-w-[398px] rounded bg-gray-200" />
             <div className="flex gap-2">
               {[...Array(3)].map((_, idx) => (
                 <div

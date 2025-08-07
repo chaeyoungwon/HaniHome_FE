@@ -68,7 +68,7 @@ const ImagePreviewSection = ({
   return (
     <div
       className={clsx(
-        "scrollbar-hide max-w-[375px] overflow-x-auto",
+        "scrollbar-hide w-full max-w-[430px] overflow-x-auto",
         wrapperClassName,
       )}
     >

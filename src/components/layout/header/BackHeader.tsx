@@ -32,7 +32,7 @@ const BackHeader = ({
   return (
     <header
       className={clsx(
-        "sticky top-0 left-1/2 z-50 flex h-12 max-w-[480px] min-w-[375px] items-center justify-between px-4 py-3",
+        "sticky top-0 z-50 flex h-12 w-full max-w-[430px] items-center justify-between px-4 py-3",
         className || "bg-white",
       )}
     >

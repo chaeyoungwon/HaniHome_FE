@@ -30,14 +30,14 @@ const BottomActionBar = ({
   // 단일 버튼 케이스
   if (isSingle) {
     return (
-      <div className="fixed bottom-0 left-1/2 z-[50] flex w-[375px] -translate-x-1/2 flex-col items-center bg-white">
+      <div className="fixed bottom-0 left-1/2 z-[50] flex w-full max-w-[430px] -translate-x-1/2 flex-col items-center bg-white">
         {showDivider && (
           <div className="h-[1px] w-full self-center bg-gray-300" />
         )}
         <button
           type="button"
           onClick={onClick}
-          className={`text-heading3 my-2 w-[343px] rounded py-3 transition ${
+          className={`text-heading3 my-2 w-[calc(100%-32px)] max-w-[398px] rounded py-3 transition ${
             disabled
               ? "cursor-not-allowed bg-gray-300 text-white"
               : variant === "outline"
@@ -53,11 +53,11 @@ const BottomActionBar = ({
 
   // 버튼 두 개 이상 케이스
   return (
-    <div className="fixed bottom-0 left-1/2 z-[50] flex w-[375px] -translate-x-1/2 flex-col items-center bg-white">
+    <div className="fixed bottom-0 left-1/2 z-[50] flex w-full max-w-[430px] -translate-x-1/2 flex-col items-center bg-white">
       {showDivider && <div className="h-[1px] w-full bg-gray-300" />}
 
       <div
-        className={`my-2 flex w-[343px] ${
+        className={`my-2 flex w-[calc(100%-32px)] max-w-[398px] ${
           layout === "equal" ? "gap-2.5" : "gap-1"
         }`}
       >

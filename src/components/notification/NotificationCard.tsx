@@ -13,7 +13,7 @@ const NotificationCard = ({ id, title, content, isRead }: NotificationItem) => {
   return (
     <div
       onClick={handleClick}
-      className="flex h-fit w-[343px] cursor-pointer flex-col gap-1 rounded-lg bg-white p-4"
+      className="flex h-fit w-full max-w-[398px] cursor-pointer flex-col gap-1 rounded-lg bg-white p-4"
     >
       {!isRead && <div className="bg-red h-2 w-2 rounded-full" />}
       <p className="text-body1-sb text-gray-900">{title}</p>

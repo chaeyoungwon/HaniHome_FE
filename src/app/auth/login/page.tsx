@@ -40,7 +40,7 @@ const LoginPage = () => {
           <GoogleLoginButton />
           <button
             onClick={handleGuestClick}
-            className="flex h-6 w-[343px] cursor-pointer items-center justify-center gap-2 bg-white py-[10px]"
+            className="flex h-6 w-full max-w-[398px] cursor-pointer items-center justify-center gap-2 bg-white py-[10px]"
           >
             <GuestIcon />
             <span className="text-lab1-b text-mint underline">

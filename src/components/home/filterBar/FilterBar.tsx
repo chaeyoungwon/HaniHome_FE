@@ -87,7 +87,7 @@ const FilterBar = () => {
 
   return (
     <div className="mb-3 flex w-full items-center gap-3 py-2">
-      <div className="scrollbar-hide flex max-w-[329px] gap-1 overflow-x-auto pl-4">
+      <div className="scrollbar-hide flex w-[calc(100%-46px)] max-w-[384px] gap-1 overflow-x-auto pl-4">
         {sortedFilters.map(({ label, value }) => (
           <FilterChip
             key={label}

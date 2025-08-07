@@ -32,7 +32,7 @@ const LivingConditionsContent = ({
   };
 
   return (
-    <div className="max-w-[375px]">
+    <div className="w-full max-w-[430px]">
       <div className="flex gap-2 px-4 py-2">
         {firstLineKeys.map(option => (
           <div key={option} className="flex flex-1 flex-col gap-2">

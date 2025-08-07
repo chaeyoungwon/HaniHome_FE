@@ -33,7 +33,7 @@ const ModalLayout = ({
     <div className="fixed inset-0 z-999 flex items-center justify-center bg-gray-800/60">
       <div
         ref={modalRef}
-        className={`relative w-[343px] rounded-lg bg-white ${className}`}
+        className={`relative w-[calc(100%-32px)] max-w-[398px] rounded-lg bg-white ${className}`}
       >
         {!hideCloseButton && (
           <button

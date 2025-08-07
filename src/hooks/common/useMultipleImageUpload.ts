@@ -69,9 +69,13 @@ const useMultipleImageUpload = ({
     }
 
     try {
-      const fileExtensions = validFiles.map(file => file.type.split("/")[1]);
+      const fileExtensions = validFiles.map(file => {
+        const ext = file.name.split(".").pop();
+        if (!ext) throw new Error("파일 확장자를 추출할 수 없습니다.");
+        return ext;
+      });
       const presignedUrls = await getPresignedUrls(fileExtensions);
-     
+
       await uploadFilesToPresignedUrls(validFiles, presignedUrls);
       const uploadedUrls = presignedUrls.map(p => p.fileUrl);
       setPreviewUrls(prev => [...prev, ...uploadedUrls]);

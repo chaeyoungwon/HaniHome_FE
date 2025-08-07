@@ -118,28 +118,32 @@ const TimeSpinner = ({
   };
 
   return (
-    <div className="relative z-30 flex w-full justify-center gap-3 border-b border-gray-200 bg-white py-3">
-      <WheelColumn
-        ref={hourRef}
-        items={HOURS}
-        selected={hour}
-        onClick={handleHourChange}
-        debounceScroll={() => debounceScroll(hourTimer, hourSnap.snap)}
-        type="hour"
-        containerClassName="w-[72px]"
-      />
-      <div className="border-mint-contrast pointer-events-none absolute top-1/2 left-[92px] z-20 h-[50px] w-[72px] -translate-y-1/2 border-y" />
+    <div className="relative z-30 mx-auto flex w-full max-w-[360px] justify-center gap-3 border-b border-gray-200 bg-white py-3">
+      <div className="relative">
+        <WheelColumn
+          ref={hourRef}
+          items={HOURS}
+          selected={hour}
+          onClick={handleHourChange}
+          debounceScroll={() => debounceScroll(hourTimer, hourSnap.snap)}
+          type="hour"
+          containerClassName="w-[72px]"
+        />
+        <div className="border-mint-contrast pointer-events-none absolute top-1/2 left-1/2 z-20 h-[50px] w-[72px] -translate-x-1/2 -translate-y-1/2 border-y" />
+      </div>
 
-      <WheelColumn
-        ref={minuteRef}
-        items={MINUTES}
-        selected={minute}
-        onClick={handleMinuteChange}
-        debounceScroll={() => debounceScroll(minuteTimer, minuteSnap.snap)}
-        type="minute"
-        containerClassName="w-[72px]"
-      />
-      <div className="border-mint-contrast pointer-events-none absolute top-1/2 left-[176px] z-20 h-[50px] w-[72px] -translate-y-1/2 border-y" />
+      <div className="relative">
+        <WheelColumn
+          ref={minuteRef}
+          items={MINUTES}
+          selected={minute}
+          onClick={handleMinuteChange}
+          debounceScroll={() => debounceScroll(minuteTimer, minuteSnap.snap)}
+          type="minute"
+          containerClassName="w-[72px]"
+        />
+        <div className="border-mint-contrast pointer-events-none absolute top-1/2 left-1/2 z-20 h-[50px] w-[72px] -translate-x-1/2 -translate-y-1/2 border-y" />
+      </div>
     </div>
   );
 };

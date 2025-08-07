@@ -6,7 +6,7 @@ interface ReservationTooltipProps {
 
 const ReservationTooltip = ({ message }: ReservationTooltipProps) => {
   return (
-    <div className="absolute -top-16 left-[143px] flex flex-col items-center">
+    <div className="absolute -top-16 left-1/2 z-50 flex translate-x-[calc(-50%+3px)] flex-col items-center">
       <div className="text-cap1-med rounded bg-gray-800 p-3 whitespace-nowrap text-gray-300">
         {message}
       </div>

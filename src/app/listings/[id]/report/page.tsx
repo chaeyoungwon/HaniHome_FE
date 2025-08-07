@@ -121,7 +121,7 @@ const ListingReportPage = () => {
 
       <div className="flex w-full flex-col gap-2 p-4">
         <span className="text-heading3 text-gray-800">증명자료 (필수)</span>
-        <p className="text-cap1-med max-w-[343px] break-words text-gray-600">
+        <p className="text-cap1-med w-full max-w-[398px] break-words text-gray-600">
           문제가 실제로 발생했음을 보여주는 스크린샷이나 허위 정보와 관련된 증빙
           자료를 첨부해주세요. 첨부된 자료는 운영팀 검토용으로만 사용되며 외부에
           공개되지 않습니다.

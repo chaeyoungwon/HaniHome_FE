@@ -129,7 +129,7 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
   const propertyContent = propertyInfo.find(item => item.kind === listingType);
 
   return (
-    <div className="max-w-[375px] pb-[70px]">
+    <div className="w-full max-w-[430px] pb-[70px]">
       <BackHeader rightIcon="close" />
       <TitleSection
         title="입력한 정보를 확인해주세요"

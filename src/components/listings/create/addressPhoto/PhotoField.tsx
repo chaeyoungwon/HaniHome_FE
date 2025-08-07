@@ -100,7 +100,7 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
   };
 
   return (
-    <div className="max-w-[375px] pb-[70px]">
+    <div className="w-full max-w-[430px] pb-[70px]">
       <div className="flex flex-col gap-2">
         <div className="text-heading3 p-4 text-gray-900">
           직접 촬영한 매물 사진을 올려주세요
@@ -127,7 +127,7 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
             </div>
           </div>
           <div
-            className="bg-mint-light text-mint text-lab1-sb flex h-9 w-full max-w-[343px] cursor-pointer items-center justify-center rounded-[4px] border"
+            className="bg-mint-light text-mint text-lab1-sb flex h-9 w-full max-w-[398px] cursor-pointer items-center justify-center rounded-[4px] border"
             onClick={handleClickUpload}
           >
             + 매물 사진 올리기

@@ -91,7 +91,7 @@ const VerificationPage = () => {
   }, [modals.showAssignModal]);
 
   return (
-    <div className="flex h-screen max-w-[375px] flex-col">
+    <div className="flex h-screen w-full max-w-[430px] flex-col">
       <BackHeader />
 
       {/* 인증수단 선택 */}
@@ -121,7 +121,7 @@ const VerificationPage = () => {
             />
           )}
           <button
-            className="text-lab1-sb flex h-9 w-[343px] cursor-pointer items-center justify-center rounded-[4px] border border-gray-600 py-[10px] text-gray-800"
+            className="text-lab1-sb flex h-9 w-full max-w-[398px] cursor-pointer items-center justify-center rounded-[4px] border border-gray-600 py-[10px] text-gray-800"
             onClick={() => fileInputRef.current?.click()}
           >
             + 사진 업로드

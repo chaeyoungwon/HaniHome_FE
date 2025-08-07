@@ -25,7 +25,7 @@ const GoogleLoginButton = () => {
     <button
       type="button"
       onClick={handleGoogleLogin}
-      className="flex h-12 w-[343px] cursor-pointer items-center justify-center gap-1 rounded-sm border border-gray-500 bg-white py-[10px]"
+      className="flex h-12 w-full max-w-[398px] min-w-[343px] cursor-pointer items-center justify-center gap-1 rounded-sm border border-gray-500 bg-white py-[10px]"
     >
       <GoogleIcon />
       <span className="text-body1-sb text-gray-900">

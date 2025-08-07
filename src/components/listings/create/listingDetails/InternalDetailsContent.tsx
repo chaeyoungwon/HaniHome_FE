@@ -167,7 +167,7 @@ const InternalDetailsContent = <
       : (value as ShareInternalDetails);
 
   return (
-    <div className="max-w-[375px]">
+    <div className="w-full max-w-[430px]">
       <div className="relative">
         {isOpenAreaInfo && (
           <div
@@ -198,16 +198,19 @@ const InternalDetailsContent = <
         </div>
 
         {/* 면적 입력 */}
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-2">
           {areaKeys.map(key => {
             const rawValue = details[key];
 
             return (
-              <div key={key} className="flex h-[73px] flex-col justify-between">
+              <div
+                key={key}
+                className="flex h-[73px] w-1/2 flex-col justify-between"
+              >
                 <div className="text-body2-med text-gray-600">
                   {LISTING_INFORMATION_LABEL[key]}
                 </div>
-                <div className="relative w-[167px]">
+                <div className="relative">
                   <input
                     type="text"
                     className={`text-body1-med h-11 w-full rounded-[4px] border px-4 py-3 pr-12 focus:outline-none ${
@@ -248,13 +251,13 @@ const InternalDetailsContent = <
             return acc;
           }, [])
           .map((pair, rowIdx) => (
-            <div key={rowIdx} className="flex justify-between px-4 py-5">
+            <div key={rowIdx} className="flex w-full gap-2 px-4 py-5">
               {pair.map(key => (
-                <div key={key} className="flex flex-col">
+                <div key={key} className="flex w-1/2 flex-col">
                   <div className="text-body1-sb mb-3 text-gray-800">
                     {LISTING_INFORMATION_LABEL[key]}
                   </div>
-                  <div className="relative w-[167px]">
+                  <div className="relative">
                     {(() => {
                       const rawValue = details[key as keyof typeof details];
                       const valueForInput =

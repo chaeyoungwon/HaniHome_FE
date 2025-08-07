@@ -20,7 +20,7 @@ const HighLightsContent = ({ value, onChange }: HighLightsContentProps) => {
   return (
     <div className="flex flex-col gap-3 px-4 py-2">
       <div className="text-lab1-sb text-gray-700">5개 골라주세요</div>
-      <div className="flex w-[343px] flex-wrap content-center items-center gap-3 self-stretch">
+      <div className="flex w-full max-w-[398px] flex-wrap content-center items-center gap-3 self-stretch">
         {highlightOptions.map(({ optionId, label }) => {
           const isSelected = value.includes(optionId);
           return (

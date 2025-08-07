@@ -19,7 +19,7 @@ const TermsDetailTemplate = ({
   bottomText,
 }: TermsDetailTemplateProps) => {
   return (
-    <div className="flex max-w-[375px] flex-col gap-4">
+    <div className="flex w-full max-w-[430px] flex-col gap-4">
       <BackHeader />
 
       {/* 타이틀 영역 */}

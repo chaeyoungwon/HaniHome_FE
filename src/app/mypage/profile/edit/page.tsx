@@ -107,7 +107,7 @@ const ProfileEditPage = () => {
             }}
           />
           {!isLoading && (
-            <div className="w-[343px] pb-[66px]">
+            <div className="w-[calc(100%-32px)] max-w-[398px] pb-[66px]">
               <InputField
                 label="닉네임"
                 placeholder="한영문, 숫자로 5 - 12글자"

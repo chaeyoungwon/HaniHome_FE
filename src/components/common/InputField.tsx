@@ -40,7 +40,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
         </span>
 
         <div className="flex flex-col gap-2">
-          <div className="flex max-w-[343px] gap-1">
+          <div className="flex w-full max-w-[398px] gap-1">
             <input
               name={props.name ?? "default-input"}
               ref={ref}

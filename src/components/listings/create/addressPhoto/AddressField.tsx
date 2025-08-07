@@ -178,7 +178,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
         <div className="flex flex-col gap-2">
           <div
             className={clsx(
-              "flex h-11 w-[343px] items-center justify-between rounded-[4px] border px-4 py-3",
+              "flex h-11 w-full max-w-[398px] items-center justify-between rounded-[4px] border px-4 py-3",
               getBorderColor(addressData.streetName, isFocused),
             )}
           >
@@ -209,7 +209,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
                 {suggestions.map(item => (
                   <li
                     key={item.placeId}
-                    className="text-cap1-med cursor-pointer truncate max-w-[343px] px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    className="text-cap1-med w-full max-w-[398px] cursor-pointer truncate px-4 py-2 text-gray-700 hover:bg-gray-100"
                     onMouseDown={e => {
                       e.preventDefault(); // prevent input blur
                       handleSelectSuggestion(item.placeId, item.text);
@@ -233,7 +233,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
         </div>
 
         {isSearchClicked && selectedAddress && (
-          <div className="h-[343px] w-[343px] py-3">
+          <div className="aspect-square h-full max-h-[398px] min-h-[343px] w-full max-w-[398px] py-3">
             <GoogleMap
               lat={selectedAddress.latitude}
               lng={selectedAddress.longitude}
@@ -278,7 +278,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
                   <div className="text-body2-med text-gray-700">Unit No.</div>
                   <div
                     className={clsx(
-                      "flex h-11 w-[343px] items-center rounded-[4px] border px-4 py-3",
+                      "flex h-11 w-full max-w-[398px] items-center rounded-[4px] border px-4 py-3",
                       getBorderColor(addressData.unit, isUnitFocused),
                     )}
                   >
@@ -302,7 +302,7 @@ const AddressField = ({ onNext, edit }: AddressFieldProps) => {
                   </div>
                   <div
                     className={clsx(
-                      "flex h-11 w-[343px] items-center rounded-[4px] border px-4 py-3",
+                      "flex h-11 w-full max-w-[398px] items-center rounded-[4px] border px-4 py-3",
                       getBorderColor(
                         addressData.buildingName,
                         isBuildingFocused,

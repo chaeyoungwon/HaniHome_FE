@@ -2,6 +2,8 @@ import Image from "next/image";
 
 import clsx from "clsx";
 
+import { DEFAULT_PROFILE_IMAGES } from "@/utils/images/getRandomDefaultProfile";
+
 type UserRoomPreviewVariant = "sm" | "md" | "lg";
 
 interface UserRoomPreviewProps {
@@ -58,7 +60,7 @@ const UserRoomPreview = ({
       }}
     >
       <Image
-        src={userImg}
+        src={userImg || DEFAULT_PROFILE_IMAGES[0]}
         alt="유저 이미지"
         width={size}
         height={size}
@@ -74,7 +76,7 @@ const UserRoomPreview = ({
       />
 
       <Image
-        src={roomImg}
+        src={roomImg || "/svgs/common/room-img.svg"}
         alt="룸 이미지"
         width={size}
         height={size}

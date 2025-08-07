@@ -21,7 +21,7 @@ const FurnitureContent = ({ value, onChange }: FurnitureContentProps) => {
       {Object.entries(furnitureItems).map(([category, items]) => (
         <div key={category} className="flex flex-col gap-3 px-5 py-4">
           <div className="text-body1-sb text-gray-800">{category}</div>
-          <ul className="scrollbar-hide flex max-w-[335px] gap-1 overflow-x-auto">
+          <ul className="scrollbar-hide flex w-full gap-1 overflow-x-auto">
             {items.map(({ optionId, label }) => {
               const Icon = furnitureIconMap[label];
               const isSelected = value.includes(optionId);

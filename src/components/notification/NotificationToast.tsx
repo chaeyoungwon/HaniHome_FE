@@ -17,7 +17,7 @@ const NotificationToast = ({
   }, [onClose]);
 
   return (
-    <div className="border-mint bg-mint-light shadow-fab w-[343px] rounded-lg border p-4">
+    <div className="border-mint bg-mint-light shadow-fab w-[calc(100%-32px)] max-w-[398px] rounded-lg border p-4">
       <div className="text-body1-sb text-mint-contrast">{title}</div>
       {content && (
         <div className="text-cap1-med mt-1 text-gray-600">{content}</div>

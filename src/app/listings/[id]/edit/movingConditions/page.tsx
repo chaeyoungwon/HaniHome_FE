@@ -238,7 +238,7 @@ const MovingConditionsEdit = () => {
           <div key={item.id}>
             <div
               className={clsx(
-                "flex h-19 w-[375px] cursor-pointer items-start justify-between p-4",
+                "flex h-19 w-full max-w-[430px] cursor-pointer items-start justify-between p-4",
               )}
               onClick={() => {
                 if (open != item.id) handleItemClick();

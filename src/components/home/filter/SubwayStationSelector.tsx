@@ -77,7 +77,7 @@ const SubwayStationSelector = ({
           <div className="absolute top-2 left-0 z-0 h-1 w-full -translate-y-1/2 rounded-full bg-gray-100" />
           <div className="bg-mint absolute top-2 left-0 z-10 h-1 w-[5%] -translate-y-1/2 rounded-full transition-all duration-200" />
 
-          <div className="w-[327px] pb-[30px]">
+          <div className="w-full max-w-[382px] min-w-[327px] pb-[30px]">
             <Slider
               className="custom-slider my-[1px]"
               value={localRadiusKm}

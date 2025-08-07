@@ -106,7 +106,7 @@ const ContractTermsEdit = () => {
     <div className="pb-[70px]">
       <BackHeader />
       <FunnelStepMenu fixedKey={fixedKey} />
-      <div className="flex h-19 w-[375px] cursor-pointer items-start justify-between p-4">
+      <div className="flex h-19 w-full max-w-[430px] cursor-pointer items-start justify-between p-4">
         <div className="flex flex-col">
           <div className="text-heading3 text-gray-900">
             {COMMON_CONTRACT_TERMS[0].label}

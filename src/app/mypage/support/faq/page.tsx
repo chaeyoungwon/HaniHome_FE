@@ -33,7 +33,7 @@ const FaqPage = () => {
   };
 
   return (
-    <div className="max-w-[375px] pb-15">
+    <div className="w-full max-w-[430px] pb-15">
       <BackHeader />
       <div className="flex gap-2 px-4 pt-4 pb-2">
         {(["서비스 이용", "뷰잉"] as const).map(category => (

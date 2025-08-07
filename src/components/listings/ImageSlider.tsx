@@ -16,11 +16,12 @@ const ImageSlider = ({ photoUrls }: ImageSliderProps) => {
   const [currentIndex, setCurrentIndex] = useState(1);
 
   return (
-    <div className="relative h-[375px] w-[375px]">
+    <div className="relative aspect-square w-full max-w-[430px] overflow-hidden">
       {/* 슬라이드 카운터 UI */}
       <div className="text-cap1-med absolute bottom-5 left-6 z-10 flex items-center gap-1 rounded-[50px] bg-gray-800/60 px-2 py-1 text-gray-200">
-        <span> {currentIndex}</span>
-        <span>/</span> <span>{photoUrls.length}</span>
+        <span>{currentIndex}</span>
+        <span>/</span>
+        <span>{photoUrls.length}</span>
       </div>
 
       <Swiper
@@ -32,15 +33,14 @@ const ImageSlider = ({ photoUrls }: ImageSliderProps) => {
         className="h-full w-full"
       >
         {photoUrls.map((url, idx) => (
-          <SwiperSlide key={idx}>
+          <SwiperSlide key={idx} className="relative h-full w-full">
             <Image
               src={url}
               alt={`매물 이미지 ${idx + 1}`}
-              width={375}
-              height={375}
+              fill
               unoptimized
-              className="h-full w-full border border-gray-200 object-cover"
               priority={idx === 0}
+              className="border border-gray-200 object-cover"
             />
           </SwiperSlide>
         ))}

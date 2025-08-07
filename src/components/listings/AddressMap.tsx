@@ -15,7 +15,7 @@ const AddressMap = ({ region, isReservationConfirmed }: AddressMapProps) => {
   return (
     <div className="flex flex-col gap-3">
       {/* 지도 */}
-      <div className="relative h-[343px] w-[343px] overflow-hidden">
+      <div className="relative aspect-square h-full max-h-[398px] w-full max-w-[398px] overflow-hidden">
         <GoogleMap lat={region.latitude} lng={region.longitude} />
 
         {!isReservationConfirmed && (
@@ -29,7 +29,7 @@ const AddressMap = ({ region, isReservationConfirmed }: AddressMapProps) => {
 
       {/* 주소 정보 */}
       {isReservationConfirmed && (
-        <div className="bg-gray-0 text-body1-sb flex max-w-[343px] flex-col gap-2 rounded p-2 text-gray-900">
+        <div className="bg-gray-0 text-body1-sb flex w-full max-w-[398px] flex-col gap-2 rounded p-2 text-gray-900">
           <p> {formatAddress(region)}</p>
           <p>unit. {region.unit}</p>
         </div>

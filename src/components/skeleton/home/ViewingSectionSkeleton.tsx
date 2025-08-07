@@ -22,7 +22,7 @@ const ViewingSectionSkeleton = () => {
         다가오는 뷰잉 일정
       </span>
 
-      <div className="scrollbar-hide flex w-full max-w-[375px] gap-1 overflow-x-auto px-4">
+      <div className="scrollbar-hide flex w-full max-w-[430px] gap-1 overflow-x-auto px-4">
         {[...Array(3)].map((_, idx) => (
           <ViewingBoxSkeleton key={idx} />
         ))}

@@ -63,7 +63,7 @@ const CostDetailField = ({
           <input
             type="text"
             placeholder="입력해주세요"
-            className={`placeholder:text-body2-med h-9 w-[343px] rounded-[4px] border border-gray-400 px-4 py-3 placeholder:text-gray-500 focus:outline-none ${value.weeklyCost ? "border-gray-600 text-gray-900" : "border-gray-400"}`}
+            className={`placeholder:text-body2-med h-9 w-full max-w-[398px] rounded-[4px] border border-gray-400 px-4 py-3 placeholder:text-gray-500 focus:outline-none ${value.weeklyCost ? "border-gray-600 text-gray-900" : "border-gray-400"}`}
             value={value.weeklyCost === 0 ? "" : value.weeklyCost}
             onChange={e => handleInputChange("weeklyCost", +e.target.value)}
           />
@@ -90,7 +90,7 @@ const CostDetailField = ({
       <div className="flex flex-col gap-4">
         <div className="text-body1-sb text-gray-800">빌에 포함된 항목</div>
 
-        <div className="flex w-[343px] flex-wrap content-center items-center gap-2 self-stretch">
+        <div className="flex w-full max-w-[398px] flex-wrap content-center items-center gap-2 self-stretch">
           {CATEGORY_OPTIONS[4].items.map(({ optionId, label }) => {
             const isSelected = optionItemIds.includes(optionId);
             return (
@@ -111,7 +111,7 @@ const CostDetailField = ({
             onChange={e => setCustomIncludedItemText(e.target.value)}
             placeholder="항목을 입력해주세요"
             className={clsx(
-              "text-body2-med h-9 w-[343px] rounded-[4px] border px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none",
+              "text-body2-med h-9 w-full max-w-[398px] rounded-[4px] border px-4 py-3 text-gray-900 placeholder:text-gray-500 focus:outline-none",
               customIncludedItemText ? "border-gray-600" : "border-gray-400",
             )}
           />
@@ -126,7 +126,7 @@ const CostDetailField = ({
         <input
           type="text"
           placeholder="ex) 주차비는 주/$20 입니다"
-          className={`text-body2-med h-9 w-[343px] rounded-[4px] border px-4 py-3 placeholder:text-gray-500 focus:outline-none ${value.costDescription ? "border-gray-600 text-gray-900" : "border-gray-400"}`}
+          className={`text-body2-med h-9 w-full max-w-[398px] rounded-[4px] border px-4 py-3 placeholder:text-gray-500 focus:outline-none ${value.costDescription ? "border-gray-600 text-gray-900" : "border-gray-400"}`}
           value={value.costDescription}
           onChange={e => handleInputChange("costDescription", e.target.value)}
         />
@@ -134,11 +134,11 @@ const CostDetailField = ({
 
       <Divider className="my-[2px]" />
 
-      <div className="flex gap-2">
+      <div className="flex w-full gap-2">
         {/*디파짓 */}
-        <div className="flex flex-col gap-2">
+        <div className="flex w-1/2 flex-col gap-2">
           <div className="text-body1-sb text-gray-800">디파짓</div>
-          <div className="relative w-[167px]">
+          <div className="relative">
             <input
               type="text"
               placeholder="입력해주세요"
@@ -162,9 +162,9 @@ const CostDetailField = ({
           </button>
         </div>
         {/* key디파짓 */}
-        <div className="flex flex-col gap-2">
+        <div className="flex w-1/2 flex-col gap-2">
           <div className="text-body1-sb text-gray-800">Key 디파짓 (선택)</div>
-          <div className="relative w-[167px]">
+          <div className="relative">
             <input
               type="text"
               placeholder="입력해주세요"

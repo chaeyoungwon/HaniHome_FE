@@ -42,7 +42,7 @@ const LayoutWrapper = ({ children }: { children: React.ReactNode }) => {
       className={
         isAdmin
           ? "min-h-screen w-full overflow-y-auto bg-white"
-          : "scrollbar-hide mx-auto h-screen max-w-[480px] min-w-[375px] overflow-y-auto"
+          : "scrollbar-hide mx-auto h-screen w-full max-w-[430px] overflow-y-auto"
       }
     >
       <Suspense fallback={null}>

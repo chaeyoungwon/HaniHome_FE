@@ -42,7 +42,7 @@ const CategoryContent = ({
   value,
   listingData,
 }: CategoryContentProps) => {
-  const baseClass = "text-body2-med w-[319px] text-right text-gray-600";
+  const baseClass = "text-body2-med max-w-[384px] text-right text-gray-600";
 
   switch (keyName) {
     case "kind":

@@ -39,9 +39,9 @@ const BudgetSlider = ({
       </div>
 
       <div className="relative flex w-full flex-col justify-center gap-2 px-4 py-1">
-        <div className="absolute top-4 left-4 z-0 h-1 w-[343px] rounded-full bg-gray-100" />
+        <div className="absolute top-4 left-4 z-0 h-1 w-full max-w-[398px] rounded-full bg-gray-100" />
 
-        <div className="w-[327px] self-center pt-[6px] pb-7">
+        <div className="w-full max-w-[382px] min-w-[327px] self-center pt-[6px] pb-7">
           <Slider
             range
             className="custom-slider my-[1px]"

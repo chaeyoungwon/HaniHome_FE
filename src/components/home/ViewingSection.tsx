@@ -54,7 +54,7 @@ const ViewingSection = () => {
         <span className="text-heading3 px-4 text-gray-900">
           다가오는 뷰잉 일정
         </span>
-        <div className="mx-4 mt-1 flex w-[343px]">
+        <div className="mx-4 mt-1 flex">
           <span className="bg-mint-light border-mint text-mint text-lab1-sb flex h-10 w-full items-center justify-center rounded border">
             로그인 후 이용할 수 있습니다
           </span>
@@ -71,7 +71,7 @@ const ViewingSection = () => {
         다가오는 뷰잉 일정
       </span>
 
-      <div className="scrollbar-hide flex w-full max-w-[375px] gap-1 overflow-x-auto px-4">
+      <div className="scrollbar-hide flex w-full max-w-[430px] gap-1 overflow-x-auto px-4">
         {filteredData && filteredData.length > 0 ? (
           filteredData.map(viewing => {
             const day = dayjs.utc(viewing.meetingDay).tz(dayjs.tz.guess());
