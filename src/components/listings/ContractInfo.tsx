@@ -26,7 +26,9 @@ const ContractInfo = ({ data }: { data?: Property }) => {
           <Label>빌 포함 항목</Label>
           <div
             className={`mt-4 flex flex-wrap items-center ${
-              includedItems.length > 0 ? "mb-3" : ""
+              includedItems.length > 0 && data.costDetails.costDescription
+                ? "mb-3"
+                : ""
             }`}
           >
             {includedItems.length > 0 &&
@@ -39,9 +41,11 @@ const ContractInfo = ({ data }: { data?: Property }) => {
                 </React.Fragment>
               ))}
           </div>
-          <div className="text-body2-med rounded border border-gray-400 px-3 py-[6px] text-gray-600">
-            {data.costDetails.costDescription}
-          </div>
+          {data.costDetails.costDescription && (
+            <div className="text-body2-med rounded border border-gray-400 px-3 py-[6px] text-gray-600">
+              {data.costDetails.costDescription}
+            </div>
+          )}
         </div>
       </Section>
 
