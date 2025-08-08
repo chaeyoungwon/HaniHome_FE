@@ -1,10 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
-import { useEffect, useMemo, useState } from "react";
-
-import { useAuthStore } from "@/stores/useAuthStore";
 import { useSignupStore } from "@/stores/useSignupStore";
 
 import { useAuth } from "@/hooks/auth/useAuthApi";
@@ -26,9 +23,6 @@ import { GENDER_OPTIONS } from "@/constants/dropdown-options";
 import { SignupPayload } from "@/types/auth.type";
 
 const SignupProfilePage = () => {
-  const router = useRouter();
-  const isLoggedIn = useAuthStore(state => state.isLoggedIn);
-
   const {
     message,
     isValid,
@@ -95,12 +89,6 @@ const SignupProfilePage = () => {
     () => nickname && gender && interestRegion && result === "available",
     [nickname, gender, interestRegion, result],
   );
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.replace("/home");
-    }
-  }, [isLoggedIn, router]);
 
   return (
     <div className="relative flex h-full flex-col">
