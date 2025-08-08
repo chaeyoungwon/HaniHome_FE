@@ -3,11 +3,12 @@ import AvailableDatePicker from "@/components/home/filter/AvailableDatePicker";
 import { MoveInInfo } from "@/types/listingDetailPost.type";
 
 interface MoveInfoContentProps {
-  value: MoveInInfo;
+  value: MoveInInfo | null;
   onSelect: (value: MoveInInfo) => void;
 }
 
 const MoveInfoContent = ({ value, onSelect }: MoveInfoContentProps) => {
+  if (!value) return null;
   const handleDateChange = (from: string, to: string) => {
     // from과 to 날짜를 비교하여 더 빠른 날짜와 늦은 날짜를 교환
     if (new Date(from) > new Date(to)) {

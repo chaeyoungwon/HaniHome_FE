@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 
@@ -41,14 +41,7 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
   const searchParams = useSearchParams();
   const draftId = searchParams.get("draftId");
 
-  const store = useListingStore();
-  const { mutate: postProperty } = usePostProperty();
-  const { data: myInfo, isLoading } = useMyInfo();
-
-  const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
-    null,
-  );
-
+  // ⚠️ store 전체를 의존성에 넣지 않기 위해, 읽기 값과 setter를 분리 구조분해
   const {
     listingType,
     region,
@@ -70,78 +63,132 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
     lgbtAvailable,
     moveInInfo,
     livingConditions,
-  } = store;
+
+    // setters
+    setListingType,
+    setRentPropertyType,
+    setSharePropertyType,
+    setRentCapacityPeople,
+    setShareCapacityPeople,
+    setRentInternalDetails,
+    setShareInternalDetails,
+    setOptionItemIds,
+    setMoveInInfo,
+    setPhotoUrls,
+    setGenderPreference,
+    setLgbtAvailable,
+    setLivingConditions,
+    setDescription,
+    setAllCostDetails,
+    setMeetingDateRange,
+    setViewingAlwaysAvailable,
+    setTimeSlots,
+  } = useListingStore();
+
+  const { mutate: postProperty } = usePostProperty();
+  const { data: myInfo, isLoading } = useMyInfo();
+
+  const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
+    null,
+  );
+  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
-    const initDraft = async () => {
-      if (!draftId) return;
+    if (!draftId || initialized) return;
+
+    (async () => {
       try {
-        const draftData = await fetchTemporaryPropertyData(Number(draftId));
-        setDraftData(draftData);
-        if (draftData) {
-          // listingType 세팅
-          if (draftData.kind === "RENT") store.setListingType("RENT");
-          else if (draftData.kind === "SHARE") store.setListingType("SHARE");
-          // SubType 세팅
-          if (draftData.rentPropertySubType)
-            store.setRentPropertyType(draftData.rentPropertySubType);
-          if (draftData.sharePropertySubType)
-            store.setSharePropertyType(draftData.sharePropertySubType);
+        const draft = await fetchTemporaryPropertyData(Number(draftId));
+        setDraftData(draft);
 
-          // Capacity 세팅
-          if (draftData.capacityRent)
-            store.setRentCapacityPeople(draftData.capacityRent);
-          if (draftData.capacityShare)
-            store.setShareCapacityPeople(draftData.capacityShare);
+        if (!draft) {
+          setInitialized(true);
+          return;
+        }
 
-          // internalDetails는 kind에 따라 분기해서 세팅
-          if (draftData.internalDetails) {
-            if (draftData.kind === "RENT") {
-              store.setRentInternalDetails(
-                draftData.internalDetails as RentInternalDetails,
-              );
-            } else if (draftData.kind === "SHARE") {
-              store.setShareInternalDetails(
-                draftData.internalDetails as ShareInternalDetails,
-              );
-            }
-          }
-          // optionItems가 있을 경우 optionItemIds 추출해 세팅
-          if (draftData.optionItems) {
-            const optionItemIds = draftData.optionItems.map(
-              (item: OptionItem) => item.optionItemId,
+        // listingType
+        if (draft.kind === "RENT") setListingType("RENT");
+        else if (draft.kind === "SHARE") setListingType("SHARE");
+
+        // SubType
+        if (draft.rentPropertySubType)
+          setRentPropertyType(draft.rentPropertySubType);
+        if (draft.sharePropertySubType)
+          setSharePropertyType(draft.sharePropertySubType);
+
+        // Capacity
+        if (draft.capacityRent) setRentCapacityPeople(draft.capacityRent);
+        if (draft.capacityShare) setShareCapacityPeople(draft.capacityShare);
+
+        // Internal Details
+        if (draft.internalDetails) {
+          if (draft.kind === "RENT") {
+            setRentInternalDetails(
+              draft.internalDetails as RentInternalDetails,
             );
-            store.setOptionItemIds(optionItemIds);
+          } else {
+            setShareInternalDetails(
+              draft.internalDetails as ShareInternalDetails,
+            );
           }
-          if (draftData.moveInInfo) store.setMoveInInfo(draftData.moveInInfo);
-          if (draftData.genderPreference)
-            store.setGenderPreference(draftData.genderPreference);
-          if (draftData.lgbtAvailable)
-            store.setLgbtAvailable(draftData.lgbtAvailable);
-          if (draftData.livingConditions)
-            store.setLivingConditions(draftData.livingConditions);
         }
-        if (draftData?.description) {
-          store.setDescription(draftData.description);
+        if (draft.photoUrls && draft.photoUrls.length) {
+          setPhotoUrls(draft.photoUrls);
         }
-        if (draftData.costDetails)
-          store.setAllCostDetails(draftData.costDetails);
-        if (draftData.meetingDateFrom && draftData.meetingDateTo)
-          store.setMeetingDateRange(
-            draftData.meetingDateFrom,
-            draftData.meetingDateTo,
+
+        // Option Items
+        if (draft.optionItems) {
+          setOptionItemIds(
+            draft.optionItems.map((item: OptionItem) => item.optionItemId),
           );
-        if (draftData.viewingAlwaysAvailable)
-          store.setViewingAlwaysAvailable(draftData.viewingAlwaysAvailable);
-        if (draftData.timeSlots) store.setTimeSlots(draftData.timeSlots);
+        }
+
+        // Moving Conditions
+        if (draft.moveInInfo) setMoveInInfo(draft.moveInInfo);
+        if (draft.genderPreference) setGenderPreference(draft.genderPreference);
+        if (draft.lgbtAvailable !== undefined)
+          setLgbtAvailable(draft.lgbtAvailable);
+        if (draft.livingConditions) setLivingConditions(draft.livingConditions);
+
+        // 기타
+        if (draft.description) setDescription(draft.description);
+        if (draft.costDetails) setAllCostDetails(draft.costDetails);
+        if (draft.meetingDateFrom && draft.meetingDateTo)
+          setMeetingDateRange(draft.meetingDateFrom, draft.meetingDateTo);
+        if (draft.viewingAlwaysAvailable !== undefined)
+          setViewingAlwaysAvailable(draft.viewingAlwaysAvailable);
+        if (draft.timeSlots) setTimeSlots(draft.timeSlots);
       } catch (error) {
         console.error("임시 저장 데이터 가져오기 실패", error);
+      } finally {
+        setInitialized(true);
       }
-    };
-    initDraft();
-  }, [draftId, store]);
+    })();
+  }, [
+    draftId,
+    initialized,
+    // ✅ setter들은 보통 안정적이지만, 린트 회피/안전 위해 의존성에 명시
+    setListingType,
+    setRentPropertyType,
+    setSharePropertyType,
+    setRentCapacityPeople,
+    setShareCapacityPeople,
+    setRentInternalDetails,
+    setShareInternalDetails,
+    setOptionItemIds,
+    setMoveInInfo,
+    setGenderPreference,
+    setLgbtAvailable,
+    setLivingConditions,
+    setDescription,
+    setAllCostDetails,
+    setMeetingDateRange,
+    setViewingAlwaysAvailable,
+    setTimeSlots,
+  ]);
 
-  const getPayload = (): PropertyDetail | null => {
+  // ✅ payload 계산은 함수형이 아니라 memo로 (불필요 재계산 방지)
+  const payload: PropertyDetail | null = useMemo(() => {
     if (
       !myInfo ||
       !listingType ||
@@ -150,8 +197,9 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
       !genderPreference ||
       !livingConditions ||
       !timeSlots
-    )
+    ) {
       return null;
+    }
 
     if (listingType === "RENT") {
       if (!rentPropertyType || !rentCapacityPeople || !rentInternalDetails)
@@ -179,7 +227,9 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
         memberId: myInfo.id,
         thumbnailUrl: photoUrls?.[0] || null,
       };
-    } else if (listingType === "SHARE") {
+    }
+
+    if (listingType === "SHARE") {
       if (!sharePropertyType || !shareCapacityPeople || !shareInternalDetails)
         return null;
 
@@ -206,10 +256,30 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
         thumbnailUrl: photoUrls?.[0] || null,
       };
     }
-    return null;
-  };
 
-  const payload = getPayload();
+    return null;
+  }, [
+    myInfo,
+    listingType,
+    moveInInfo,
+    viewingAlwaysAvailable,
+    meetingDateFrom,
+    meetingDateTo,
+    genderPreference,
+    livingConditions,
+    timeSlots,
+    rentPropertyType,
+    rentCapacityPeople,
+    rentInternalDetails,
+    sharePropertyType,
+    shareCapacityPeople,
+    shareInternalDetails,
+    region,
+    photoUrls,
+    optionItemIds,
+    costDetails,
+    description,
+  ]);
 
   const handlePost = () => {
     if (!payload) {
@@ -223,10 +293,13 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
   };
 
   const handleTemporarySave = async () => {
-    const payload = createPayloadByStep("CREATE_CONFIRM", store, draftData);
     try {
-      await postTemporaryPropertyData(payload);
-      router.push(`/home`);
+      const tempPayload = createPayloadByStep(
+        "CREATE_CONFIRM",
+        useListingStore.getState(),
+        draftData,
+      );
+      await postTemporaryPropertyData(tempPayload);
     } catch (e) {
       console.error("임시 저장 실패:", e);
     }
@@ -238,7 +311,7 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
 
   return (
     <div className="w-full max-w-[430px] pb-[70px]">
-      <BackHeader rightIcon="close" />
+      <BackHeader rightIcon="close" onRightClick={() => router.push("/home")} />
       <TitleSection
         title="입력한 정보를 확인해주세요"
         label="수정을 원하는 섹션은 클릭해주세요"
@@ -247,11 +320,7 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
       {propertyContent && payload && <DropDownSection listingData={payload} />}
       <BottomActionBar
         buttons={[
-          {
-            label: "저장",
-            onClick: handleTemporarySave,
-            variant: "outline",
-          },
+          { label: "저장", onClick: handleTemporarySave, variant: "outline" },
           {
             label: "다음",
             onClick: handlePost,

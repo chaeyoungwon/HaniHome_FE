@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
@@ -49,7 +49,6 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
     setOptionItemIds,
   } = store;
   const searchParams = useSearchParams();
-  const router = useRouter();
 
   const draftId = searchParams.get("draftId");
   const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
@@ -92,14 +91,14 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
         if (genderPreference) {
           timer = setTimeout(() => {
             autoAdvance(currentIndex);
-          }, 4000);
+          }, 1500);
         }
         break;
       case "additionalInfo":
         if (optionItemIds.length > 0) {
           timer = setTimeout(() => {
             autoAdvance(currentIndex);
-          }, 4000);
+          }, 1500);
         }
         break;
       case "moveInInfo":
@@ -109,7 +108,7 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
         ) {
           timer = setTimeout(() => {
             autoAdvance(currentIndex);
-          }, 4000);
+          }, 1500);
         }
         break;
       case "livingConditions":
@@ -120,7 +119,7 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
         ) {
           timer = setTimeout(() => {
             autoAdvance(currentIndex);
-          }, 4000);
+          }, 1500);
         }
         break;
     }
@@ -296,7 +295,6 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
     const payload = createPayloadByStep("MOVING_CONDITIONS", store, draftData);
     try {
       await postTemporaryPropertyData(payload);
-      router.push(`/home`);
     } catch (e) {
       console.error("임시 저장 실패:", e);
     }

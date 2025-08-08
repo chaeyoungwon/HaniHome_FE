@@ -122,7 +122,6 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
 
     try {
       await postTemporaryPropertyData(payload);
-      router.push(`/home`);
     } catch (e) {
       console.error("임시 저장 실패:", e);
     }

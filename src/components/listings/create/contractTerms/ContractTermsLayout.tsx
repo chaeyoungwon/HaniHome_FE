@@ -1,5 +1,4 @@
 import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
@@ -51,7 +50,6 @@ const ContractTerms = ({ onNext }: ContractTermsProps) => {
     optionItemIds,
     viewingAlwaysAvailable,
   } = store;
-  const router = useRouter();
   const searchParams = useSearchParams();
   const draftId = searchParams.get("draftId");
   const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
@@ -92,19 +90,19 @@ const ContractTerms = ({ onNext }: ContractTermsProps) => {
       if (weeklyCost && deposit) {
         timer = setTimeout(() => {
           autoAdvance(currentIndex);
-        }, 4000);
+        }, 1500);
       }
     } else if (id === "meetingTime") {
       if ((meetingDateFrom && meetingDateTo) || viewingAlwaysAvailable) {
         timer = setTimeout(() => {
           autoAdvance(currentIndex);
-        }, 4000);
+        }, 1500);
       }
     } else if (id === "timeSlots") {
       if (timeSlots && timeSlots.length > 0) {
         timer = setTimeout(() => {
           autoAdvance(currentIndex);
-        }, 4000);
+        }, 1500);
       }
     } else {
       const answer = selectedAnswers[id];
@@ -135,7 +133,8 @@ const ContractTerms = ({ onNext }: ContractTermsProps) => {
         setDraftData(draftData);
 
         if (draftData) {
-          if (draftData.costDetails) store.setAllCostDetails(draftData.costDetails);
+          if (draftData.costDetails)
+            store.setAllCostDetails(draftData.costDetails);
           if (draftData.meetingDateFrom && draftData.meetingDateTo)
             store.setMeetingDateRange(
               draftData.meetingDateFrom,
@@ -267,7 +266,6 @@ const ContractTerms = ({ onNext }: ContractTermsProps) => {
     const payload = createPayloadByStep("CONTRACT_TERMS", store, draftData);
     try {
       await postTemporaryPropertyData(payload);
-      router.push(`/home`);
     } catch (e) {
       console.error("임시 저장 실패:", e);
     }

@@ -113,7 +113,12 @@ const MovingConditionsEdit = () => {
       }
       case "moveInInfo": {
         const { availableFrom, availableTo, immediate, negotiable } =
-          moveInInfo;
+          moveInInfo ?? {
+            availableFrom: null,
+            availableTo: null,
+            immediate: false,
+            negotiable: false,
+          };
 
         const moveInParts = [];
 
@@ -209,10 +214,12 @@ const MovingConditionsEdit = () => {
           ? { jsonDiscriminator: "SHARE", livingConditions }
           : { jsonDiscriminator: "RENT", livingConditions };
     } else if (open === "moveInInfo") {
-      payload =
-        jsonDiscriminator === "SHARE"
-          ? { jsonDiscriminator: "SHARE", moveInInfo }
-          : { jsonDiscriminator: "RENT", moveInInfo };
+      if (moveInInfo) {
+        payload =
+          jsonDiscriminator === "SHARE"
+            ? { jsonDiscriminator: "SHARE", moveInInfo }
+            : { jsonDiscriminator: "RENT", moveInInfo };
+      }
     } else if (open === "additionalInfo") {
       payload =
         jsonDiscriminator === "SHARE"

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -51,7 +51,6 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
   const store = useListingStore();
   const { listingType, optionItemIds, setOptionItemIds } = store;
 
-  const router = useRouter();
   const searchParams = useSearchParams();
   const draftId = searchParams.get("draftId");
   const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
@@ -168,7 +167,6 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
 
     try {
       await postTemporaryPropertyData(payload);
-      router.push(`/home`);
     } catch (e) {
       console.error("임시 저장 실패:", e);
     }
