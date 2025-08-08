@@ -34,6 +34,7 @@ const TimeSlotField = ({ value, onChange }: TimeSlotFieldProps) => {
 
     const localTime = convertUtcStringToLocalTime(time);
     const [hour, minute] = (localTime || "00:00").split(":");
+
     return (
       <span className="flex items-center gap-[2px]">
         <span>{hour}</span>
@@ -68,7 +69,7 @@ const TimeSlotField = ({ value, onChange }: TimeSlotFieldProps) => {
               <button
                 key="start"
                 className={`text-body1-med flex h-[33px] w-[77px] items-center justify-center gap-1 rounded-[4px] border px-3 py-1 ${getButtonClass(
-                  slots[idx].timeFrom ,
+                  slots[idx].timeFrom,
                   activeSpinner?.period === period &&
                     activeSpinner?.type === "start",
                 )}`}

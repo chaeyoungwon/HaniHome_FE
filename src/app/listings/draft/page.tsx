@@ -7,7 +7,10 @@ import { useEffect, useState } from "react";
 
 import { getTemporaryPropertyId } from "@/apis/propertyApi";
 
-import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
+import {
+  convertUtcStringToLocalTime,
+  formatMeetingDay,
+} from "@/utils/formatter/dateFormatter";
 
 import { FUNNEL_STEPS_MAP } from "@/constants/funnel-steps";
 
@@ -58,13 +61,14 @@ const ListingDraft = () => {
         ) : (
           temporaryProperties.map(property => {
             const formatted = formatMeetingDay(property.createdAt);
+            const utcTime = convertUtcStringToLocalTime(formatted.time);
             return (
               <div
                 key={property.temporaryPropertyId}
                 className="text-body1-sb cursor-pointer px-4 py-3 text-gray-800"
                 onClick={() => handleClick(property)}
               >
-                {formatted.fullDate} {formatted.weekday} {formatted.time}
+                {formatted.fullDate} {formatted.weekday} {utcTime}
               </div>
             );
           })

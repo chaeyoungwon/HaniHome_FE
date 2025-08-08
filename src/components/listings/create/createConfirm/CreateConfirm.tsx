@@ -45,8 +45,7 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const draftId = searchParams.get("draftId");
-
-  // ⚠️ store 전체를 의존성에 넣지 않기 위해, 읽기 값과 setter를 분리 구조분해
+  const store = useListingStore();
   const {
     listingType,
     region,
@@ -88,7 +87,7 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
     setMeetingDateRange,
     setViewingAlwaysAvailable,
     setTimeSlots,
-  } = useListingStore();
+  } = store;
 
   const { mutate: postProperty } = usePostProperty();
   const { data: myInfo, isLoading } = useMyInfo();
@@ -172,7 +171,6 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
   }, [
     draftId,
     initialized,
-    // ✅ setter들은 보통 안정적이지만, 린트 회피/안전 위해 의존성에 명시
     setListingType,
     setRentPropertyType,
     setSharePropertyType,
@@ -192,7 +190,6 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
     setTimeSlots,
   ]);
 
-  // ✅ payload 계산은 함수형이 아니라 memo로 (불필요 재계산 방지)
   const payload: PropertyDetail | null = useMemo(() => {
     if (
       !myInfo ||
@@ -295,6 +292,7 @@ const CreateConfirm = ({ onNext }: CreateConfirmProps) => {
       onSuccess: () => onNext(),
       onError: error => console.error("등록 실패:", error),
     });
+    console.log(payload); //Todo. 지우기
   };
 
   const handleTemporarySave = async () => {

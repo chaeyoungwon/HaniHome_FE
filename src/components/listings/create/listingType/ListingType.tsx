@@ -8,6 +8,7 @@ import { useListingStore } from "@/stores/useListingStore";
 import { getTemporaryPropertyId } from "@/apis/propertyApi";
 
 import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
+import { convertUtcStringToLocalTime } from "@/utils/formatter/dateFormatter";
 
 import { FUNNEL_STEPS_MAP } from "@/constants/funnel-steps";
 
@@ -46,6 +47,7 @@ const ListingType = ({
       try {
         const data = await getTemporaryPropertyId();
         setTemporaryProperties(data); // 성공 시 상태 저장
+        console.log(data);
       } catch (error) {
         console.error("임시 저장 매물 조회 실패:", error);
       }
@@ -117,6 +119,7 @@ const ListingType = ({
             .slice(0, 3)
             .map(property => {
               const formatted = formatMeetingDay(property.createdAt);
+              const utcTime = convertUtcStringToLocalTime(formatted.time);
               const lastStepItem = FUNNEL_STEPS_MAP.find(
                 step => step.key === property.status,
               );
@@ -131,7 +134,7 @@ const ListingType = ({
                     )
                   }
                 >
-                  {formatted.fullDate} {formatted.weekday} {formatted.time}
+                  {formatted.fullDate} {formatted.weekday} {utcTime}
                 </div>
               );
             })}

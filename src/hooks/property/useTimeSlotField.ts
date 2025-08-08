@@ -77,18 +77,26 @@ export const useTimeSlotField = (
 
     const idx = PERIODS.indexOf(period);
     const otherVal =
-      slots[idx][type === "start" ? "timeTo" : "timeFrom"] || "00:00";
-    const localOtherVal = convertUtcStringToLocalTime(otherVal);
+      slots[idx][type === "start" ? "timeTo" : "timeFrom"] || null;
 
-    if (type === "start") {
-      if (val >= localOtherVal && localOtherVal !== "00:00") {
-        setAlertMsg("시작 시간은 종료 시간보다 이전이어야 합니다.");
-        return;
-      }
-    } else {
-      if (val <= localOtherVal && val !== "00:00") {
-        setAlertMsg("시작 시간은 종료 시간보다 이전이어야 합니다.");
-        return;
+    if (idx === -1) return;
+
+    if (otherVal) {
+      const localOtherVal = convertUtcStringToLocalTime(otherVal);
+      if (type === "start") {
+        if (val >= localOtherVal && localOtherVal !== "00:00") {
+          console.log("slots[idx]:", slots[idx]);
+          console.log(localOtherVal, val);
+          setAlertMsg("시작 시간은 종료 시간보다 이전이어야 합니다.");
+          return;
+        }
+      } else {
+        if (val <= localOtherVal && val !== "00:00") {
+          console.log(localOtherVal, val);
+          console.log("slots[idx]:", slots[idx]);
+          setAlertMsg("시작 시간은 종료 시간보다 이전이어야 합니다.");
+          return;
+        }
       }
     }
 
@@ -117,6 +125,9 @@ export const useTimeSlotField = (
   };
 
   const handleButtonClick = (period: Period, type: "start" | "end") => {
+    const idx = PERIODS.indexOf(period);
+    if (idx === -1) return;
+    
     const incomplete = slots.find((slot, idx) => {
       const isCurrent = PERIODS[idx] === period;
       return (
@@ -130,6 +141,22 @@ export const useTimeSlotField = (
       setAlertMsg(
         "현재 시간대의 시작 시간과 종료 시간을 모두 설정한 후\n다른 시간대를 선택해 주세요",
       );
+      return;
+    }
+    const currentVal = slots[idx]?.[type === "start" ? "timeFrom" : "timeTo"];
+    if (currentVal !== null && currentVal !== undefined) {
+      // 값 초기화
+      const updatedSlots = [...slots];
+      updatedSlots[idx] = {
+        ...updatedSlots[idx],
+        [type === "start" ? "timeFrom" : "timeTo"]: null,
+      };
+      setSlots(updatedSlots);
+      onChange(updatedSlots);
+
+      // 스피너 닫기
+      setActiveSpinner(null);
+      setTempTime(null);
       return;
     }
 
@@ -146,6 +173,7 @@ export const useTimeSlotField = (
         const [hour, minute] = currentTime.split(":").map(Number);
         setScrollTarget({ hour, minute });
       }
+      console.log(slots);
     }
   };
 
