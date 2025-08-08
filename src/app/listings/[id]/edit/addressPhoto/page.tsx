@@ -17,7 +17,6 @@ const BackHeader = dynamic(
 const AddressPhotoEdit = () => {
   const searchParams = useSearchParams();
   const stepFromQuery = searchParams.get("subStep");
-  const isDraft = Boolean(searchParams.get("draftId"));
 
   const fixedKey = "addressPhoto";
   const [subStep, setSubStep] = useState<"address" | "photo">("address");
@@ -30,7 +29,7 @@ const AddressPhotoEdit = () => {
 
   return (
     <>
-      <BackHeader isDraft={isDraft} />
+      <BackHeader />
       <FunnelStepMenu fixedKey={fixedKey} />
       {subStep === "address" && <AddressField edit />}
       {subStep === "photo" && <PhotoField edit />}

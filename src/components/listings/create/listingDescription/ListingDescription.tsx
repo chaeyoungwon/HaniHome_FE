@@ -129,11 +129,7 @@ const ListingDescription = ({
 
   return (
     <>
-      <BackHeader
-        isDraft={Boolean(draftId)}
-        rightIcon="close"
-        onRightClick={() => router.push("/home")}
-      />
+      <BackHeader rightIcon="close" onRightClick={() => router.push("/home")} />
       <div className="flex flex-col gap-2 px-4 py-3">
         <div className="text-heading2 text-gray-900">
           마지막이에요! <br />

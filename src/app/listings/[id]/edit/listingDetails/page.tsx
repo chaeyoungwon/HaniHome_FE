@@ -70,7 +70,6 @@ const ListingDetailsEdit = () => {
   const id = params.id as string;
   const searchParams = useSearchParams();
   const open = searchParams.get("open");
-  const draftId = searchParams.get("draftId");
 
   const { data, isLoading, error } = usePropertyDetailEditList(id ?? "");
   const { mutate: patchProperty } = usePatchProperty(Number(id));
@@ -232,7 +231,7 @@ const ListingDetailsEdit = () => {
 
   return (
     <>
-      <BackHeader isDraft={Boolean(draftId)} />
+      <BackHeader />
       <FunnelStepMenu fixedKey="listingDetails" />
       {QUESTION_MAP[listingType].ListingDetails.map((item, index, array) => {
         let value: React.ReactNode = "N/A";

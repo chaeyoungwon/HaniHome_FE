@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
 
@@ -34,8 +34,6 @@ const ContractTermsEdit = () => {
   const params = useParams();
   const id = params.id as string;
   const { data } = usePropertyDetailEditList(id ?? "");
-  const searchParams = useSearchParams();
-  const draftId = searchParams.get("draftId");
 
   const [costDetails, setCostDetails] = useState<CostDetails>({
     weeklyCost: 0,
@@ -111,7 +109,7 @@ const ContractTermsEdit = () => {
 
   return (
     <div className="pb-[70px]">
-      <BackHeader isDraft={Boolean(draftId)} />
+      <BackHeader />
       <FunnelStepMenu fixedKey={fixedKey} />
       <div className="flex h-19 w-full max-w-[430px] cursor-pointer items-start justify-between p-4">
         <div className="flex flex-col">
