@@ -1,8 +1,17 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { useEffect, useMemo, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
+
+import {
+  fetchTemporaryPropertyData,
+  postTemporaryPropertyData,
+} from "@/apis/propertyApi";
+
+import { createPayloadByStep } from "@/hooks/property/createPayloadBySteps";
 
 import {
   LISTING_DETAILS_IDS,
@@ -20,6 +29,7 @@ import FunnelLayout from "@/components/listings/create/common/FunnelLayout";
 import { QUESTION_MAP } from "@/constants/question-map";
 
 import { ListingDetailsOption } from "@/types/createPropertyAnswer.type";
+import { OptionItem } from "@/types/listingDetailGet.type";
 import {
   CapacityRent,
   CapacityShare,
@@ -28,6 +38,7 @@ import {
   ShareInternalDetails,
   SharePropertySubType,
 } from "@/types/listingDetailPost.type";
+import { TemporaryPropertyPost } from "@/types/temporaryProperty.type";
 
 import ListingDetailsDropdownContent from "./ListingDetailsDropdownContent";
 
@@ -40,12 +51,71 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
   const store = useListingStore();
   const { listingType, optionItemIds, setOptionItemIds } = store;
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const draftId = searchParams.get("draftId");
+  const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
+    null,
+  );
+
   const section = "ListingDetails";
   const questions = useMemo(() => {
     return listingType ? QUESTION_MAP[listingType][section] : [];
   }, [listingType, section]);
+
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { highlightIds, furnitureIds, isBrokeredIds } = LISTING_DETAILS_IDS;
+
+  useEffect(() => {
+    const initDraft = async () => {
+      if (!draftId) return;
+      try {
+        const draftData = await fetchTemporaryPropertyData(Number(draftId));
+        setDraftData(draftData);
+        if (draftData) {
+          // SubType 세팅
+          if (draftData.rentPropertySubType)
+            store.setRentPropertyType(draftData.rentPropertySubType);
+          if (draftData.sharePropertySubType)
+            store.setSharePropertyType(draftData.sharePropertySubType);
+
+          // Capacity 세팅
+          if (draftData.capacityRent)
+            store.setRentCapacityPeople(draftData.capacityRent);
+          if (draftData.capacityShare)
+            store.setShareCapacityPeople(draftData.capacityShare);
+
+          // internalDetails는 kind에 따라 분기해서 세팅
+          if (draftData.internalDetails) {
+            if (draftData.kind === "RENT") {
+              store.setRentInternalDetails(
+                draftData.internalDetails as RentInternalDetails,
+              );
+            } else if (draftData.kind === "SHARE") {
+              store.setShareInternalDetails(
+                draftData.internalDetails as ShareInternalDetails,
+              );
+            }
+          }
+
+          // optionItems가 있을 경우 optionItemIds 추출해 세팅
+          if (draftData.optionItems) {
+            const optionItemIds = draftData.optionItems.map(
+              (item: OptionItem) => item.optionItemId,
+            );
+            store.setOptionItemIds(optionItemIds);
+          }
+
+          // listingType 세팅
+          if (draftData.kind === "RENT") store.setListingType("RENT");
+          else if (draftData.kind === "SHARE") store.setListingType("SHARE");
+        }
+      } catch (error) {
+        console.error("임시 저장 데이터 가져오기 실패", error);
+      }
+    };
+    initDraft();
+  }, [draftId]);
 
   const { openIndices, visibleIndices, toggleIndex, autoAdvance } =
     useDropdownAutoManager({
@@ -83,6 +153,8 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
 
   useEffect(() => {
     openIndices.forEach(idx => {
+      const question = questions[idx];
+      if (!question) return; // idx가 유효하지 않으면 무시
       const answer = getAnswerValue(
         questions[idx].id as ListingDetailsOption["type"],
         store,
@@ -90,6 +162,17 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
       if (autoAdvance && answer) autoAdvance(idx);
     });
   }, [openIndices, questions, autoAdvance, store]);
+
+  const handleTemporarySave = async () => {
+    const payload = createPayloadByStep("LISTING_DETAILS", store, draftData);
+
+    try {
+      await postTemporaryPropertyData(payload);
+      router.push(`/home`);
+    } catch (e) {
+      console.error("임시 저장 실패:", e);
+    }
+  };
 
   return (
     <FunnelLayout>
@@ -177,17 +260,7 @@ const ListingDetails = ({ onNext }: ListingDetailsProps) => {
           buttons={[
             {
               label: "저장",
-              onClick: () => {
-                console.log("저장된 Zustand 상태", {
-                  rentPropertyType: store.rentPropertyType,
-                  sharePropertyType: store.sharePropertyType,
-                  rentCapacityPeople: store.rentCapacityPeople,
-                  shareCapacityPeople: store.shareCapacityPeople,
-                  rentInternalDetails: store.rentInternalDetails,
-                  shareInternalDetails: store.shareInternalDetails,
-                  optionItemIds,
-                });
-              },
+              onClick: handleTemporarySave,
               variant: "outline",
             },
             {

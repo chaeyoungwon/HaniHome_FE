@@ -56,7 +56,7 @@ interface ListingState {
   optionItemIds: number[];
   setOptionItemIds: (ids: number[]) => void;
 
-  timeSlots: TimeSlot[];
+  timeSlots: TimeSlot[] | null;
   setTimeSlots: (data: TimeSlot[]) => void;
 
   meetingDateFrom: string | null;
@@ -75,8 +75,8 @@ interface ListingState {
   lgbtAvailable: boolean;
   setLgbtAvailable: (value: boolean) => void;
 
-  moveInInfo: MoveInInfo;
-  setMoveInInfo: (value: MoveInInfo) => void;
+  moveInInfo: MoveInInfo | null;
+  setMoveInInfo: (value: MoveInInfo | null) => void;
 
   livingConditions: LivingConditions | null;
   setLivingConditions: (value: LivingConditions | null) => void;

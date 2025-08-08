@@ -2,7 +2,7 @@ import { TimeSlot } from "@/types/listingDetailPost.type";
 
 export type TimeLabel = "아침" | "점심" | "저녁";
 
-export const DEFAULT_SLOT: TimeSlot = { timeFrom: "00:00", timeTo: "00:00" };
+export const DEFAULT_SLOT: TimeSlot = { timeFrom: null, timeTo: null};
 export const DEFAULT_SLOTS: TimeSlot[] = [
   DEFAULT_SLOT,
   DEFAULT_SLOT,

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { convertLocalTimeToUtcString } from "@/utils/formatter/dateFormatter";
-import { convertUtcStringToLocalTime } from "@/utils/formatter/dateFormatter";
+import {
+  convertLocalTimeToUtcString,
+  convertUtcStringToLocalTime,
+} from "@/utils/formatter/dateFormatter";
 import { timeToMinutes } from "@/utils/listing/create/timeslotUtils";
 
 import {
@@ -15,10 +17,21 @@ import { TimeSlot } from "@/types/listingDetailPost.type";
 type Period = (typeof PERIODS)[number];
 
 export const useTimeSlotField = (
-  value: TimeSlot[],
+  value: TimeSlot[] | null,
   onChange: (updated: TimeSlot[]) => void,
 ) => {
-  const [slots, setSlots] = useState<TimeSlot[]>(value);
+  const initialSlots: TimeSlot[] = PERIODS.map(() => ({
+    timeFrom: null,
+    timeTo: null,
+  }));
+
+  const [slots, setSlots] = useState<TimeSlot[]>(() => {
+    // value가 주어졌고 길이가 정확하면 그대로 사용
+    if (value?.length === PERIODS.length) return value;
+    // 그렇지 않으면 초기값 사용
+    return initialSlots;
+  });
+
   const [tempTime, setTempTime] = useState<string | null>(null);
   const [activeSpinner, setActiveSpinner] = useState<{
     period: Period;
@@ -31,6 +44,10 @@ export const useTimeSlotField = (
   } | null>(null);
 
   useEffect(() => {
+    if (!value) {
+      setSlots(DEFAULT_SLOTS);
+      return;
+    }
     const isSame =
       value.length === slots.length &&
       value.every(
@@ -49,7 +66,7 @@ export const useTimeSlotField = (
     val: string,
   ) => {
     const { minTime, maxTime } = PERIOD_LIMITS[period];
-    let valMin = timeToMinutes(val);
+    const valMin = timeToMinutes(val);
     const minLimit = timeToMinutes(minTime);
     const maxLimit = timeToMinutes(maxTime === "00:00" ? "24:00" : maxTime);
 
@@ -59,29 +76,20 @@ export const useTimeSlotField = (
     }
 
     const idx = PERIODS.indexOf(period);
-    const otherValUtc =
+    const otherVal =
       slots[idx][type === "start" ? "timeTo" : "timeFrom"] || "00:00";
-    const otherValLocal = convertUtcStringToLocalTime(otherValUtc);
+    const localOtherVal = convertUtcStringToLocalTime(otherVal);
 
-    let otherMin = timeToMinutes(otherValLocal);
     if (type === "start") {
-      // 시작 시간이 종료 시간보다 같거나 크면 종료 시간에 24시간(1440분) 더함
-      if (otherMin <= valMin && otherValLocal !== "00:00") {
-        otherMin += 24 * 60;
+      if (val >= localOtherVal && localOtherVal !== "00:00") {
+        setAlertMsg("시작 시간은 종료 시간보다 이전이어야 합니다.");
+        return;
       }
-    } else if (type === "end") {
-      // 종료 시간이 시작 시간보다 같거나 작으면 종료 시간에 24시간 더함
-      if (valMin <= otherMin && val !== "00:00") {
-        valMin += 24 * 60;
+    } else {
+      if (val <= localOtherVal && val !== "00:00") {
+        setAlertMsg("시작 시간은 종료 시간보다 이전이어야 합니다.");
+        return;
       }
-    }
-
-    if (
-      (type === "start" && valMin >= otherMin && otherValLocal !== "00:00") ||
-      (type === "end" && valMin <= otherMin && val !== "00:00")
-    ) {
-      setAlertMsg("시작 시간은 종료 시간보다 이전이어야 합니다.");
-      return;
     }
 
     setTempTime(val);

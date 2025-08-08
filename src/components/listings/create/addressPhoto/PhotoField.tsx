@@ -11,6 +11,7 @@ import {
 import { getPropertyPresignedUrl } from "@/apis/s3UploadApi";
 
 import useMultipleImageUpload from "@/hooks/common/useMultipleImageUpload";
+import { createPayloadByStep } from "@/hooks/property/createPayloadBySteps";
 import {
   usePatchProperty,
   usePropertyDetailEditList,
@@ -23,7 +24,8 @@ import BottomActionBar from "@/components/common/BottomActionBar";
 import Divider from "@/components/common/Divider";
 import ImageSlider from "@/components/listings/detailShow/ImageSlider";
 import ImageAlertModal from "@/components/signup/profile/ImageAlertModal";
-import { TemporaryProperty } from "@/types/temporaryProperty.type";
+
+import { TemporaryPropertyPost } from "@/types/temporaryProperty.type";
 
 import QuestionMarkIcon from "@/public/svgs/listings/question-mark-icon.svg";
 
@@ -44,7 +46,8 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
   const searchParams = useSearchParams();
   const draftId = searchParams.get("draftId");
 
-  const { photoUrls, setPhotoUrls } = useListingStore();
+  const store = useListingStore();
+  const { photoUrls, setPhotoUrls } = store;
 
   const [previewUrls, setPreviewUrls] = useState<string[]>(photoUrls); // 이미지 URL 미리보기
   const [, setUploadedFiles] = useState<File[]>([]); // 실제 파일 객체
@@ -53,7 +56,9 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [, setAlertMessage] = useState<string | null>(null);
 
-  const [draftData, setDraftData] = useState<TemporaryProperty | null>(null);
+  const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
+    null,
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -100,7 +105,6 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
       try {
         const draftData = await fetchTemporaryPropertyData(Number(draftId));
         setDraftData(draftData);
-        console.log(draftData);
         if (Array.isArray(draftData.photoUrls)) {
           setPhotoUrls(draftData.photoUrls); // Zustand store에 저장
           setPreviewUrls(draftData.photoUrls); // 미리보기에도 반영
@@ -114,20 +118,11 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
   }, [draftId, edit]);
 
   const handleTemporarySave = async () => {
-    if (!draftData) return;
-
-    const payload = {
-      jsonDiscriminator: draftData.kind,
-      ...draftData,
-      photoUrls,
-    };
+    const payload = createPayloadByStep("ADDRESS_PHOTO", store, draftData);
 
     try {
       await postTemporaryPropertyData(payload);
-      console.log(payload)
-      router.push(
-        `/listings/create?step=addressPhoto&draftId=${draftId}&subStep=photo`,
-      );
+      router.push(`/home`);
     } catch (e) {
       console.error("임시 저장 실패:", e);
     }
@@ -142,7 +137,6 @@ const PhotoField = ({ onNext, edit = false }: PhotoFieldProps) => {
       jsonDiscriminator,
       photoUrls,
     };
-    console.log(payload);
     patchProperty(payload, {
       onSuccess: () => {
         router.push(`/listings/${id}/edit`);

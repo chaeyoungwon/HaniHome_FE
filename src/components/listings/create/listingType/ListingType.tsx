@@ -42,7 +42,6 @@ const ListingType = ({
       try {
         const data = await getTemporaryPropertyId();
         setTemporaryProperties(data); // 성공 시 상태 저장
-        console.log(data);
       } catch (error) {
         console.error("임시 저장 매물 조회 실패:", error);
       }
@@ -105,26 +104,33 @@ const ListingType = ({
               <LeftArrow />
             </div>
           </div>
-          {temporaryProperties.map(property => {
-            const formatted = formatMeetingDay(property.createdAt);
-            const lastStepItem = FUNNEL_STEPS_MAP.find(
-              step => step.key === property.lastStep,
-            );
-            const lastStep = lastStepItem?.label ?? "addressPhoto";
-            return (
-              <div
-                key={property.temporaryPropertyId}
-                className="text-body2-med cursor-pointer px-4 py-2 text-gray-700"
-                onClick={() =>
-                  router.push(
-                    `/listings/create?step=${lastStep}&draftId=${property.temporaryPropertyId}`,
-                  )
-                }
-              >
-                {formatted.fullDate} {formatted.weekday} {formatted.time}
-              </div>
-            );
-          })}
+          {[...temporaryProperties]
+            .sort(
+              (a, b) =>
+                new Date(b.createdAt).getTime() -
+                new Date(a.createdAt).getTime(),
+            )
+            .slice(0, 3)
+            .map(property => {
+              const formatted = formatMeetingDay(property.createdAt);
+              const lastStepItem = FUNNEL_STEPS_MAP.find(
+                step => step.key === property.status,
+              );
+              const lastStep = lastStepItem?.label ?? "addressPhoto";
+              return (
+                <div
+                  key={property.temporaryPropertyId}
+                  className="text-body2-med cursor-pointer px-4 py-2 text-gray-700"
+                  onClick={() =>
+                    router.push(
+                      `/listings/create?step=${lastStep}&draftId=${property.temporaryPropertyId}`,
+                    )
+                  }
+                >
+                  {formatted.fullDate} {formatted.weekday} {formatted.time}
+                </div>
+              );
+            })}
         </>
       )}
     </>

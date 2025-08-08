@@ -10,7 +10,7 @@ import { PERIODS, PERIOD_LIMITS } from "@/constants/time-options";
 import { TimeSlot } from "@/types/listingDetailPost.type";
 
 interface TimeSlotFieldProps {
-  value: TimeSlot[];
+  value: TimeSlot[] | null;
   onChange: (updated: TimeSlot[]) => void;
 }
 
@@ -68,7 +68,7 @@ const TimeSlotField = ({ value, onChange }: TimeSlotFieldProps) => {
               <button
                 key="start"
                 className={`text-body1-med flex h-[33px] w-[77px] items-center justify-center gap-1 rounded-[4px] border px-3 py-1 ${getButtonClass(
-                  slots[idx].timeFrom,
+                  slots[idx].timeFrom ,
                   activeSpinner?.period === period &&
                     activeSpinner?.type === "start",
                 )}`}

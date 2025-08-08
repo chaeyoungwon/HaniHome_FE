@@ -1,14 +1,17 @@
-import { OptionItem } from "./listingDetailGet.type";
 import {
+  CapacityRent,
+  CapacityShare,
   GenderPreference,
   PropertyRegion,
   PropertySuperType,
   RentInternalDetails,
+  RentPropertySubType,
   ShareInternalDetails,
+  SharePropertySubType,
 } from "./listingDetailPost.type";
 
 export type FunnelSteps =
-  | "ADDRESS_PHOTO "
+  | "ADDRESS_PHOTO"
   | "LISTING_DETAILS"
   | "MOVING_CONDITIONS"
   | "CONTRACT_TERMS"
@@ -18,7 +21,7 @@ export type FunnelSteps =
 export interface TemporaryPropertyId {
   temporaryPropertyId: number;
   createdAt: string;
-  lastStep: FunnelSteps;
+  status: FunnelSteps;
 }
 
 export interface TemporaryCostDetails {
@@ -40,8 +43,8 @@ export interface TemporaryLivingConditions {
 export interface TemporaryMoveInInfo {
   availableFrom: string; // ISO datetime
   availableTo: string; // ISO datetime
-  isImmediate: boolean;
-  isNegotiable: boolean;
+  immediate: boolean;
+  negotiable: boolean;
 }
 
 export interface TemporaryTimeSlot {
@@ -61,25 +64,40 @@ export interface ViewingAvailableDateTime {
   reserved: boolean;
 }
 
-export interface TemporaryProperty {
-  id: number;
+interface TemporaryPropertyBase {
+  jsonDiscriminator: PropertySuperType;
+  id?: number;
+  status: FunnelSteps;
   kind: PropertySuperType; // "RENT" | "SHARE"
-  genderPreference: GenderPreference | null;
-  lgbtAvailable: boolean | null;
+  genderPreference?: GenderPreference | null;
+  lgbtAvailable?: boolean | null;
   region: PropertyRegion | null;
   photoUrls: string[] | null;
-  costDetails: TemporaryCostDetails | null;
-  optionItems: OptionItem[] | null;
-  livingConditions: TemporaryLivingConditions | null;
-  moveInInfo: TemporaryMoveInInfo | null;
-  meetingDateFrom: string | null; //isoDate
-  meetingDateTo: string | null; // isoDate
-  timeSlots: TemporaryTimeSlot[] | null;
-  viewingAvailableDateTimes: ViewingAvailableDateTime[] | null;
-  viewingAlwaysAvailable: boolean | null;
-  description: string | null;
-  createdAt: string | null; // ISO date
-  // 내부 구조는 kind에 따라 아래 둘 중 하나만 존재:
-  shareInternalDetails?: ShareInternalDetails | null;
-  rentInternalDetails?: RentInternalDetails | null;
+  costDetails?: TemporaryCostDetails | null;
+  optionItemIds?: number[] | null;
+  livingConditions?: TemporaryLivingConditions | null;
+  moveInInfo?: TemporaryMoveInInfo | null;
+  meetingDateFrom?: string | null; //isoDate
+  meetingDateTo?: string | null; // isoDate
+  timeSlots?: TemporaryTimeSlot[] | null;
+  viewingAvailableDateTimes?: ViewingAvailableDateTime[] | null;
+  viewingAlwaysAvailable?: boolean | null;
+  description?: string | null;
+  createdAt?: string | null; // ISO date
+  sharePropertySubType?: SharePropertySubType | null;
+  capacityShare?: CapacityShare | null;
+  rentPropertySubType?: RentPropertySubType | null;
+  capacityRent?: CapacityRent | null;
 }
+
+export interface ShareTemporaryProperty extends TemporaryPropertyBase {
+  internalDetails?: ShareInternalDetails | null;
+}
+
+export interface RentTemporaryProperty extends TemporaryPropertyBase {
+  internalDetails?: RentInternalDetails | null;
+}
+
+export type TemporaryPropertyPost =
+  | ShareTemporaryProperty
+  | RentTemporaryProperty;

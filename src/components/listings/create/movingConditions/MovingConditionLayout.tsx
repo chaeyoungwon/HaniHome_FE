@@ -1,8 +1,17 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
+
 import { useEffect, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
+
+import {
+  fetchTemporaryPropertyData,
+  postTemporaryPropertyData,
+} from "@/apis/propertyApi";
+
+import { createPayloadByStep } from "@/hooks/property/createPayloadBySteps";
 
 import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
 import { useDropdownAutoManager } from "@/utils/listing/create/useDropdownAutoManager";
@@ -17,6 +26,8 @@ import { CATEGORY_OPTIONS } from "@/constants/property-category";
 import { COMMON_MOVING_CONDITIONS } from "@/constants/question-map";
 
 import { MovingConditionsOption } from "@/types/createPropertyAnswer.type";
+import { OptionItem } from "@/types/listingDetailGet.type";
+import { TemporaryPropertyPost } from "@/types/temporaryProperty.type";
 
 import MovingConditionDropdownContent from "./MovingConditionDropdownContent";
 
@@ -26,6 +37,7 @@ interface MovingConditionProps {
 }
 
 const MovingCondition = ({ onNext }: MovingConditionProps) => {
+  const store = useListingStore();
   const {
     genderPreference,
     moveInInfo,
@@ -35,7 +47,14 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
     setMoveInInfo,
     setLivingConditions,
     setOptionItemIds,
-  } = useListingStore();
+  } = store;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const draftId = searchParams.get("draftId");
+  const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
+    null,
+  );
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
   const { openIndices, visibleIndices, toggleIndex, autoAdvance } =
     useDropdownAutoManager({
@@ -45,14 +64,10 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
         switch (id) {
           case "genderPreference":
             return !!genderPreference;
-          case "additionalInfo":
-            return optionItemIds.length > 0;
+
           case "moveInInfo":
-            return (
-              !!moveInInfo.availableFrom ||
-              !!moveInInfo.immediate ||
-              !!moveInInfo.negotiable
-            );
+            if (!moveInInfo) return false;
+            return !!moveInInfo.availableFrom || !!moveInInfo.availableTo;
           case "livingConditions":
             return (
               !!livingConditions &&
@@ -89,9 +104,8 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
         break;
       case "moveInInfo":
         if (
-          moveInInfo.availableFrom ||
-          moveInInfo.immediate ||
-          moveInInfo.negotiable
+          moveInInfo &&
+          (moveInInfo.availableFrom || moveInInfo.availableTo)
         ) {
           timer = setTimeout(() => {
             autoAdvance(currentIndex);
@@ -123,22 +137,33 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
     livingConditions,
   ]);
 
-  const handleSelect = (id: string, option: MovingConditionsOption) => {
-    switch (option.type) {
-      case "genderPreference":
-        setGenderPreference(option.value);
-        break;
-      case "optionItemIds":
-        setOptionItemIds(option.value);
-        break;
-      case "moveInInfo":
-        if (option.value) setMoveInInfo(option.value);
-        break;
-      case "livingConditions":
-        setLivingConditions(option.value);
-        break;
-    }
-  };
+  useEffect(() => {
+    const initDraft = async () => {
+      if (!draftId) return;
+      try {
+        const draftData = await fetchTemporaryPropertyData(Number(draftId));
+        setDraftData(draftData);
+        if (draftData) {
+          if (draftData.moveInInfo) store.setMoveInInfo(draftData.moveInInfo);
+          if (draftData.genderPreference)
+            store.setGenderPreference(draftData.genderPreference);
+          if (draftData.lgbtAvailable)
+            store.setLgbtAvailable(draftData.lgbtAvailable);
+          if (draftData.livingConditions)
+            store.setLivingConditions(draftData.livingConditions);
+          if (draftData.optionItems) {
+            const optionItemIds = draftData.optionItems.map(
+              (item: OptionItem) => item.optionItemId,
+            );
+            store.setOptionItemIds(optionItemIds);
+          }
+        }
+      } catch (error) {
+        console.error("임시 저장 데이터 가져오기 실패", error);
+      }
+    };
+    initDraft();
+  }, [draftId]);
 
   const allAnswered = COMMON_MOVING_CONDITIONS.every(item => {
     switch (item.id) {
@@ -160,9 +185,7 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
       }
       case "moveInInfo":
         return (
-          !!moveInInfo.availableFrom ||
-          !!moveInInfo.immediate ||
-          !!moveInInfo.negotiable
+          !!moveInInfo && !!moveInInfo.availableFrom && !!moveInInfo.availableTo
         );
       case "livingConditions":
         return (
@@ -252,6 +275,33 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
     }
   };
 
+  const handleSelect = (id: string, option: MovingConditionsOption) => {
+    switch (option.type) {
+      case "genderPreference":
+        setGenderPreference(option.value);
+        break;
+      case "optionItemIds":
+        setOptionItemIds(option.value);
+        break;
+      case "moveInInfo":
+        setMoveInInfo(option.value);
+        break;
+      case "livingConditions":
+        setLivingConditions(option.value);
+        break;
+    }
+  };
+
+  const handleTemporarySave = async () => {
+    const payload = createPayloadByStep("MOVING_CONDITIONS", store, draftData);
+    try {
+      await postTemporaryPropertyData(payload);
+      router.push(`/home`);
+    } catch (e) {
+      console.error("임시 저장 실패:", e);
+    }
+  };
+
   return (
     <FunnelLayout>
       {COMMON_MOVING_CONDITIONS.map((item, index) => {
@@ -280,14 +330,7 @@ const MovingCondition = ({ onNext }: MovingConditionProps) => {
           buttons={[
             {
               label: "저장",
-              onClick: () => {
-                console.log(
-                  genderPreference,
-                  moveInInfo,
-                  livingConditions,
-                  optionItemIds,
-                );
-              },
+              onClick: handleTemporarySave,
               variant: "outline",
             },
             {

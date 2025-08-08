@@ -87,6 +87,7 @@ export const getAnswerText = (
 
   switch (id) {
     case "isBrokered":
+      if (!answer) return "";
       return answer === 54 ? "개인임대" : "부동산 중개";
     case "highlights": {
       const highlights = answer as number[];

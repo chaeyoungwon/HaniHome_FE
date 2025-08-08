@@ -1,11 +1,17 @@
 "use client";
 
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useEffect, useRef, useState } from "react";
 
 import { useListingStore } from "@/stores/useListingStore";
 
+import {
+  fetchTemporaryPropertyData,
+  postTemporaryPropertyData,
+} from "@/apis/propertyApi";
+
+import { createPayloadByStep } from "@/hooks/property/createPayloadBySteps";
 import {
   usePatchProperty,
   usePropertyDetailEditList,
@@ -18,6 +24,8 @@ import BottomActionBar from "@/components/common/BottomActionBar";
 import TextareaField from "@/components/common/TextareaField";
 import BackHeader from "@/components/layout/header/BackHeader";
 
+import { TemporaryPropertyPost } from "@/types/temporaryProperty.type";
+
 interface ListingDescriptionProps {
   onNext?: () => void;
   onPrev?: () => void;
@@ -27,15 +35,22 @@ const ListingDescription = ({
   onNext,
   edit = false,
 }: ListingDescriptionProps) => {
+  const store = useListingStore();
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
+
   const id = params.id as string;
   const { data } = usePropertyDetailEditList(id ?? "");
+  const draftId = searchParams.get("draftId");
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { description, setDescription } = useListingStore();
   const [text, setText] = useState(description || "");
   const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const [draftData, setDraftData] = useState<TemporaryPropertyPost | null>(
+    null,
+  );
   useEffect(() => {
     if (edit && data) {
       const parsed = toPostPropertyDetail(data);
@@ -46,6 +61,22 @@ const ListingDescription = ({
       setText(description || "");
     }
   }, [edit, data]);
+
+  useEffect(() => {
+    const initDraft = async () => {
+      if (!draftId) return;
+      try {
+        const draftData = await fetchTemporaryPropertyData(Number(draftId));
+        setDraftData(draftData);
+        if (draftData.description) {
+          store.setDescription(draftData.description);
+        }
+      } catch (error) {
+        console.error("임시 저장 데이터 가져오기 실패", error);
+      }
+    };
+    initDraft();
+  }, [draftId, setDescription]);
 
   const handleResize = () => {
     const textarea = textareaRef.current;
@@ -77,6 +108,21 @@ const ListingDescription = ({
       },
     });
   };
+
+  const handleTemporarySave = async () => {
+    const payload = createPayloadByStep(
+      "LISTING_DESCRIPTION",
+      store,
+      draftData,
+    );
+    try {
+      await postTemporaryPropertyData(payload);
+      router.push(`/home`);
+    } catch (e) {
+      console.error("임시 저장 실패:", e);
+    }
+  };
+
   return (
     <>
       <BackHeader rightIcon="close" />
@@ -102,10 +148,7 @@ const ListingDescription = ({
             buttons={[
               {
                 label: "저장",
-                onClick: () => {
-                  setDescription(text);
-                  console.log("저장");
-                },
+                onClick: handleTemporarySave,
                 variant: "outline",
               },
               {

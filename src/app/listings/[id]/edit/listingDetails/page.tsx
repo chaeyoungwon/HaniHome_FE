@@ -212,7 +212,6 @@ const ListingDetailsEdit = () => {
     }
 
     if (payload) {
-      console.log(payload);
       patchProperty(payload, {
         onSuccess: () => {
           router.push(`/listings/${id}/edit`);

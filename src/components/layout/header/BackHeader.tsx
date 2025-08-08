@@ -1,8 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import clsx from "clsx";
+
+import { useFunnel } from "@/hooks/common/useFunnel";
+
+import { FUNNEL_FLOW } from "@/constants/funnel-steps";
 
 import CloseIcon from "@/public/svgs/common/close-icon.svg";
 import BackArrow from "@/public/svgs/common/left-arrow.svg";
@@ -28,6 +32,24 @@ const BackHeader = ({
   className,
 }: BackHeaderProps) => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const draftId = searchParams.get("draftId");
+
+  const { onPrevStep } = useFunnel({ steps: FUNNEL_FLOW });
+
+  const handleBack = () => {
+    if (onBackClick) {
+      onBackClick();
+    } else if (draftId) {
+      onPrevStep();
+    } else {
+      if (window.history.length > 1) {
+        router.back();
+      } else {
+        router.push("/home");
+      }
+    }
+  };
 
   return (
     <header
@@ -39,19 +61,7 @@ const BackHeader = ({
       {hideBackIcon ? (
         <div className="w-6" />
       ) : (
-        <button
-          onClick={
-            onBackClick ??
-            (() => {
-              if (window.history.length > 1) {
-                router.back();
-              } else {
-                router.push("/home");
-              }
-            })
-          }
-          className="cursor-pointer"
-        >
+        <button onClick={handleBack} className="cursor-pointer">
           <BackArrow className="h-6 w-6" />
         </button>
       )}

@@ -34,6 +34,10 @@ export const useFunnel = ({ steps }: { steps: readonly FunnelStep[] }) => {
     const sp = new URLSearchParams();
     sp.set("step", step);
     if (subStep) sp.set("subStep", subStep);
+
+    const draftId = searchParams.get("draftId");
+    if (draftId) sp.set("draftId", draftId);
+
     router.push(`${pathname}?${sp.toString()}`, { scroll: false });
   };
 
@@ -70,7 +74,7 @@ export const useFunnel = ({ steps }: { steps: readonly FunnelStep[] }) => {
     const { stepIndex, subStepIndex } = pos;
     const current = steps[stepIndex];
 
-    // ✅ subStep이 있는 스텝인데 현재 subStep이 잘못되었거나 빠져있는 경우
+    //  subStep이 있는 스텝인데 현재 subStep이 잘못되었거나 빠져있는 경우
     if (current.subSteps && subStepIndex === -1) {
       goTo(current.step, current.subSteps[0]); // 첫 subStep으로 강제 이동
       return;

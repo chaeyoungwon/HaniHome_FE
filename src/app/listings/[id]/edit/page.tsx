@@ -46,8 +46,7 @@ const ListingsEdit = () => {
   if (isLoading) return <div>로딩 중...</div>;
   if (error || !originalDetail || !currentDetail)
     return <div>데이터를 불러올 수 없습니다.</div>;
-  console.log(originalDetail);
-  // console.log("바뀐값: ", currentDetail);
+
   return (
     <>
       <div className="w-full max-w-[430px] pb-[130px]">

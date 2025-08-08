@@ -9,6 +9,7 @@ import { getTemporaryPropertyId } from "@/apis/propertyApi";
 import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
 
 import BackHeader from "@/components/layout/header/BackHeader";
+import { FUNNEL_STEPS_MAP } from "@/constants/funnel-steps";
 
 import { TemporaryPropertyId } from "@/types/temporaryProperty.type";
 
@@ -23,7 +24,6 @@ const ListingDraft = () => {
       try {
         const data = await getTemporaryPropertyId();
         setTemporaryProperties(data); // 성공 시 상태 저장
-        console.log(data);
       } catch (error) {
         console.error("임시 저장 매물 조회 실패:", error);
       }
@@ -33,8 +33,12 @@ const ListingDraft = () => {
   }, []);
 
   const handleClick = (property: TemporaryPropertyId) => {
+    const lastStepItem = FUNNEL_STEPS_MAP.find(
+      step => step.key === property.status,
+    );
+    const lastStep = lastStepItem?.label ?? "addressPhoto";
     router.push(
-      `/listings/create?step=listingType&draftId=${property.temporaryPropertyId}`,
+      `/listings/create?step=${lastStep}&draftId=${property.temporaryPropertyId}`,
     );
   };
 
