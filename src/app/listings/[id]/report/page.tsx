@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 
 import { useEffect, useRef, useState } from "react";
@@ -17,7 +18,11 @@ import ImagePreviewSection from "@/components/common/ImagePreviewSection";
 import LoadingLottie from "@/components/common/LoadingLottie";
 import TextareaField from "@/components/common/TextareaField";
 import ContentWrapper from "@/components/layout/ContentWrapper";
-import BackHeader from "@/components/layout/header/BackHeader";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const MAX_IMAGES = 5;
 const ALLOWED_TYPES = ["image/jpeg", "image/png"];

@@ -1,12 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { useState } from "react";
 
 import Accordion from "@/components/common/Accordion";
 import SelectableChip from "@/components/common/SelectableChip";
-import BackHeader from "@/components/layout/header/BackHeader";
 
 import { faqData } from "@/constants/faq-data";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 type CategoryType = "서비스 이용" | "뷰잉";
 

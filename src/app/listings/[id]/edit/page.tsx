@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
@@ -9,7 +10,6 @@ import { usePropertyDetailEditList } from "@/hooks/property/usePropertyApi";
 import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
-import BackHeader from "@/components/layout/header/BackHeader";
 import DropDownSection from "@/components/listings/detailShow/DropDownSection";
 import ImageSlider from "@/components/listings/detailShow/ImageSlider";
 import TitleSection from "@/components/listings/detailShow/TitleSection";
@@ -18,6 +18,11 @@ import {
   RentPropertyDetail,
   SharePropertyDetail,
 } from "@/types/listingDetailPost.type";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const ListingsEdit = () => {
   const router = useRouter();

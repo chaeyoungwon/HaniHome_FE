@@ -1,5 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { useEffect } from "react";
 
 import { getVerificationPresignedUrl } from "@/apis/s3UploadApi";
@@ -16,7 +18,6 @@ import AlertModal from "@/components/common/AlertModal";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import CompleteModal from "@/components/common/CompleteModal";
 import DropdownField from "@/components/common/DropdownField";
-import BackHeader from "@/components/layout/header/BackHeader";
 import VerifyImageUploader from "@/components/mypage/VerifyImageUploader";
 import ExistVerifyKindAlertModal from "@/components/signup/profile/ExistVerifyKindAlertModal";
 import ImageAlertModal from "@/components/signup/profile/ImageAlertModal";
@@ -29,6 +30,11 @@ import { VerificationType } from "@/types/auth.type";
 
 import EmptyCheck from "@/public/svgs/common/empty-check.svg";
 import FilledCheck from "@/public/svgs/common/filled-check.svg";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const VerificationPage = () => {
   const { data: existingVerifications } = useVerificationsQuery();

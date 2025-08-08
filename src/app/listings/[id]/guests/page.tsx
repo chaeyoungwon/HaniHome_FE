@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
 
 import { useState } from "react";
@@ -12,7 +13,11 @@ import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import CheckIcon from "@/components/common/CheckIcon";
 import UserRoomPreview from "@/components/common/UserRoomPreview";
-import BackHeader from "@/components/layout/header/BackHeader";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const ListingsGuests = () => {
   const { id } = useParams();

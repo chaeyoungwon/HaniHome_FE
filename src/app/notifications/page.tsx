@@ -1,5 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { useState } from "react";
 
 import {
@@ -10,8 +12,12 @@ import {
 import AlertModal from "@/components/common/AlertModal";
 import LoadingLottie from "@/components/common/LoadingLottie";
 import ContentWrapper from "@/components/layout/ContentWrapper";
-import BackHeader from "@/components/layout/header/BackHeader";
 import NotificationCard from "@/components/notification/NotificationCard";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const NotificationPage = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);

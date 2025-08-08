@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
@@ -18,7 +19,6 @@ import { useToggleWish } from "@/hooks/wishlist/useWishListApi";
 import { getArea } from "@/utils/formatter/propertyFormatter";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
-import BackHeader from "@/components/layout/header/BackHeader";
 import AddressMap from "@/components/listings/AddressMap";
 import BottomSheet from "@/components/listings/BottomSheet";
 import DetailTabs from "@/components/listings/DetailTabs";
@@ -33,6 +33,11 @@ import { PropertyErrorResponse } from "@/types/property.type";
 import CertificatedIcon from "@/public/svgs/common/certificated-icon.svg";
 import HeartFilledIcon from "@/public/svgs/common/heart-filled-icon.svg";
 import HeartOutlineIcon from "@/public/svgs/common/heart-outline-icon.svg";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const ListingDetailPage = () => {
   const { id } = useParams();

@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { useEffect, useMemo, useState } from "react";
@@ -16,7 +17,6 @@ import { createPayloadByStep } from "@/hooks/property/createPayloadBySteps";
 import { usePostProperty } from "@/hooks/property/usePropertyApi";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
-import BackHeader from "@/components/layout/header/BackHeader";
 import DropDownSection from "@/components/listings/detailShow/DropDownSection";
 import ImageSlider from "@/components/listings/detailShow/ImageSlider";
 import TitleSection from "@/components/listings/detailShow/TitleSection";
@@ -30,6 +30,11 @@ import {
   ShareInternalDetails,
 } from "@/types/listingDetailPost.type";
 import { TemporaryPropertyPost } from "@/types/temporaryProperty.type";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 interface CreateConfirmProps {
   onNext: () => void;

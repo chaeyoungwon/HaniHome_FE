@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
@@ -11,10 +12,14 @@ import { useViewingReservation } from "@/hooks/reservation/useConfirmSchedule";
 import { useMyViewingDates } from "@/hooks/viewing/useViewingApi";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
-import BackHeader from "@/components/layout/header/BackHeader";
 import ScheduleInputList from "@/components/reservation/ScheduleInputList";
 import SingleDateCalendar from "@/components/reservation/SingleDateCalendar";
 import TimePicker from "@/components/reservation/TimePicker";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const ViewingReservationPage = () => {
   const { id } = useParams() as { id: string };

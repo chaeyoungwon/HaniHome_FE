@@ -1,3 +1,4 @@
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
@@ -8,8 +9,6 @@ import { getTemporaryPropertyId } from "@/apis/propertyApi";
 
 import { formatMeetingDay } from "@/utils/formatter/dateFormatter";
 
-import BackHeader from "@/components/layout/header/BackHeader";
-
 import { FUNNEL_STEPS_MAP } from "@/constants/funnel-steps";
 
 import { TemporaryPropertyId } from "@/types/temporaryProperty.type";
@@ -17,6 +16,11 @@ import { TemporaryPropertyId } from "@/types/temporaryProperty.type";
 import LeftArrow from "@/public/svgs/common/left-arrow.svg";
 import RentIcon from "@/public/svgs/listings/rent-icon.svg";
 import ShareIcon from "@/public/svgs/listings/share-icon.svg";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 interface ListingTypeProps {
   onSelectType: (type: "SHARE" | "RENT") => void;

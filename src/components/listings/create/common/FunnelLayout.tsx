@@ -1,12 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { ReactNode } from "react";
 
-import BackHeader from "@/components/layout/header/BackHeader";
-
 import FunnelStepMenu from "./FunnelStepMenu";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 interface FunnelLayoutProps {
   children: ReactNode;

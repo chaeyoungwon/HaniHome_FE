@@ -1,4 +1,11 @@
-import BackHeader from "@/components/layout/header/BackHeader";
+"use client";
+
+import dynamic from "next/dynamic";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 interface InfoRow {
   title: string;

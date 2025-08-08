@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import clsx from "clsx";
 
@@ -21,6 +21,8 @@ interface BackHeaderProps {
   onBackClick?: () => void;
   hideBackIcon?: boolean;
   className?: string;
+
+  isDraft?: boolean;
 }
 
 const BackHeader = ({
@@ -30,24 +32,27 @@ const BackHeader = ({
   onBackClick,
   hideBackIcon = false,
   className,
+  isDraft = false,
 }: BackHeaderProps) => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const draftId = searchParams.get("draftId");
-
   const { onPrevStep } = useFunnel({ steps: FUNNEL_FLOW });
 
   const handleBack = () => {
     if (onBackClick) {
       onBackClick();
-    } else if (draftId) {
+      return;
+    }
+
+    if (isDraft) {
       onPrevStep();
+      return;
+    }
+
+    // 일반 히스토리/대체 라우팅
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
     } else {
-      if (window.history.length > 1) {
-        router.back();
-      } else {
-        router.push("/home");
-      }
+      router.push("/home");
     }
   };
 

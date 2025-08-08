@@ -1,14 +1,20 @@
+import dynamic from "next/dynamic";
+
 import { useEffect } from "react";
 
 import { AxiosError } from "axios";
 
 import AlertMessage from "@/components/common/AlertMessage";
-import BackHeader from "@/components/layout/header/BackHeader";
 import DetailTabs from "@/components/listings/DetailTabs";
 
 import { PropertyErrorResponse } from "@/types/property.type";
 
 import ListingContentSkeleton from "./ListingContentSkeleton";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 type Props = {
   mode?: string | null;

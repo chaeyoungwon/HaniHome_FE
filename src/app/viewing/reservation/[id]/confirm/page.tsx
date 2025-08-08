@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
 
 import { useState } from "react";
@@ -15,9 +16,13 @@ import { formatDateTime, getTimeLabel } from "@/utils/formatter/dateFormatter";
 
 import BottomActionBar from "@/components/common/BottomActionBar";
 import ViewingPostCard from "@/components/common/ViewingPostCard";
-import BackHeader from "@/components/layout/header/BackHeader";
 
 import NoteIcon from "@/public/svgs/reservation/note-icon.svg";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const ViewingConfirmPage = () => {
   const { id } = useParams() as { id: string };

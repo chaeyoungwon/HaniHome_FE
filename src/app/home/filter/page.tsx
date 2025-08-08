@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
@@ -22,9 +23,13 @@ import BudgetSlider from "@/components/home/filter/BudgetSlider";
 import RoomTypeSelector from "@/components/home/filter/RoomTypeSelector";
 import SubwayStationSelector from "@/components/home/filter/SubwayStationSelector";
 import TypeSelector from "@/components/home/filter/TypeSelector";
-import BackHeader from "@/components/layout/header/BackHeader";
 
 import { SHARE_ONLY_ROOM_TYPES } from "@/constants/housing-options";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const Filter = () => {
   const [alertMessage, setAlertMessage] = useState<string | null>(null);

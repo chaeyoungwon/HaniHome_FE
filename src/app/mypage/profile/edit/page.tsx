@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +14,6 @@ import BottomActionBar from "@/components/common/BottomActionBar";
 import Divider from "@/components/common/Divider";
 import DropdownField from "@/components/common/DropdownField";
 import InputField from "@/components/common/InputField";
-import BackHeader from "@/components/layout/header/BackHeader";
 import ProfileImageUploader from "@/components/signup/profile/ProfileImageUploader";
 
 import { GENDER_OPTIONS } from "@/constants/dropdown-options";
@@ -22,6 +22,11 @@ import { Gender } from "@/types/member.type";
 
 import Arrow from "@/public/svgs/common/left-arrow.svg";
 import GoogleIcon from "@/public/svgs/mypage/google-icon.svg";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const ProfileEditPage = () => {
   const router = useRouter();

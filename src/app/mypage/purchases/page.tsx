@@ -1,12 +1,17 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { useMyDeals } from "@/hooks/property/usePropertyApi";
 
 import LoadingLottie from "@/components/common/LoadingLottie";
 import ListingCard from "@/components/home/ListingCard";
-import BackHeader from "@/components/layout/header/BackHeader";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const Purchases = () => {
   const { data: purchases, isLoading } = useMyDeals("DEAL_AS_GUEST");

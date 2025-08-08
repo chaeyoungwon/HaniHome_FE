@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useEffect, useMemo, useState } from "react";
@@ -22,7 +23,6 @@ import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import Divider from "@/components/common/Divider";
-import BackHeader from "@/components/layout/header/BackHeader";
 import FunnelStepMenu from "@/components/listings/create/common/FunnelStepMenu";
 import ListingDetailsDropdownContent from "@/components/listings/create/listingDetails/ListingDetailsDropdownContent";
 
@@ -39,6 +39,11 @@ import {
 import { PatchPayload } from "@/types/patchPayload";
 
 import DownArrow from "@/public/svgs/common/down-arrow.svg";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const ListingDetailsEdit = () => {
   const {
@@ -65,6 +70,7 @@ const ListingDetailsEdit = () => {
   const id = params.id as string;
   const searchParams = useSearchParams();
   const open = searchParams.get("open");
+  const draftId = searchParams.get("draftId");
 
   const { data, isLoading, error } = usePropertyDetailEditList(id ?? "");
   const { mutate: patchProperty } = usePatchProperty(Number(id));
@@ -226,7 +232,7 @@ const ListingDetailsEdit = () => {
 
   return (
     <>
-      <BackHeader />
+      <BackHeader isDraft={Boolean(draftId)} />
       <FunnelStepMenu fixedKey="listingDetails" />
       {QUESTION_MAP[listingType].ListingDetails.map((item, index, array) => {
         let value: React.ReactNode = "N/A";

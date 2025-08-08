@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 
 import { useEffect, useMemo, useState } from "react";
@@ -18,7 +19,6 @@ import toPostPropertyDetail from "@/utils/listing/toPostPropertyDetail";
 import AlertMessage from "@/components/common/AlertMessage";
 import BottomActionBar from "@/components/common/BottomActionBar";
 import Divider from "@/components/common/Divider";
-import BackHeader from "@/components/layout/header/BackHeader";
 import FunnelStepMenu from "@/components/listings/create/common/FunnelStepMenu";
 import MovingConditionDropdownContent from "@/components/listings/create/movingConditions/MovingConditionDropdownContent";
 
@@ -29,6 +29,11 @@ import { MovingConditionsOption } from "@/types/createPropertyAnswer.type";
 import { PatchPayload } from "@/types/patchPayload";
 
 import DownArrow from "@/public/svgs/common/down-arrow.svg";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const MovingConditionsEdit = () => {
   const fixedKey = "movingConditions";
@@ -41,6 +46,7 @@ const MovingConditionsEdit = () => {
 
   const searchParams = useSearchParams();
   const open = searchParams.get("open");
+  const draftId = searchParams.get("draftId");
 
   const { data } = usePropertyDetailEditList(id ?? "");
 
@@ -238,7 +244,7 @@ const MovingConditionsEdit = () => {
 
   return (
     <div className="pb-[70px]">
-      <BackHeader />
+      <BackHeader isDraft={Boolean(draftId)} />
       <FunnelStepMenu fixedKey={fixedKey} />
       {COMMON_MOVING_CONDITIONS.map((item, index, array) => {
         return (

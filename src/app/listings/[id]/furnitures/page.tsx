@@ -1,14 +1,19 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 
 import { Fragment, useMemo } from "react";
 
 import Divider from "@/components/common/Divider";
-import BackHeader from "@/components/layout/header/BackHeader";
 
 import { furnitureIconMap } from "@/constants/furniture-lists";
 import { CATEGORY_OPTIONS } from "@/constants/property-category";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const furnitureCategory = CATEGORY_OPTIONS[2].items;
 

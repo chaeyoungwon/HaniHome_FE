@@ -1,5 +1,7 @@
 "use client";
 
+import dynamic from "next/dynamic";
+
 import { useState } from "react";
 
 import { postOneOnOneConsult } from "@/apis/supportApi";
@@ -8,7 +10,11 @@ import BottomActionBar from "@/components/common/BottomActionBar";
 import CompleteModal from "@/components/common/CompleteModal";
 import InputField from "@/components/common/InputField";
 import TextareaField from "@/components/common/TextareaField";
-import BackHeader from "@/components/layout/header/BackHeader";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const InquiryPage = () => {
   const [content, setContent] = useState("");

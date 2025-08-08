@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import { useMemo, useState } from "react";
@@ -9,9 +10,13 @@ import { useMyProperties } from "@/hooks/property/usePropertyApi";
 import LoadingLottie from "@/components/common/LoadingLottie";
 import SelectTab from "@/components/common/SelectTab";
 import ListingCard from "@/components/home/ListingCard";
-import BackHeader from "@/components/layout/header/BackHeader";
 
 import { SummaryProperty } from "@/types/property.type";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const TABS = [
   { label: "거래중", key: "active" },

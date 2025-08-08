@@ -1,9 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 
 import ContentWrapper from "@/components/layout/ContentWrapper";
-import BackHeader from "@/components/layout/header/BackHeader";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 export default function SignupLayout({
   children,

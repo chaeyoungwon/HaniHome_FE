@@ -1,11 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import Divider from "@/components/common/Divider";
-import BackHeader from "@/components/layout/header/BackHeader";
 
 import ArrowIcon from "@/public/svgs/common/left-arrow.svg";
+
+const BackHeader = dynamic(
+  () => import("@/components/layout/header/BackHeader"),
+  { ssr: false },
+);
 
 const termsList = [
   { label: "서비스 이용약관", path: "service" },
