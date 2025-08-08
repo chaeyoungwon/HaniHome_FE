@@ -40,13 +40,13 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
         </span>
 
         <div className="flex flex-col gap-2">
-          <div className="flex w-full max-w-[398px] gap-1">
+          <div className="flex w-full items-stretch gap-1">
             <input
               name={props.name ?? "default-input"}
               ref={ref}
               {...props}
               className={clsx(
-                "text-body1-med h-[44px] flex-1 rounded-sm border px-4 py-3 placeholder:text-gray-500 focus:border-gray-600 focus:outline-none",
+                "text-body1-med h-[44px] min-w-0 flex-1 rounded-sm border px-4 py-3 placeholder:text-gray-500 focus:border-gray-600 focus:outline-none",
                 value.trim() ? "border-gray-600" : "border-gray-400",
                 className,
               )}
@@ -57,7 +57,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
                 disabled={!actionClickable}
                 onClick={onActionClick}
                 className={clsx(
-                  "text-lab1-sb w-[83px] shrink-0 rounded-sm border p-3 transition-colors",
+                  "text-lab1-sb h-[44px] shrink-0 rounded-sm border px-3 whitespace-nowrap transition-colors",
                   actionClickable
                     ? "text-mint border-mint hover:bg-mint-light cursor-pointer"
                     : "cursor-default border-gray-400 text-gray-500",
@@ -67,6 +67,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
               </button>
             )}
           </div>
+
           {errorMessage && (
             <span className="text-cap1-med text-red">{errorMessage}</span>
           )}

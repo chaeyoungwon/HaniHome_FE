@@ -113,22 +113,24 @@ const ProfileEditPage = () => {
           />
           {!isLoading && (
             <div className="w-[calc(100%-32px)] max-w-[398px] pb-[66px]">
-              <InputField
-                label="닉네임"
-                placeholder="한영문, 숫자로 5 - 12글자"
-                value={nickname}
-                onChange={handleNicknameChange}
-                onBlur={() => validate(nickname)}
-                actionLabel="중복 확인"
-                actionClickable={isValid && !isChecking}
-                onActionClick={() => checkDuplicate(nickname)}
-                errorMessage={
-                  result === "unavailable" || result === "default"
-                    ? message
-                    : undefined
-                }
-                successMessage={result === "available" ? message : undefined}
-              />
+              <div className="max-w-[398px] min-w-[343px]">
+                <InputField
+                  label="닉네임"
+                  placeholder="한영문, 숫자로 5 - 12글자"
+                  value={nickname}
+                  onChange={handleNicknameChange}
+                  onBlur={() => validate(nickname)}
+                  actionLabel="중복 확인"
+                  actionClickable={isValid && !isChecking}
+                  onActionClick={() => checkDuplicate(nickname)}
+                  errorMessage={
+                    result === "unavailable" || result === "default"
+                      ? message
+                      : undefined
+                  }
+                  successMessage={result === "available" ? message : undefined}
+                />
+              </div>
 
               <DropdownField
                 label="성별"
