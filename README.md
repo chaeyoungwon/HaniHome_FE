@@ -2,21 +2,20 @@
   <img src="https://github.com/user-attachments/assets/b5e377c5-e1f6-4f06-bf3d-7ee532fdb7d9" alt="하니홈 프로젝트"/>
 </p>
 
-
-## 🦘 HaniHome (하니홈)
-
 > **Beyond Connection: Finding Home, Creating Life.**  
 > 낯선 도시에서 새로운 삶의 시작을 든든하게 함께하는 숙소 매칭 플랫폼
 
-하니홈(HaniHome)은 신촌 연합 IT 창업 학회 **CEOS 21기**에서 시작된 프로젝트로,  
+<br/>
+
+## 🦘 HaniHome (하니홈)
+HaniHome(하니홈) 은 신촌 연합 IT 창업 학회 **CEOS 21기**에서 시작된 프로젝트로,  
 해외 거주 한인들이 보다 **쉽고 안전하게 숙소를 찾고 공유**할 수 있도록 돕는 서비스입니다.
 
-
-- ⭐️ **서비스 배포 링크:** [https://www.hanihome.app](https://www.hanihome.app)  
+- 🔗 **서비스 링크:** [https://www.hanihome.app](https://www.hanihome.app)  
 - 📸 **공식 인스타그램:** [https://www.instagram.com/hanihome_official](https://www.instagram.com/hanihome_official/)  
 - 📄 **서비스 소개 PDF:** [서비스 소개 PDF](https://github.com/user-attachments/files/21838988/default.pdf)
 
----
+<br/>
 
 ### 🐨 주요 기능
 해외에서의 숙소 거래는 종종 불편하고 불안정합니다.<br/>
@@ -36,7 +35,7 @@
   - 매물 종류, 예산, 입주 가능일, 인근 지하철역 등 세부 조건 필터 제공  
   - 자신에게 딱 맞는 숙소를 빠르게 검색 가능  
 
----
+<br/>
 
 ### 🛠️ 기술 스택
 
